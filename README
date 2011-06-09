@@ -1,0 +1,12 @@
+It is share any dotfiles
+
+[share]
+.screenrc
+.vim/
+.vimrc
+.zshrc
+install.sh
+
+
+[not share]
+keymap.screenrc # it is set escape

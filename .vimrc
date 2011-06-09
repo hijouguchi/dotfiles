@@ -1,0 +1,659 @@
+" NOTE {{{1
+" FIXME:英語のミス
+"Basic "{{{1
+"initialize "{{{2
+set nocompatible
+
+function! s:SID()
+  return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$')
+endfunction
+
+" path "{{{2
+
+silent! helptags ~/.vim/doc
+
+
+"Options "{{{2
+
+syntax enable
+set background=dark
+
+filetype plugin indent on
+
+set cinoptions=:0,t0,(0,W1s
+set noequalalways
+set wildmenu
+set wildchar=<tab>
+set wildmode=list:longest,full
+set noimcmdline
+
+set autoindent
+set number
+set backspace=indent,eol,start
+set matchpairs+=<:>
+set nohlsearch
+set nrformats+=alpha
+set smartindent
+set iminsert=1
+set imsearch=1
+set noerrorbells
+set modeline
+set foldmethod=marker
+
+set completeopt=menuone,preview
+
+"search option
+set incsearch
+set ignorecase
+set smartcase
+set wrapscan
+
+set autowrite
+
+set nowritebackup
+
+"set complete=.,w,b,u,t,i,d,k
+set complete=.,w,b,u,t,k
+
+set backup
+set backupext=.bak
+if has("mac")
+  set backupdir=~/.Trash
+else
+  set backupdir=/tmp
+endif
+
+set formatoptions=nlM1
+
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+" NOTE:you should write each edit file
+"set expandtab
+"set smarttab
+
+
+"Encoding "{{{2
+
+set encoding=utf-8
+set termencoding=utf-8
+
+
+"make fileencodings (test) {{{3
+" Does iconv support JIS X 0213 ?
+if iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+  let s:enc_euc = 'euc-jisx0213,euc-jp'
+  let s:enc_jis = 'iso-2022-jp-3'
+else
+  let s:enc_euc = 'euc-jp'
+  let s:enc_jis = 'iso-2022-jp'
+endif
+
+let &fileencodings = 'ucs-bom'
+
+let &fileencodings .= ',' . s:enc_jis
+let &fileencodings .= ',' . s:enc_euc
+let &fileencodings .= ',' . 'cp932'
+let &fileencodings .= ',' . &encoding
+
+
+unlet s:enc_euc
+unlet s:enc_jis
+
+set fileformats=unix,dos,mac
+set ambiwidth=double
+
+"{{{2 Window
+
+"colorscheme candycode
+" color "{{{
+set t_Co=256
+colorscheme desert
+highlight Pmenu cterm=underline ctermbg=8
+highlight PmenuSel ctermbg=7 ctermfg=0
+highlight PmenuSbar ctermbg=0
+
+"highlight Folded cterm=bold ctermbg=4 ctermfg=7
+highlight Folded cterm=bold ctermbg=7 ctermfg=4
+" }}}
+
+set listchars=eol:.,tab:._,trail:_
+set list
+set showcmd
+set showmode
+
+
+
+set laststatus=2
+set statusline=%<%f%=
+set statusline+=%{MyStatusSpec()}
+set statusline+=\ %3cC,%3l/%LL\ %P
+
+function! MyStatusSpec()
+  let l = []
+  if &paste | call add(l, 'paste') | endif
+  if &modified | call add(l, '+') | endif
+  if !&modifiable | call add(l, '-') | endif
+  if len(&filetype)>0 | call add(l, &filetype) | endif
+  call add(l, len(&fenc)>0?&fenc:&enc)
+  call add(l, &fileformat)
+  return '[' . join(l, ',') . ']'
+endfunction
+
+set tabline=%!MyTabLine()
+"set showtabline=2
+
+
+"key mapping "{{{1
+"Nmap {{{2
+nmap     <Space>          [Space]
+nnoremap [Space]          <Nop>
+nnoremap ,v               :<C-u>tabnew $MYVIMRC<CR>
+
+nnoremap ,w               :up!<CR>
+nnoremap ,q               :hide<CR>
+
+nnoremap j                gj
+nnoremap k                gk
+nnoremap gg               ggzvzz
+
+nnoremap dl               0d$
+nnoremap dL               ^d$
+nnoremap dt               viwd
+nnoremap yl               mz0y$`z
+nnoremap yL               mz^y$`z
+nnoremap yt               mzviwy`z
+nnoremap Y                y$
+"nnoremap }}               ][
+"nnoremap {{               ]]
+
+"nnoremap [Space][Space]   zv
+nnoremap zo               zv
+nnoremap zv               zo
+
+nnoremap --               mzgg=G`z
+
+
+nnoremap ;                :
+nnoremap :                ;
+
+nnoremap <C-P>            :set paste! \| :set paste?<CR>
+
+nnoremap <C-H>            :<C-u>help<Space>
+nnoremap [Space]k         :<C-U>Ku file<return>
+
+nnoremap [Space]e         :<C-u>!time ./%<CR>
+
+
+"Imap {{{2
+inoremap                 <Tab>         <C-R>=InsertTabWrapper()<CR>
+inoremap          <expr> <Esc>[Z       pumvisible() ? "<C-P>" : "<S-Tab>"
+"inoremap          <expr> <CR>          pumvisible() ? neocomplcache#close_popup()."\<CR>X\<BS>" : "\<CR>X\<BS>"
+"imap          <expr> <CR>          neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "<CR>"
+inoremap                 <C-U>         <C-G>u<C-U>
+inoremap                 <C-W>         <C-G>u<C-W>
+
+" for Neocomplcache
+"It dosen't work if inoremap
+"imap     <silent>        <S-Tab>         <Plug>(neocomplcache_snippets_expand)
+imap     <silent>        <C-L>         <Plug>(neocomplcache_snippets_expand)
+
+"Vmap {{{2
+vnoremap ;     :
+vnoremap :     ;
+vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v,'\/'),"\n",'\\n','g')<CR><CR>
+
+
+"Cmap {{{2
+cnoremap <C-H> <Left>
+cnoremap <C-L> <Right>
+
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
+
+" respected from kana
+" Search slashes easily (too lazy to prefix backslashes to slashes)
+cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
+
+" window move {{{2
+nmap      [Space]w    <C-W>
+nnoremap  <C-w>a      <C-R>:all<Return>
+
+
+" buffer move {{{2
+nmap     [Space]b  [Buffer]
+nnoremap [Buffer]  <Nop>
+
+nnoremap [Buffer]j :bn<Cr>
+nnoremap [Buffer]n :bn<Cr>
+
+nnoremap [Buffer]k :bp<Cr>
+nnoremap [Buffer]p :bp<Cr>
+
+
+" they are the same behavior
+nnoremap [Buffer]b :buffers<CR>
+nnoremap [Buffer]l :ls<CR>
+
+
+" tab    move {{{2
+nmap     [Space]t  [Tab]
+nnoremap [Tab]j :tabn<CR>
+nnoremap [Tab]k :tabp<CR>
+nnoremap [Tab]n :tabnew<CR>
+
+"for tab number
+for i in range(0,9)
+  execute 'nnoremap [Tab]' . i . ' :tabnext '. (i+1) . '<CR>'
+endfor
+
+
+" search jump {{{2
+"nnoremap * mz*
+
+nnoremap /        :setlocal hlsearch<CR>/
+nnoremap [Space]/ :set hlsearch! \| :set hlsearch?<CR>
+
+"jump, open fold, and cursor to the center
+nnoremap n      nzvzz
+nnoremap N      Nzvzz
+nnoremap *      :setlocal hlsearch<CR>*zvzz
+nnoremap #      #zvzz
+nnoremap g*     g*zvzz
+nnoremap g#     g#zvzz
+
+
+" tag    jamp {{{2
+nnoremap          tt      <C-]>zz
+nnoremap          th      <C-T>zz
+nnoremap          tl     :<C-U>tags<CR>
+
+
+" Quickfix {{{2
+nnoremap q     <Nop>
+nnoremap Q     q
+
+nnoremap qm   :<C-U>make<CR>
+
+nnoremap qj   :<C-U>cnext<CR>
+nnoremap qk   :<C-U>cprevious<CR>
+nnoremap qfj  :<C-U>cfirst<CR>
+nnoremap qfk  :<C-U>clast<CR>
+nnoremap ql   :<C-U>clist<CR>
+nnoremap qo   :<C-U>copen 3<CR>
+nnoremap qq   :<C-U>cclose<CR>
+
+
+" No Use cursor-keys "{{{2
+map   <Up>     <nop>
+map   <Down>   <nop>
+map   <Left>   <nop>
+map   <Right>  <nop>
+map!  <Up>     <nop>
+map!  <Down>   <nop>
+map!  <Left>   <nop>
+map!  <Right>  <nop>
+
+
+" command {{{1
+command! -nargs=0 ToggleListNumber
+      \ :setlocal list! | :setlocal number!
+
+command! -nargs=0 TabToSpace
+      \ :setlocal expandtab | :setlocal smarttab |  :set expandtab?
+
+command! -nargs=0 SpaceToTab
+      \ :setlocal noexpandtab | :setlocal nosmarttab |  :set expandtab?
+
+command! -nargs=0 ToggleCharactorChange
+      \ normal vb~w
+
+command! InsertEnv call <SID>Insert_env()
+
+command! InsertCoding call <SID>Insert_coding()
+
+" change a character code {{{2
+command! -bang Utf8   e<bang> ++enc=utf-8
+command! -bang Euc    e<bang> ++enc=euc-jp
+command! -bang Cp932  e<bang> ++enc=cp932
+command! -bang Jis    e<bang> ++enc=iso-2022-jp
+
+command! -bang Unix   e<bang> ++ff=unix
+command! -bang Mac    e<bang> ++ff=mac
+command! -bang Dos    e<bang> ++ff=dos
+
+
+" autocmd {{{1
+augroup MyAutoCmd
+  autocmd!
+augroup END
+
+autocmd MyAutoCmd BufNewFile,BufRead .vimrc
+      \ nnoremap <buffer> ,s :<c-u>source ~/.vimrc<cr>
+
+autocmd MyAutoCmd BufWritePost * if getline(1) =~ "^#!" |
+      \ silent! exe "silent !chmod +x %" | endif
+
+autocmd MyAutoCmd QuickfixCmdPost make,grep,vimgrep copen 3
+
+" if the file doesn't have used Japanese, set fileencoding to encoding
+" from kana's vimrc http://github.com/kana/config/
+autocmd MyAutoCmd BufReadPost *
+      \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
+      \ |   setlocal fileencoding=
+      \ | endif
+
+" if the file doesn't have used tab by space, set expandtab
+autocmd MyAutoCmd BufReadPost *
+      \   if search('^\t', 'cnw') == 0
+      \ |   setlocal expandtab
+      \ | endif
+
+autocmd MyAutoCmd FileType  *
+      \   if &l:omnifunc == ''
+      \ | setlocal omnifunc=syntaxcomplete#Complete
+      \ | endif
+
+" set each filetype dictionary
+autocmd MyAutoCmd Filetype *
+      \   if &filetype !=# '' && findfile(&filetype . ".dict", $HOME . "/.vim/dict") !=# ''
+      \ |   execute "setlocal dictionary=" . findfile(&filetype . ".dict", $HOME . "/.vim/dict")
+      \ | endif
+
+
+" set binary format
+augroup BinaryXXD
+  autocmd!
+  autocmd BufReadPre   *.bin let &binary =1
+  autocmd BufReadPost  * if &binary | silent %!xxd -g 1
+  autocmd BufReadPost  * set ft=xxd | endif
+  autocmd BufWritePre  * if &binary | %!xxd -r | endif
+  autocmd BufWritePost * if &binary | silent %!xxd -g 1
+  autocmd BufWritePost * set nomod | endif
+augroup END
+
+
+" for my autocomplete
+" NOTE: I use Neocomplcache now
+"augroup AutoComplete
+"  autocmd!
+"  autocmd CursorMovedI * call <SID>AutoCompletetion()
+"augroup END
+
+
+"setteing each filetype 
+" NOTE: here is only for small settings
+augroup FiletypeAutoCmd
+  autocmd!
+augroup END
+
+" help {{{2
+autocmd FiletypeAutoCmd FileType help setlocal nolist | setlocal number
+
+
+" html {{{2
+autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
+
+
+" vhdl {{{2
+autocmd FiletypeAutoCmd BufNewFile *.vhd 0r ~/.vim/template/vhdl.vhd
+
+
+" Quickfix {{{2
+autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
+function! s:FileType_qf()
+  nnoremap <buffer> <expr> qc   ":\<C-U>cc " . line('.') ."\<CR>"
+endfunction
+
+
+" sh {{{2
+autocmd FiletypeAutoCmd FileType sh call <SID>FileType_sh()
+function! s:FileType_sh()
+  nnoremap <buffer> [Space]e :!./%<CR>
+endfunction
+
+
+" R {{{2
+autocmd FiletypeAutoCmd FileType r call <SID>FileType_R()
+"set filetype R for .r (not set to rexx)
+autocmd FiletypeAutoCmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
+function! s:FileType_R()
+  nnoremap <buffer> [Space]e :<c-u>!R CMD BATCH --vanilla % \| :!cat %out<CR>
+endfunction
+
+" Ruby {{{2
+autocmd FiletypeAutoCmd FileType ruby call <SID>FileType_ruby()
+function! s:FileType_ruby()
+  "setlocal omnifunc=rubycomplete#Complete
+  set expandtab
+  set smarttab
+  compiler ruby
+  setlocal makeprg=ruby\ -c\ %
+  nnoremap <buffer> [Space]e :<c-u>!time ruby %<cr>
+  nnoremap <buffer> [Space]s :<c-u>!ruby -c %<cr>
+endfunction
+
+
+" Tex {{{2
+autocmd FiletypeAutoCmd FileType plaintex setlocal filetype=tex
+autocmd FiletypeAutoCmd FileType tex call <SID>FileType_tex()
+" if tex file is saved, auto rake
+autocmd FiletypeAutoCmd BufWritePost *.tex silent! execute "silent !rake >/dev/null 2>&1"
+function! s:FileType_tex()
+  setlocal complete+=k~/.vim/dict/tex.dict
+endfunction
+
+
+" vim {{{2
+autocmd FiletypeAutoCmd FileType vim
+      \ setlocal keywordprg=:help
+      \ | nnoremap <buffer> ,s :<C-U>source $MYVIMRC<CR>
+
+
+" screen {{{2
+autocmd FiletypeAutoCmd FileType screen
+      \ nnoremap <buffer> ,s :<C-U>!screen -X source %<CR>
+
+
+" plugin options {{{1
+" Neocomplcache {{{2
+" Feature: make own autocomplete function (more lighe, more simple, and more like vim)
+
+let g:neocomplcache_enable_at_startup            = 1
+let g:neocomplcache_max_list                     = 30
+let g:neocomplcache_max_keyword_width            = 25
+let g:neocomplcache_auto_completion_start_length = 5
+"let g:neocomplcache_enable_smart_case            = 1
+let g:neocomplcache_enable_wildcard              = 1
+let g:neocomplcache_enable_quick_match           = 1
+let g:neocomplcache_snippets_dir                 = $HOME . '/.vim/snippet'
+
+
+
+
+
+" Set each language dictionary
+" NOTE: If g:neocomplcache_dictionary_filetype_lists is empty, neocomplcache use 'dictionary' option.
+"  BUG: cannot use dictionary completion unless execute :NeoComplCacheCachingDictionary
+
+"let g:neocomplcache_dictionary_filetype_lists     = {'default' : ''}
+"autocmd MyAutoCmd Filetype *
+"      \   if &filetype !=# ''
+"      \     && findfile(&filetype . ".dict", $HOME . "/.vim/dict") !=# ''
+"      \     && !has_key(g:neocomplcache_dictionary_filetype_lists, &filetype)
+"      \ |   call extend(g:neocomplcache_dictionary_filetype_lists,
+"      \       { &filetype : findfile(&filetype . ".dict", $HOME . "/.vim/dict") })
+"      \ | endif
+"
+
+
+" Ku {{{2
+autocmd MyAutoCmd FileType ku call Ku_options()
+
+function! Ku_options()
+  call ku#default_key_mappings(1)
+  inoremap <buffer> <expr> <Tab>         InsertTabWrapper()
+  "It dosen't work if inoremap
+  imap     <buffer>        <C-U>         <Plug>(ku-choose-an-action)
+endfunction
+
+
+" submode {{{2
+" sovle ^W < - + > ...
+call submode#enter_with('Window', 'n', '', '<C-W>+')
+call submode#enter_with('Window', 'n', '', '<C-W>-')
+call submode#enter_with('Window', 'n', '', '<C-W>>')
+call submode#enter_with('Window', 'n', '', '<C-W><')
+call submode#leave_with('Window', 'n', '', '<Esc>')
+call submode#map('Window', 'n', '', '-', '<C-W>-')
+call submode#map('Window', 'n', '', '=', '<C-W>+')
+call submode#map('Window', 'n', '', '+', '<C-W>+')
+call submode#map('Window', 'n', '', '<', '<C-W><')
+call submode#map('Window', 'n', '', '>', '<C-W>>')
+
+
+"functions "{{{1
+" Resist to dictionary {{{2
+" Basic {{{3
+let g:throw_dictionary = '~/.vim/dict/throw_dictionary.dict'
+execute "set complete+=k" . g:throw_dictionary
+
+
+" command {{{3
+command! -nargs=* ResistDictionary call <SID>Throw_dictionary(<q-args>)
+command! -nargs=0 ToggleResistDictionary call <SID>Throw_dictionary_Toggle()
+
+
+" key mappings {{{3
+vnoremap td :<C-U>call <SID>Range_throw()<CR>
+
+
+function! s:Throw_dictionary(words) "{{{3
+  let l:words = split(a:words, ' ')
+
+  if len(l:words) == 0
+    return ""
+  endif
+
+  execute "split " . &dictionary
+
+  for l:word in l:words
+
+    for l:i in range(1, line('$'))
+      if getline(l:i) == l:word
+        silent! close
+        silent! execute "bdelete " . &dictionary
+        return ""
+      endif
+    endfor
+
+    let @z = l:word . "\n"
+    normal G"zp
+    sort
+
+    if getline(1) == ""
+      normal ggdd
+    endif
+
+  endfor
+
+  silent! up
+  silent! close
+  execute "silent! bdelete " . &dictionary
+endfunction
+
+
+function! s:Throw_dictionary_Toggle() "{{{3
+  if (&complete =~ '\V' . g:throw_dictionary)
+    execute "setlocal complete-=k" . g:throw_dictionary
+  else
+    execute "setlocal complete+=k" . g:throw_dictionary
+  endif
+endfunction
+
+
+function! MyTabLine() "{{{2
+  "NOTE: it's not script local function
+  let s = ""
+  for i in range(1, tabpagenr('$'))
+    let title_number = tabpagebuflist(i)[0]
+    let no = i - 1
+    let mod = getbufvar(title_number, "&modified") ? "+" : " "
+    let title = fnamemodify(bufname(title_number), ":t")
+    let title = len(title) ? title : "[No Name]"
+
+    let s .= "%" . i . "T"
+    let s .= "%#" . (i == tabpagenr() ? "TablineSel" : "Tabline") . "# "
+    let s .= no . mod . title
+    let s .= " %#TablineFill#%T"
+    let s .= ""
+  endfor
+
+  let s .= "%="
+  let s .= getcwd()
+  return s
+endfunction
+
+
+function! s:AutoCompletetion() "{{{2
+  if getline('.')[col('.')-1] =~ '[.:>]' && has(&l:omnifunc)
+    call feedkeys("\<C-X>\<C-O>\<C-P>", "n")
+  elseif len(matchstr(getline('.')[0:col('.')-1], '\k*$')) >= 5
+    call feedkeys("\<C-N>\<C-P>", "n")
+    if !pumvisible() && has(&l:omnifunc)
+      call feedkeys("\<C-X>\<C-O>\<C-P>", "n")
+    endif
+  endif
+  return
+endfunction
+
+
+function! InsertTabWrapper() "{{{2
+  if pumvisible() || getline('.')[col('.')-2] =~ '\k'
+    return "\<C-N>"
+  else
+    return "\<Tab>"
+  endif
+endfunction
+
+
+function! s:Range_throw() "{{{3
+  normal gv""y
+  call <SID>Throw_dictionary(getreg("\""))
+endfunction
+
+
+
+
+function! s:Insert_env() "{{{2
+  let l:env = system("which env")
+  if l:env == ''
+    throw "Can't find env"
+  endif
+  " delete backspace
+  if l:env =~ '\r$\|\n$'
+    let l:env = l:env[:-2]
+  endif
+  let @z = "\#!" . l:env . " " . &filetype . "\n"
+  normal mzgg"zP'z
+endfunction
+
+
+function! s:Insert_coding() "{{{2
+  let l:fenc = &fileencoding
+  if l:fenc == ''
+    let l:fenc = 'utf-8'
+  endif
+  let @z = "# coding: " . l:fenc . "\n"
+  if getline(1) =~ '^#!'
+    normal mzgg"zp'z
+  else
+    normal mzgg"zP'z
+  endif
+endfunction
+
+
+" __END__ {{{1
+" vim: expandtab
+
+

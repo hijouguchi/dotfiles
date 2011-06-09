@@ -1,0 +1,115 @@
+# NOTE {{{1
+
+
+# OPTION {{{1
+defkanji        utf-8
+defencoding     utf-8
+encoding        utf-8 utf-8
+
+autodetach      on
+bell_msg        "^G"
+startup_message off
+vbell           off
+defscrollback   10000
+altscreen       on
+defmonitor      on
+
+hardcopydir     "%HOME/screen"
+
+termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color
+termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l' # for resize
+attrcolor b ".I"
+defbce "on"
+
+
+# WINDOW {{{1
+rendition bell    "=ub" "RY"
+rendition monitor "=b"  "BW"
+rendition silence "=U"  "wk"
+rendition so      "="   "wk"
+#hardstatus  alwayslastline " %-Lw%35L>%{=ub bw}%n %t%{-}%+Lw %=%-23<%{=b} %H %l %{-}"
+hardstatus  alwayslastline " %-Lw%35L>%{=ub bw}%n %t%{-}%+Lw %=%-23L<%{=b} %H %l %{-}"
+caption     always         "%?%F%{= bW}%:%{= Kk}%?%2n%f%07=%t"
+
+layout new
+
+
+# KEY MAP {{{1
+escape ^Gt
+
+
+bind  n screen
+bind ^l windowlist
+bind ^v copy
+bind  p paste .
+bind  q remove
+bind  ; colon
+
+bind  s split
+bind  v split -v
+bind  S eval split focus screen
+bind  V eval 'split -v' focus screen
+
+# window focus {{{2
+bind ^n eval next
+bind ^p eval prev
+bind  h focus left
+bind  j focus down
+bind  k focus up
+bind  l focus right
+
+bind ^w eval 'command -c window_region' 'echo "region window"'
+bind -c window_region ^n eval next          'command -c window_region'
+bind -c window_region ^p eval prev          'command -c window_region'
+bind -c window_region  h eval 'focus left'  'command -c window_region'
+bind -c window_region  j eval 'focus down'  'command -c window_region'
+bind -c window_region  k eval 'focus up'    'command -c window_region'
+bind -c window_region  l eval 'focus right' 'command -c window_region'
+bind -c window_region  q remove
+bind -c window_region  Q only
+bind -c window_region  K kill
+
+
+# layout {{{2
+bind w eval 'command -c layout_region' 'echo "layout command"'
+bind -c layout_region  n eval   'layout new' 'echo "create new layout"'
+bind -c layout_region  l layout show
+bind -c layout_region ^f eval   'layout next' 'command -c layout_region'
+bind -c layout_region ^b eval   'layout prev' 'command -c layout_region'
+bind -c layout_region  s layout select
+bind -c layout_region  0 layout select 0
+bind -c layout_region  1 layout select 1
+bind -c layout_region  2 layout select 2
+bind -c layout_region  3 layout select 3
+bind -c layout_region  4 layout select 4
+bind -c layout_region  5 layout select 5
+bind -c layout_region  6 layout select 6
+bind -c layout_region  7 layout select 7
+bind -c layout_region  8 layout select 8
+bind -c layout_region  9 layout select 9
+bind -c layout_region  q layout remove
+
+
+#resize {{{2
+bind           + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
+bind           - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
+bind           > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
+bind           < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
+bind           = eval 'resize ='     'command -c resize' 'echo "resize mode"'
+bind           _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
+bind -c resize + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
+bind -c resize - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
+bind -c resize > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
+bind -c resize < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
+bind -c resize = eval 'resize ='     'command -c resize' 'echo "resize mode"'
+bind -c resize _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
+
+
+# TEST OPTIONS {{{1
+
+
+# END {{{1
+# vim:smarttab expandtab :
+# vim:foldmethod=marker :
+
+
