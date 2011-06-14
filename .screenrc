@@ -35,7 +35,7 @@ layout new
 
 
 # KEY MAP {{{1
-escape ^Gt
+#escape ^Gt
 
 
 bind  n screen
@@ -105,6 +105,10 @@ bind -c resize = eval 'resize ='     'command -c resize' 'echo "resize mode"'
 bind -c resize _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
 
 
+# other source {{{1
+
+# scpace code
+source $HOME/dotfiles/keymap.screenrc
 # TEST OPTIONS {{{1
 
 
