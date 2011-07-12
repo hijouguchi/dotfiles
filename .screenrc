@@ -25,8 +25,8 @@ defbce "on"
 # WINDOW {{{1
 rendition bell    "=U"  "rk"
 rendition monitor "=b"  "bW"
-rendition so      "=b"  "wW"
-caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?%n %t%=[%H] [%D %M %d %c:%s]%{-}"
+rendition so      "=b"  "wk"
+caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?%n %t%=[%H] [%m/%d %c:%s]%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
 
 #layout new
