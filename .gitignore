@@ -1,3 +1,4 @@
 keymap.screenrc
 .DS_Store
 *.swp
+.vim/info/ku/history

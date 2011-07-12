@@ -418,7 +418,7 @@ autocmd FiletypeAutoCmd FileType r call <SID>FileType_R()
 "set filetype R for .r (not set to rexx)
 autocmd FiletypeAutoCmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
 function! s:FileType_R()
-  nnoremap <buffer> [Space]e :<c-u>!R CMD BATCH --vanilla % \| :!cat %out<CR>
+  nnoremap <buffer> [Space]e :<c-u>!Rscript %<CR>
 endfunction
 
 " Ruby {{{2
