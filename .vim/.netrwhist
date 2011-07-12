@@ -1,5 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/Users/hijouguchi/dotfiles/.vim/autoload/neocomplcache/plugin/snippets_complete'
-let g:netrw_dirhist_2='/home/hijouguchi/screen_git/screen/incoming'
-let g:netrw_dirhist_3='/Users/hijouguchi/.screen'
