@@ -23,15 +23,13 @@ defbce "on"
 
 
 # WINDOW {{{1
-rendition bell    "=ub" "RY"
-rendition monitor "=b"  "BW"
-rendition silence "=U"  "wk"
-rendition so      "="   "wk"
-#hardstatus  alwayslastline " %-Lw%35L>%{=ub bw}%n %t%{-}%+Lw %=%-23<%{=b} %H %l %{-}"
-hardstatus  alwayslastline " %-Lw%35L>%{=ub bw}%n %t%{-}%+Lw %=%-23L<%{=b} %H %l %{-}"
-caption     always         "%?%F%{= bW}%:%{= Kk}%?%2n%f%07=%t"
+rendition bell    "=U"  "rk"
+rendition monitor "=b"  "bW"
+rendition so      "=b"  "wW"
+caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?%n %t%=[%H] [%D %M %d %c:%s]%{-}"
+hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
 
-layout new
+#layout new
 
 
 # KEY MAP {{{1
