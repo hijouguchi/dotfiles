@@ -134,8 +134,8 @@ alias U='screen -U'
 alias S='_screen_new_window_split -U'
 alias V='_screen_new_window_split_v -U'
 
-alias ls='ls -F --color=auto'
-alias la='ls -AF --color=auto'
+alias ls='ls -F   --color=auto'
+alias la='ls -AF  --color=auto'
 alias ll='ls -lAF --color=auto'
 
 alias quit='exit'
@@ -143,12 +143,44 @@ alias quit='exit'
 alias -g G='|grep'
 alias -g T='|tee'
 alias -g L='|less'
+alias -g X='|xargs'
 alias -g G2='2>&1 |grep'
 alias -g T2='2>&1 |tee'
 alias -g L2='2>&1 |less'
 
 
 # Tiny function {{{1
+# for preexec, precmd {{{2
+_echo_pwd() {
+  echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
+}
+
+_update_screen_name_for_preexec() {
+  local cmd
+  : ${cmd::=${1##([[:digit:]])# (sudo )#}} # remove number and sudo
+  : ${cmd::=${cmd##screen }} # remove screen
+
+  case ${cmd%% *} in
+    ls|ll|la) _echo_pwd; screen -X title `pwd`;;
+    vim) screen -X title "${cmd%% *}";;
+    ssh*) ;;
+    *) screen -X title "!${cmd}";;
+  esac
+}
+
+_update_screen_name_for_precmd() {
+  #TODO: if not active window in screen, notification
+  local cmd
+  : ${cmd::=`history -1`}
+  : ${cmd::=${cmd##([[:digit:]])# (sudo )#}} # remove number and sudo
+  : ${cmd::=${cmd##screen }} # remove screen
+
+  case $cmd in
+    quit|exit|ssh*) ;;
+    *) screen -X title "${cmd%% *}";;
+  esac
+}
+
 _update_vcs_info_msg() {
   psvar=()
   LANG=en_US.UTF-8 vcs_info
@@ -169,28 +201,21 @@ _update_vcs_info_msg() {
     done
   fi
 }
-add-zsh-hook precmd _update_vcs_info_msg
 
-_update_screen_name() {
-  local ti=''
-  #: ${(A)cmd::=${=${=1##sudo}%%|*}}
-  : ${(A)cmd::=${=${1%%|*}##sudo}}
-  case "$cmd[1]" in
-    ./*|/*) ti="${cmd[1]##*/}" ;;
-    ls|la|ll)
-      echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
-      ti="`pwd`" ;;
-    cat|tail|less|grep) ti="$cmd[1] ${cmd[-1]##*/}" ;;
-    *) ti="$cmd[1]" ;;
-  esac
-  screen -X title "$ti"
-}
-add-zsh-hook preexec _update_screen_name
+# here add pre***_functions
+preexec_functions=(_update_screen_name_for_preexec)
+precmd_functions=(_update_screen_name_for_precmd _update_vcs_info_msg)
 
-chpwd() {
-  echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
-  screen -X title `pwd`
-}
+
+# for chpwd_functions {{{2
+
+_set_pwd_screen() screen -X title `pwd`
+
+chpwd_functions=(_echo_pwd)
+
+
+# other tiny functions {{{2
+
 
 _ssh_new_screen() {
   screen -U -t "$@[-1]" ssh $*
