@@ -126,8 +126,9 @@ bindkey               '^e'   edit-command-line
 
 
 # Alias {{{1
-alias ssh='_ssh_new_screen'
-alias ssh-screen='_ssh_screen'
+alias ssh=_ssh_new_screen
+alias ssh-screen=_ssh_screen
+alias title=_screen_name_manual_update
 
 alias scrr='screen -U -D '
 alias U='screen -U'
@@ -138,7 +139,7 @@ alias ls='ls -F   --color=auto'
 alias la='ls -AF  --color=auto'
 alias ll='ls -lAF --color=auto'
 
-alias quit='exit'
+alias quit=exit
 
 alias -g G='|grep'
 alias -g T='|tee'
@@ -150,43 +151,50 @@ alias -g L2='2>&1 |less'
 
 
 # Tiny function {{{1
-# for preexec, precmd {{{2
+# for preexec, precmd, and chpwd {{{2
+_update_vcs_info_msg() {
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+
+
 _echo_pwd() {
   echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
 }
+
+
+_set_pwd_screen() screen -X title `pwd`
+
 
 _update_screen_name_for_preexec() {
   local cmd
   : ${cmd::=${1##([[:digit:]])# (sudo )#}} # remove number and sudo
   : ${cmd::=${cmd##screen }} # remove screen
+  COMMAND_NAME=$cmd # save cmd for _update_screen_name_for_precmd
 
   case ${cmd%% *} in
     ls|ll|la) _echo_pwd; screen -X title `pwd`;;
     vim) screen -X title "${cmd%% *}";;
     ssh*) ;;
-    *) screen -X title "!${cmd}";;
+    *) screen -X title "!$cmd[1,10]";;
   esac
 }
 
+
 _update_screen_name_for_precmd() {
   #TODO: if not active window in screen, notification
-  local cmd
-  : ${cmd::=`history -1`}
-  : ${cmd::=${cmd##([[:digit:]])# (sudo )#}} # remove number and sudo
-  : ${cmd::=${cmd##screen }} # remove screen
+  local cmd=$COMMAND_NAME # load cmd from _update_screen_name_for_preexec
+  unset COMMAND_NAME # remove cmd
 
   case $cmd in
-    quit|exit|ssh*) ;;
+    quit|exit|ssh*|) ;;
     *) screen -X title "${cmd%% *}";;
   esac
 }
 
-_update_vcs_info_msg() {
-  psvar=()
-  LANG=en_US.UTF-8 vcs_info
-  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 
-  # for screen title
+_update_git_commit_screen_name() {
   local git_branch=`git branch 2>&1 | grep '^*' | sed -e 's/^* //'`
   if [[ -n "$git_branch" ]] then
     local dir_orig=`pwd`
@@ -194,7 +202,8 @@ _update_vcs_info_msg() {
     while [[ -n "$dir" ]] ; do
       if [[ -n "`ls -1aF $dir | grep .git/`" ]] then
         local relative_git_path="${${dir_orig#${dir}}#/}"
-        screen -X title "${dir##*/}[$git_branch]:$relative_git_path"
+        #screen -X title "${dir##*/}[$git_branch]:$relative_git_path"
+        screen -X title "[${dir##*/}:$git_branch]"
         break
       fi
       local dir=${dir%/*}
@@ -203,27 +212,17 @@ _update_vcs_info_msg() {
 }
 
 # here add pre***_functions
-preexec_functions=(_update_screen_name_for_preexec)
-precmd_functions=(_update_screen_name_for_precmd _update_vcs_info_msg)
-
-
-# for chpwd_functions {{{2
-
-_set_pwd_screen() screen -X title `pwd`
-
+precmd_functions=(_update_vcs_info_msg)
 chpwd_functions=(_echo_pwd)
 
 
-# other tiny functions {{{2
+# for screen hock functions {{{2
 
 
-_ssh_new_screen() {
-  screen -U -t "$@[-1]" ssh $*
-}
+_ssh_new_screen() screen -U -t "$@[-1]" ssh $*
 
-_ssh_screen() {
-  screen -U -t "$@[-1]" ssh $* -t screen -U -D -RR
-}
+_ssh_screen() screen -U -t "$@[-1]" ssh $* -t screen -U -D -RR
+
 
 _screen_new_window_split() {
   screen -X split
@@ -231,10 +230,17 @@ _screen_new_window_split() {
   screen $*
 }
 
+
 _screen_new_window_split_v() {
   screen -X split -v
   screen -X focus
   screen $*
+}
+
+
+_screen_name_manual_update() {
+  screen -X title "$*"
+  echo "screen title is changed to '$*'"
 }
 
 
