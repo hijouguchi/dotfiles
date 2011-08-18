@@ -138,6 +138,7 @@ alias V='_screen_new_window_split_v -U'
 alias ls='ls -F   --color=auto'
 alias la='ls -AF  --color=auto'
 alias ll='ls -lAF --color=auto'
+alias l1='ls -1AF --color=auto'
 
 alias quit=exit
 
@@ -158,8 +159,16 @@ _update_vcs_info_msg() {
   [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 
+# returns number of files if last command is type of ls
+_type_ls() {
+  for cmd in $=2; do
+    [[ "$cmd" == "ls" ]] && _echo_number_of_files && break
+  done
+}
 
-_echo_pwd() {
+
+# returns number of files
+_echo_number_of_files() {
   echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
 }
 
@@ -212,6 +221,7 @@ _update_git_commit_screen_name() {
 }
 
 # here add pre***_functions
+preexec_functions=(_type_ls)
 precmd_functions=(_update_vcs_info_msg)
 chpwd_functions=(_echo_pwd)
 
