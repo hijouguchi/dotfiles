@@ -140,6 +140,7 @@ alias la='ls -AF  --color=auto'
 alias ll='ls -lAF --color=auto'
 alias l1='ls -1AF --color=auto'
 
+alias vim='screen vim'
 alias quit=exit
 
 alias -g G='|grep'
