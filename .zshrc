@@ -29,6 +29,14 @@ setopt no_beep
 setopt equals
 setopt case_glob
 
+REPORTTIME=30
+TIMEFMT="\
+The name of this job.             :%J
+CPU seconds spent in user mode.   :%U
+CPU seconds spent in kernel mode. :%S
+Elapsed time in seconds.          :%E
+The  CPU percentage.              :%P"
+
 # for directory
 setopt auto_cd
 setopt auto_pushd
@@ -126,7 +134,7 @@ bindkey               '^e'   edit-command-line
 
 
 # Alias {{{1
-alias ssh=_ssh_new_screen
+#alias ssh=_ssh_new_screen
 alias ssh-screen=_ssh_screen
 alias title=_screen_name_manual_update
 
@@ -139,6 +147,8 @@ alias ls='ls -F   --color=auto'
 alias la='ls -AF  --color=auto'
 alias ll='ls -lAF --color=auto'
 alias l1='ls -1AF --color=auto'
+
+alias vim='screen vim'
 
 alias quit=exit
 
