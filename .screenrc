@@ -26,7 +26,8 @@ defbce "on"
 rendition bell    "=U"  "rk"
 rendition monitor "=b"  "RW"
 rendition so      "=b"  "wk"
-caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?%n %t%=[%H] [%m/%d %c:%s]%{-}"
+# caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?[%H]%010=%n %t%=[%Y/%m/%d %c:%s] [%l]%{-}"
+caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?[%H]%010=%n %t%?%P *** copy/paste mode *** %?%=[%Y/%m/%d %c:%s] [%l]%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
 
 #layout new
@@ -37,11 +38,11 @@ hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
 
 
 bind  n screen
-bind ^l windowlist
 bind ^v copy
 bind  p paste .
 bind  q remove
 bind  ; colon
+bind  b windowlist -b
 
 bind  s split
 bind  v split -v
@@ -49,8 +50,8 @@ bind  S eval split focus screen
 bind  V eval 'split -v' focus screen
 
 # window focus {{{2
-bind ^n eval next
-bind ^p eval prev
+bind ^n next
+bind ^p prev
 bind  h focus left
 bind  j focus down
 bind  k focus up
@@ -63,13 +64,52 @@ bind -c window_region  h eval 'focus left'  'command -c window_region'
 bind -c window_region  j eval 'focus down'  'command -c window_region'
 bind -c window_region  k eval 'focus up'    'command -c window_region'
 bind -c window_region  l eval 'focus right' 'command -c window_region'
+bind -c window_region  w windowlist -b
 bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
+bind -c window_region ^l eval 'windowlist -b' 'command -c window_select'
+
+bind -c window_select 0 select 0
+bind -c window_select 1 select 1
+bind -c window_select 2 select 2
+bind -c window_select 3 select 3
+bind -c window_select 4 select 4
+bind -c window_select 5 select 5
+bind -c window_select 6 select 6
+bind -c window_select 7 select 7
+bind -c window_select 8 select 8
+bind -c window_select 9 select 9
+bind -c window_select a select a
+bind -c window_select b select b
+bind -c window_select c select c
+bind -c window_select d select d
+bind -c window_select e select e
+bind -c window_select f select f
+bind -c window_select g select g
+bind -c window_select h select h
+bind -c window_select i select i
+bind -c window_select j select j
+bind -c window_select k select k
+bind -c window_select l select l
+bind -c window_select m select m
+bind -c window_select n select n
+bind -c window_select o select o
+bind -c window_select p select p
+bind -c window_select q select q
+bind -c window_select r select r
+bind -c window_select s select s
+bind -c window_select t select t
+bind -c window_select u select u
+bind -c window_select v select v
+bind -c window_select w select w
+bind -c window_select x select x
+bind -c window_select y select y
+bind -c window_select z select z
 
 
 # layout {{{2
-bind w eval 'command -c layout_region' 'echo "layout command"'
+bind ^l eval 'command -c layout_region' 'echo "layout command"'
 bind -c layout_region  n eval   'layout new' 'echo "create new layout"'
 bind -c layout_region  l layout show
 bind -c layout_region ^f eval   'layout next' 'command -c layout_region'
