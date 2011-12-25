@@ -5,7 +5,8 @@
 _screen_exec() {
   screen -wipe
  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-   exec screen -U -D -RR
+   # screen escape sequence is "^G"
+   exec screen -U -D -RR -e"^Gt"
  else
    exec screen -U -x
  fi
@@ -146,26 +147,15 @@ bindkey               '^e'   edit-command-line
 
 
 # Alias {{{1
-#alias ssh=_ssh_new_screen
-alias ssh-screen=_ssh_screen
-alias title=_screen_name_manual_update
-
-alias scrr='screen -U -D '
-alias U='screen -U'
-alias S='_screen_new_window_split -U'
-alias V='_screen_new_window_split_v -U'
-
 alias ls='ls -hF   --color=auto'
 alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
 alias l1='ls -h1AF --color=auto'
-
 alias du='du -h'
-
-alias vim='screen vim'
-
-alias vim='screen vim'
 alias quit=exit
+
+alias vim='screen vim'
+
 
 alias -g G='|grep'
 alias -g T='|tee'

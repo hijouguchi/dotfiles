@@ -118,7 +118,10 @@ bind -c layout_region  9 eval  'layout select 9' 'layout show'
 # other source {{{1
 
 # scpace code
-source $HOME/dotfiles/keymap.screenrc
+# MEMO: do not setting escape from .screenrc
+#       I will set escape from command line optoinns
+#       also % screen -e"^Gt"
+# source $HOME/dotfiles/keymap.screenrc
 # TEST OPTIONS {{{1
 
 
