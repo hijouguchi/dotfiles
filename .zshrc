@@ -19,6 +19,14 @@ esac
 
 
 # Basic Settings {{{1
+
+
+# minimum function
+if [[ $OSTYPE == darwin* ]]; then
+  function dircolors() { gdircolors $* }
+  function ls() { gls $* }
+fi
+
 export LANG=ja_JP.UTF-8
 export EDITOR=vim
 
@@ -143,10 +151,12 @@ alias U='screen -U'
 alias S='_screen_new_window_split -U'
 alias V='_screen_new_window_split_v -U'
 
-alias ls='ls -F   --color=auto'
-alias la='ls -AF  --color=auto'
-alias ll='ls -lAF --color=auto'
-alias l1='ls -1AF --color=auto'
+alias ls='ls -hF   --color=auto'
+alias la='ls -hAF  --color=auto'
+alias ll='ls -hlAF --color=auto'
+alias l1='ls -h1AF --color=auto'
+
+alias du='du -h'
 
 alias vim='screen vim'
 
@@ -193,7 +203,7 @@ _update_screen_name_for_preexec() {
   COMMAND_NAME=$cmd # save cmd for _update_screen_name_for_precmd
 
   case ${cmd%% *} in
-    ls|ll|la) _echo_pwd; screen -X title `pwd`;;
+    ls|ll|la) _echo_number_of_files;;
     vim) screen -X title "${cmd%% *}";;
     ssh*) ;;
     *) screen -X title "!$cmd[1,10]";;
@@ -208,6 +218,7 @@ _update_screen_name_for_precmd() {
 
   case $cmd in
     quit|exit|ssh*|) ;;
+    ls|ll|la|cd) ;;
     *) screen -X title "${cmd%% *}";;
   esac
 }
