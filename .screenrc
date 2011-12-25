@@ -34,23 +34,22 @@ hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%
 
 
 bind  n screen
-bind ^v copy
 bind  p paste .
 bind  q remove
 bind  ; colon
 
 bind  s split
 bind  v split -v
-bind  S eval split focus screen
-bind  V eval 'split -v' focus screen
+
 
 # copy mode {{{2
-# TODO:more like visual mode of vim
-markkeys Y=y:y=Y
+bind ^v eval 'bindkey -m y' copy
+bindkey -m -t  y stuff Y
 bindkey -m -t  Y stuff " $ "
 bindkey -m -t  v stuff " "
-bindkey -m -t  V stuff "0 "
-bindkey -m -t ^v stuff "c "
+bindkey -m -t  V eval 'bindkey -m y stuff "$ "' 'stuff "0 $"'
+bindkey -m -t ^v eval 'bindkey -m y stuff "C "' 'stuff "c "'
+
 
 # window focus {{{2
 bind ^n next
@@ -60,17 +59,10 @@ bind  j focus down
 bind  k focus up
 bind  l focus right
 
+
 # for window region {{{2
 bind                  ^w eval 'command -c window_region' 'echo "region window"'
 bind                   w eval 'command -c window_region' 'echo "region window"'
-# bind                  ^n eval next          'command -c window_region' 'echo "region window"'
-# bind                  ^p eval prev          'command -c window_region' 'echo "region window"'
-# bind                   s eval split         'command -c window_region' 'echo "region window"'
-# bind                   v eval 'split -v'    'command -c window_region' 'echo "region window"'
-# bind                   h eval 'focus left'  'command -c window_region' 'echo "region window"'
-# bind                   j eval 'focus down'  'command -c window_region' 'echo "region window"'
-# bind                   k eval 'focus up'    'command -c window_region' 'echo "region window"'
-# bind                   l eval 'focus right' 'command -c window_region' 'echo "region window"'
 bind -c window_region ^n eval next          'command -c window_region'
 bind -c window_region ^p eval prev          'command -c window_region'
 bind -c window_region  s eval split         'command -c window_region'
@@ -84,6 +76,7 @@ bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
 bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
+
 
 #resize {{{2
 bind                 ^r eval 'command -c window_resize' 'echo "resize mode"'
@@ -105,7 +98,7 @@ bind -c window_resize w eval 'command -c window_region' 'echo "region window"'
 
 # layout {{{2
 bind                  ^l eval 'command -c layout_region' 'layout show'
-bind -c layout_region  n eval  'layout new' 'echo "create new layout"'
+bind -c layout_region  n eval  'layout new'  'echo "create new layout"'
 bind -c layout_region ^n eval  'layout next' 'command -c layout_region' 'layout show'
 bind -c layout_region ^p eval  'layout prev' 'command -c layout_region' 'layout show'
 bind -c layout_region  A colon 'layout title '

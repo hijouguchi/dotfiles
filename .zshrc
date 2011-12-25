@@ -68,6 +68,7 @@ autoload -Uz colors; colors
 
 # prompt
 PROMPT="%B%(?||[error] )%n@%m%#%b "
+PROMPT2="%_ > "
 RPROMPT="%1(v|%1v|:%(3~,%-1~/.../%1~,%~))"
 
 # zmv
