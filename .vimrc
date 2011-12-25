@@ -399,6 +399,12 @@ autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 autocmd FiletypeAutoCmd BufNewFile *.vhd 0r ~/.vim/template/vhdl.vhd
 
 
+" C {{{2
+autocmd! FiletypeAutoCmd FileType c call <SID>FileType_c()
+function! s:FileType_c()
+  inoremap <expr> = smartchr#one_of(' = ', ' == ', '=')
+endfunction
+
 " Quickfix {{{2
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
 function! s:FileType_qf()
