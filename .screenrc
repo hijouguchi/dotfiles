@@ -60,32 +60,36 @@ bind  j focus down
 bind  k focus up
 bind  l focus right
 
-# for window region {{{3
+# for window region {{{2
 bind ^w eval 'command -c window_region' 'echo "region window"'
 bind -c window_region ^n eval next          'command -c window_region'
 bind -c window_region ^p eval prev          'command -c window_region'
+bind -c window_region  s eval split         'command -c window_region'
+bind -c window_region  v eval 'split -v'    'command -c window_region'
 bind -c window_region  h eval 'focus left'  'command -c window_region'
 bind -c window_region  j eval 'focus down'  'command -c window_region'
 bind -c window_region  k eval 'focus up'    'command -c window_region'
 bind -c window_region  l eval 'focus right' 'command -c window_region'
-bind -c window_region  w windowlist -b
+bind -c window_region ^l windowlist -b
 bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
+bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
 
 #resize {{{2
-bind           + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
-bind           - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
-bind           > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
-bind           < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
-bind           = eval 'resize ='     'command -c resize' 'echo "resize mode"'
-bind           _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
-bind -c resize + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
-bind -c resize - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
-bind -c resize > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
-bind -c resize < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
-bind -c resize = eval 'resize ='     'command -c resize' 'echo "resize mode"'
-bind -c resize _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
+bind                  + eval 'resize -v +1' 'command -c window_resize' 'echo "resize mode"'
+bind                  - eval 'resize -v -1' 'command -c window_resize' 'echo "resize mode"'
+bind                  > eval 'resize -h +1' 'command -c window_resize' 'echo "resize mode"'
+bind                  < eval 'resize -h -1' 'command -c window_resize' 'echo "resize mode"'
+bind                  = eval 'resize ='     'command -c window_resize' 'echo "resize mode"'
+bind                  _ eval 'resize max'   'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize + eval 'resize -v +1' 'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize - eval 'resize -v -1' 'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize > eval 'resize -h +1' 'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize < eval 'resize -h -1' 'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize = eval 'resize ='     'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize _ eval 'resize max'   'command -c window_resize' 'echo "resize mode"'
+bind -c window_resize w eval 'command -c window_region' 'echo "region window"'
 
 
 # layout {{{2
