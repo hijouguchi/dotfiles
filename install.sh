@@ -10,4 +10,3 @@ if [[ ! -f $HOME/.zlogin ]]                  ; then ln -sf $HOME/dotfiles/.zlogi
 if [[ ! -f $HOME/.zshrc ]]                   ; then ln -sf $HOME/dotfiles/.zshrc     $HOME/.zshrc                         ; fi
 if [[ ! -f $HOME/.screenrc ]]                ; then ln -sf $HOME/dotfiles/.screenrc  $HOME/.screenrc                      ; fi
 if [[ ! -f $HOME/.zshenv ]]                  ; then echo 'export FPATH=$HOME/dotfiles/zfunctions:$FPATH' >> $HOME/.zshenv ; fi
-if [[ ! -f $HOME/dotfiles/keymap.screenrc ]] ; then echo 'escape ^Gt' >> $HOME/dotfiles/keymap.screenrc                   ; fi
