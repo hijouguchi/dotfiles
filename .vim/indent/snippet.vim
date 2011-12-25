@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: snippets.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 26 Oct 2009
+" Last Modified: 19 Sep 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,14 +25,14 @@
 "=============================================================================
 
 " Only load this indent file when no other was loaded.
-if exists("b:did_indent")
+if exists('b:did_indent')
   finish
 endif
 let b:did_indent = 1
 
-setlocal expandtab
-setlocal shiftwidth=4
-setlocal softtabstop=4
+let s:save_cpo = &cpo
+set cpo&vim
+
 if !exists('b:undo_indent')
     let b:undo_indent = ''
 endif
@@ -40,19 +40,22 @@ endif
 setlocal indentexpr=SnippetsIndent()
 
 function! SnippetsIndent()"{{{
-    let l:line = getline('.')
-    let l:prev_line = (line('.') == 1)? '' : getline(line('.')-1)
+    let line = getline('.')
+    let prev_line = (line('.') == 1)? '' : getline(line('.')-1)
 
-    if l:prev_line =~ '^\s*$'
+    if prev_line =~ '^\s*$'
         return 0
-    elseif l:prev_line =~ '^\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
-                \&& l:line !~ '^\s*\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
+    elseif prev_line =~ '^\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
+                \&& line !~ '^\s*\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
         return &shiftwidth
     else
-        return match(l:line, '\S')
+        return match(line, '\S')
     endif
 endfunction"}}}
 
 let b:undo_indent .= '
-    \ | setlocal expandtab< shiftwidth< softtabstop<
+    \ | setlocal indentexpr<
     \'
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

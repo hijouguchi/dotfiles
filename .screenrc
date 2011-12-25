@@ -26,10 +26,8 @@ defbce "on"
 rendition bell    "=U"  "rk"
 rendition monitor "=b"  "RW"
 rendition so      "=b"  "wk"
-caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?%n %t%=[%H] [%m/%d %c:%s]%{-}"
+caption     always         "%?%F%{= bw}%?%?%{= RW}[%h]%{-} %?[%H]%010=%n %t%?%P *** copy/paste mode *** %?%=[%Y/%m/%d %c:%s] [%l]%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
-
-#layout new
 
 
 # KEY MAP {{{1
@@ -37,25 +35,32 @@ hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<"
 
 
 bind  n screen
-bind ^l windowlist
 bind ^v copy
 bind  p paste .
 bind  q remove
 bind  ; colon
+bind  b windowlist -b
 
 bind  s split
 bind  v split -v
 bind  S eval split focus screen
 bind  V eval 'split -v' focus screen
 
+markkeys Y=y:y=Y
+bindkey -m -t  Y stuff " $ "
+bindkey -m -t  v stuff " "
+bindkey -m -t  V stuff "0 "
+bindkey -m -t ^v stuff "c "
+
 # window focus {{{2
-bind ^n eval next
-bind ^p eval prev
+bind ^n next
+bind ^p prev
 bind  h focus left
 bind  j focus down
 bind  k focus up
 bind  l focus right
 
+# for window region {{{3
 bind ^w eval 'command -c window_region' 'echo "region window"'
 bind -c window_region ^n eval next          'command -c window_region'
 bind -c window_region ^p eval prev          'command -c window_region'
@@ -63,13 +68,28 @@ bind -c window_region  h eval 'focus left'  'command -c window_region'
 bind -c window_region  j eval 'focus down'  'command -c window_region'
 bind -c window_region  k eval 'focus up'    'command -c window_region'
 bind -c window_region  l eval 'focus right' 'command -c window_region'
+bind -c window_region  w windowlist -b
 bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
 
+#resize {{{2
+bind           + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
+bind           - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
+bind           > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
+bind           < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
+bind           = eval 'resize ='     'command -c resize' 'echo "resize mode"'
+bind           _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
+bind -c resize + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
+bind -c resize - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
+bind -c resize > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
+bind -c resize < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
+bind -c resize = eval 'resize ='     'command -c resize' 'echo "resize mode"'
+bind -c resize _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
+
 
 # layout {{{2
-bind w eval 'command -c layout_region' 'echo "layout command"'
+bind ^l eval 'command -c layout_region' 'echo "layout command"'
 bind -c layout_region  n eval   'layout new' 'echo "create new layout"'
 bind -c layout_region  l layout show
 bind -c layout_region ^f eval   'layout next' 'command -c layout_region'
@@ -86,21 +106,6 @@ bind -c layout_region  7 layout select 7
 bind -c layout_region  8 layout select 8
 bind -c layout_region  9 layout select 9
 bind -c layout_region  q layout remove
-
-
-#resize {{{2
-bind           + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
-bind           - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
-bind           > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
-bind           < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
-bind           = eval 'resize ='     'command -c resize' 'echo "resize mode"'
-bind           _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
-bind -c resize + eval 'resize -v +1' 'command -c resize' 'echo "resize mode"'
-bind -c resize - eval 'resize -v -1' 'command -c resize' 'echo "resize mode"'
-bind -c resize > eval 'resize -h +1' 'command -c resize' 'echo "resize mode"'
-bind -c resize < eval 'resize -h -1' 'command -c resize' 'echo "resize mode"'
-bind -c resize = eval 'resize ='     'command -c resize' 'echo "resize mode"'
-bind -c resize _ eval 'resize max'   'command -c resize' 'echo "resize mode"'
 
 
 # other source {{{1

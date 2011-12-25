@@ -148,10 +148,8 @@ set tabline=%!MyTabLine()
 "Nmap {{{2
 nmap     <Space>          [Space]
 nnoremap [Space]          <Nop>
-nnoremap ,v               :<C-u>tabnew $MYVIMRC<CR>
 
 nnoremap ,w               :up!<CR>
-nnoremap ,q               :hide<CR>
 
 nnoremap j                gj
 nnoremap k                gk
@@ -159,15 +157,8 @@ nnoremap gg               ggzvzz
 
 nnoremap dl               0d$
 nnoremap dL               ^d$
-nnoremap dt               viwd
-nnoremap yl               mz0y$`z
-nnoremap yL               mz^y$`z
-nnoremap yt               mzviwy`z
 nnoremap Y                y$
-"nnoremap }}               ][
-"nnoremap {{               ]]
 
-"nnoremap [Space][Space]   zv
 nnoremap zo               zv
 nnoremap zv               zo
 
@@ -180,7 +171,6 @@ nnoremap :                ;
 nnoremap <C-P>            :set paste! \| :set paste?<CR>
 
 nnoremap <C-H>            :<C-u>help<Space>
-nnoremap [Space]k         :<C-U>Ku file<return>
 
 nnoremap [Space]e         :<C-u>!time ./%<CR>
 
@@ -188,20 +178,16 @@ nnoremap [Space]e         :<C-u>!time ./%<CR>
 "Imap {{{2
 inoremap                 <Tab>         <C-R>=InsertTabWrapper()<CR>
 inoremap          <expr> <Esc>[Z       pumvisible() ? "<C-P>" : "<S-Tab>"
-"inoremap          <expr> <CR>          pumvisible() ? neocomplcache#close_popup()."\<CR>X\<BS>" : "\<CR>X\<BS>"
-"imap          <expr> <CR>          neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "<CR>"
 inoremap                 <C-U>         <C-G>u<C-U>
 inoremap                 <C-W>         <C-G>u<C-W>
 
 " for Neocomplcache
-"It dosen't work if inoremap
-"imap     <silent>        <S-Tab>         <Plug>(neocomplcache_snippets_expand)
-imap     <silent>        <C-L>         <Plug>(neocomplcache_snippets_expand)
+inoremap                 <C-k>         <Plug>(neocomplcache_snippets_expand)
+
 
 "Vmap {{{2
 vnoremap ;     :
 vnoremap :     ;
-vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v,'\/'),"\n",'\\n','g')<CR><CR>
 
 
 "Cmap {{{2
@@ -284,6 +270,12 @@ nnoremap qo   :<C-U>copen 3<CR>
 nnoremap qq   :<C-U>cclose<CR>
 
 
+" Ku {{{2
+nmap     [Space]k         [Ku]
+nnoremap [Ku]f            :<C-U>Ku file<return>
+nnoremap [Ku]b            :<C-U>Ku buffer<return>
+
+
 " No Use cursor-keys "{{{2
 map   <Up>     <nop>
 map   <Down>   <nop>
@@ -326,39 +318,43 @@ command! -bang Dos    e<bang> ++ff=dos
 " autocmd {{{1
 augroup MyAutoCmd
   autocmd!
+
+  autocmd BufNewFile,BufRead .vimrc
+        \ nnoremap <buffer> ,s :<c-u>source ~/.vimrc<cr>
+
+  autocmd BufWritePost * if getline(1) =~ "^#!" |
+        \ silent! exe "silent !chmod +x %" | endif
+
+  autocmd QuickfixCmdPost make,grep,vimgrep copen 3
+
+  " if the file doesn't have used Japanese, set fileencoding to encoding
+  " from kana's vimrc http://github.com/kana/config/
+  autocmd BufReadPost *
+        \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
+        \ |   setlocal fileencoding=
+        \ | endif
+
+  " if the file doesn't have used tab by space, set expandtab
+  autocmd BufReadPost *
+        \   if search('^\t', 'cnw') == 0
+        \ |   setlocal expandtab
+        \ | endif
+
+  autocmd FileType  *
+        \   if &l:omnifunc == ''
+        \ | setlocal omnifunc=syntaxcomplete#Complete
+        \ | endif
+
+  " set each filetype dictionary
+  autocmd Filetype *
+        \   if &filetype !=# '' && findfile(&filetype . ".dict", $HOME . "/.vim/dict") !=# ''
+        \ |   execute "setlocal dictionary=" . findfile(&filetype . ".dict", $HOME . "/.vim/dict")
+        \ | endif
+
+  "" ruby syntax check
+  "" http://vim-users.jp/2009/05/hack13/
+  "autocmd BufWrite *.rb !ruby -c %
 augroup END
-
-autocmd MyAutoCmd BufNewFile,BufRead .vimrc
-      \ nnoremap <buffer> ,s :<c-u>source ~/.vimrc<cr>
-
-autocmd MyAutoCmd BufWritePost * if getline(1) =~ "^#!" |
-      \ silent! exe "silent !chmod +x %" | endif
-
-autocmd MyAutoCmd QuickfixCmdPost make,grep,vimgrep copen 3
-
-" if the file doesn't have used Japanese, set fileencoding to encoding
-" from kana's vimrc http://github.com/kana/config/
-autocmd MyAutoCmd BufReadPost *
-      \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
-      \ |   setlocal fileencoding=
-      \ | endif
-
-" if the file doesn't have used tab by space, set expandtab
-autocmd MyAutoCmd BufReadPost *
-      \   if search('^\t', 'cnw') == 0
-      \ |   setlocal expandtab
-      \ | endif
-
-autocmd MyAutoCmd FileType  *
-      \   if &l:omnifunc == ''
-      \ | setlocal omnifunc=syntaxcomplete#Complete
-      \ | endif
-
-" set each filetype dictionary
-autocmd MyAutoCmd Filetype *
-      \   if &filetype !=# '' && findfile(&filetype . ".dict", $HOME . "/.vim/dict") !=# ''
-      \ |   execute "setlocal dictionary=" . findfile(&filetype . ".dict", $HOME . "/.vim/dict")
-      \ | endif
 
 
 " set binary format
@@ -373,53 +369,46 @@ augroup BinaryXXD
 augroup END
 
 
-" for my autocomplete
-" NOTE: I use Neocomplcache now
-"augroup AutoComplete
-"  autocmd!
-"  autocmd CursorMovedI * call <SID>AutoCompletetion()
-"augroup END
 
-
-"setteing each filetype 
+"setteing each filetype {{{2
 " NOTE: here is only for small settings
 augroup FiletypeAutoCmd
   autocmd!
 augroup END
 
-" help {{{2
+" help {{{3
 autocmd FiletypeAutoCmd FileType help setlocal nolist | setlocal number
 
 
-" html {{{2
+" html {{{3
 autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 
 
-" vhdl {{{2
+" vhdl {{{3
 autocmd FiletypeAutoCmd BufNewFile *.vhd 0r ~/.vim/template/vhdl.vhd
 
 
-" C {{{2
+" C {{{3
 autocmd! FiletypeAutoCmd FileType c call <SID>FileType_c()
 function! s:FileType_c()
   inoremap <expr> = smartchr#one_of(' = ', ' == ', '=')
 endfunction
 
-" Quickfix {{{2
+" Quickfix {{{3
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
 function! s:FileType_qf()
   nnoremap <buffer> <expr> qc   ":\<C-U>cc " . line('.') ."\<CR>"
 endfunction
 
 
-" sh {{{2
+" sh {{{3
 autocmd FiletypeAutoCmd FileType sh call <SID>FileType_sh()
 function! s:FileType_sh()
   nnoremap <buffer> [Space]e :!./%<CR>
 endfunction
 
 
-" R {{{2
+" R {{{3
 autocmd FiletypeAutoCmd FileType r call <SID>FileType_R()
 "set filetype R for .r (not set to rexx)
 autocmd FiletypeAutoCmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
@@ -427,7 +416,7 @@ function! s:FileType_R()
   nnoremap <buffer> [Space]e :<c-u>!Rscript %<CR>
 endfunction
 
-" Ruby {{{2
+" Ruby {{{3
 autocmd FiletypeAutoCmd FileType ruby call <SID>FileType_ruby()
 function! s:FileType_ruby()
   "setlocal omnifunc=rubycomplete#Complete
@@ -440,7 +429,7 @@ function! s:FileType_ruby()
 endfunction
 
 
-" Tex {{{2
+" Tex {{{3
 autocmd FiletypeAutoCmd FileType plaintex setlocal filetype=tex
 autocmd FiletypeAutoCmd FileType tex call <SID>FileType_tex()
 " if tex file is saved, auto rake
@@ -450,47 +439,24 @@ function! s:FileType_tex()
 endfunction
 
 
-" vim {{{2
+" vim {{{3
 autocmd FiletypeAutoCmd FileType vim
       \ setlocal keywordprg=:help
       \ | nnoremap <buffer> ,s :<C-U>source $MYVIMRC<CR>
 
 
-" screen {{{2
+" screen {{{3
 autocmd FiletypeAutoCmd FileType screen
       \ nnoremap <buffer> ,s :<C-U>!screen -X source %<CR>
 
 
 " plugin options {{{1
 " Neocomplcache {{{2
-" Feature: make own autocomplete function (more lighe, more simple, and more like vim)
-
-let g:neocomplcache_enable_at_startup            = 1
-let g:neocomplcache_max_list                     = 30
-let g:neocomplcache_max_keyword_width            = 25
-let g:neocomplcache_auto_completion_start_length = 5
-"let g:neocomplcache_enable_smart_case            = 1
-let g:neocomplcache_enable_wildcard              = 1
-let g:neocomplcache_enable_quick_match           = 1
-let g:neocomplcache_snippets_dir                 = $HOME . '/.vim/snippet'
-
-
-
-
-
-" Set each language dictionary
-" NOTE: If g:neocomplcache_dictionary_filetype_lists is empty, neocomplcache use 'dictionary' option.
-"  BUG: cannot use dictionary completion unless execute :NeoComplCacheCachingDictionary
-
-"let g:neocomplcache_dictionary_filetype_lists     = {'default' : ''}
-"autocmd MyAutoCmd Filetype *
-"      \   if &filetype !=# ''
-"      \     && findfile(&filetype . ".dict", $HOME . "/.vim/dict") !=# ''
-"      \     && !has_key(g:neocomplcache_dictionary_filetype_lists, &filetype)
-"      \ |   call extend(g:neocomplcache_dictionary_filetype_lists,
-"      \       { &filetype : findfile(&filetype . ".dict", $HOME . "/.vim/dict") })
-"      \ | endif
-"
+let g:neocomplcache_enable_at_startup      = 1
+let g:neocomplcache_max_list               = 25
+let g:neocomplcache_enable_auto_delimiter  = 1
+let g:neocomplcache_enable_caching_message = 0
+let g:neocomplcache_temporary_dir          = '/tmp/neocon'
 
 
 " Ku {{{2
@@ -601,34 +567,19 @@ function! MyTabLine() "{{{2
 endfunction
 
 
-function! s:AutoCompletetion() "{{{2
-  if getline('.')[col('.')-1] =~ '[.:>]' && has(&l:omnifunc)
-    call feedkeys("\<C-X>\<C-O>\<C-P>", "n")
-  elseif len(matchstr(getline('.')[0:col('.')-1], '\k*$')) >= 5
-    call feedkeys("\<C-N>\<C-P>", "n")
-    if !pumvisible() && has(&l:omnifunc)
-      call feedkeys("\<C-X>\<C-O>\<C-P>", "n")
-    endif
-  endif
-  return
-endfunction
-
-
 function! InsertTabWrapper() "{{{2
-  if pumvisible() || getline('.')[col('.')-2] =~ '\k'
+  "NOTE: it is test function (unstable)
+  if pumvisible()
     return "\<C-N>"
+  elseif getline('.')[col('.')-2] =~ '\k'
+    if has(&l:completefunc)
+      return "\<C-X>\<C-U>"
+    endif
+    return "\<C-X>\<C-O>"
   else
-    return "\<Tab>"
+    return "\<TAB>"
   endif
 endfunction
-
-
-function! s:Range_throw() "{{{3
-  normal gv""y
-  call <SID>Throw_dictionary(getreg("\""))
-endfunction
-
-
 
 
 function! s:Insert_env() "{{{2
