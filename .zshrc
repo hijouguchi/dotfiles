@@ -78,8 +78,12 @@ autoload -U add-zsh-hook
 # vcs_info
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' formats       "[%b]:%S"
-zstyle ':vcs_info:*' actionformats "[%b|%a]:%S"
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:*'     formats       "%c%u[%r:%b]:%S"
+zstyle ':vcs_info:*'     actionformats "%c%u[%r:%b|%a]:%S"
+zstyle ':vcs_info:git:*' stagedstr     "[I]"
+zstyle ':vcs_info:git:*' unstagedstr   "[W]"
+
 
 
 # completion {{{1
