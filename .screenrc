@@ -49,6 +49,12 @@ bind  v split -v
 bind  S eval split focus screen
 bind  V eval 'split -v' focus screen
 
+markkeys Y=y:y=Y
+bindkey -m -t  Y stuff " $ "
+bindkey -m -t  v stuff " "
+bindkey -m -t  V stuff "0 "
+bindkey -m -t ^v stuff "c "
+
 # window focus {{{2
 bind ^n next
 bind ^p prev
