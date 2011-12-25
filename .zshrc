@@ -129,6 +129,7 @@ bindkey               '^n'   history-beginning-search-forward
 bindkey -v            '^h'   vi-backward-char
 bindkey -v            '^l'   vi-forward-char
 bindkey               "\e[Z" reverse-menu-complete
+bindkey               '^d'   push-line
 
 bindkey -M vicmd      'u'    undo
 bindkey -M vicmd      '^r'   redo
@@ -152,12 +153,13 @@ alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
 alias l1='ls -h1AF --color=auto'
 alias du='du -h'
+alias grep='grep --color'
 alias quit=exit
 
 alias vim='screen vim'
 
 
-alias -g G='|grep'
+alias -g G='|grep --color'
 alias -g T='|tee'
 alias -g L='|less'
 alias -g X='|xargs'

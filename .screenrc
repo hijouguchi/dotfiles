@@ -26,7 +26,7 @@ defbce "on"
 rendition bell    "=U"  "rk"
 rendition monitor "=b"  "RW"
 rendition so      "=b"  "wk"
-caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P *** copy/paste mode ***%?%=%{-}"
+caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P -- COPY MODE --%?%=%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%s]"
 
 
