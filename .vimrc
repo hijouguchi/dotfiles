@@ -180,6 +180,9 @@ inoremap                 <Tab>         <C-R>=InsertTabWrapper()<CR>
 inoremap          <expr> <Esc>[Z       pumvisible() ? "<C-P>" : "<S-Tab>"
 inoremap                 <C-U>         <C-G>u<C-U>
 inoremap                 <C-W>         <C-G>u<C-W>
+inoremap          <expr> <C-Y>         neocomplcache#close_popup()
+inoremap          <expr> <C-E>         neocomplcache#cancel_popup()
+inoremap          <expr> <CR>          pumvisible() ? "<C-Y><CR>" : "<CR>"
 
 " for Neocomplcache
 inoremap                 <C-k>         <Plug>(neocomplcache_snippets_expand)
@@ -360,7 +363,7 @@ augroup END
 " set binary format
 augroup BinaryXXD
   autocmd!
-  autocmd BufReadPre   *.bin let &binary =1
+  autocmd BufReadPre   *.bin let &binary = 1
   autocmd BufReadPost  * if &binary | silent %!xxd -g 1
   autocmd BufReadPost  * set ft=xxd | endif
   autocmd BufWritePre  * if &binary | %!xxd -r | endif
@@ -452,11 +455,12 @@ autocmd FiletypeAutoCmd FileType screen
 
 " plugin options {{{1
 " Neocomplcache {{{2
-let g:neocomplcache_enable_at_startup      = 1
-let g:neocomplcache_max_list               = 25
-let g:neocomplcache_enable_auto_delimiter  = 1
-let g:neocomplcache_enable_caching_message = 0
-let g:neocomplcache_temporary_dir          = '/tmp/neocon'
+let g:neocomplcache_enable_at_startup            = 1
+let g:neocomplcache_auto_completion_start_length = 5
+let g:neocomplcache_max_list                     = 25
+let g:neocomplcache_enable_auto_delimiter        = 1
+let g:neocomplcache_enable_caching_message       = 0
+let g:neocomplcache_temporary_dir                = '/var/tmp/neocon'
 
 
 " Ku {{{2

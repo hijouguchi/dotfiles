@@ -75,6 +75,7 @@ bind -c window_region ^l windowlist -b
 bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
+bind -c window_region  n screen //group
 bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
 
 

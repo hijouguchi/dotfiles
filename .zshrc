@@ -112,7 +112,8 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*:(vim|cp|mv|rm):*' ignore-line true
+# zstyle ':completion:*:(vim|cp|mv|rm):*' ignore-line true
+zstyle ':completion:*:(vim|cp|rm):*' ignore-line true
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*' ignore-parents parent pwd
 
@@ -270,6 +271,18 @@ _screen_new_window_split_v() {
 _screen_name_manual_update() {
   screen -X title "$*"
   echo "screen title is changed to '$*'"
+}
+
+
+# all_window_cd {{{2
+# MEMO: windowがshellじゃなかったらどうする？
+_all_window_cd() {
+  for list in $(screen -Q windows); do
+    num=$(echo $list | sed -e 's/[^0-9].*$//g')
+    if [ -n "$num" ]; then
+      screen -X "at $num stuff cd $0"
+    fi
+  done
 }
 
 
