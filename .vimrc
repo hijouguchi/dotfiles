@@ -572,14 +572,11 @@ endfunction
 
 
 function! InsertTabWrapper() "{{{2
-  "NOTE: it is test function (unstable)
   if pumvisible()
     return "\<C-N>"
   elseif getline('.')[col('.')-2] =~ '\k'
-    if has(&l:completefunc)
-      return "\<C-X>\<C-U>"
-    endif
-    return "\<C-X>\<C-O>"
+    call neocomplcache#start_manual_complete()
+    return "\<C-N>"
   else
     return "\<TAB>"
   endif
