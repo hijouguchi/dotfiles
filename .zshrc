@@ -6,7 +6,8 @@ _screen_exec() {
   screen -wipe
  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
    # screen escape sequence is "^G"
-   exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
+   # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
+   exec screen -U -D -RR -e"^Gt"
  else
    exec screen -U -x
  fi
