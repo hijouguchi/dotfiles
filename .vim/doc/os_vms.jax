@@ -1,4 +1,4 @@
-*os_vms.txt*    For Vim バージョン 7.0.  Last change: 2006 Apr 30
+*os_vms.txt*    For Vim バージョン 7.3.  Last change: 2011 Aug 14
 
 
 			  VIMリファレンスマニュアル
@@ -37,9 +37,6 @@ Vimのソースコードは公式サイトからftpでダウンロードする�
 	ftp://ftp.vim.org/pub/vim/
 またはミラーサイトを利用しても良い:
 	ftp://ftp.vim.org/pub/vim/MIRRORS
-
-VMSでvim.exeを構築するにはUNIXとextraアーカイブの両方が必要である。Vimの全機能
-を利用するにはランタイムアーカイブも同様に必要となる。
 
 コンパイル済み実行可能ファイルは以下のところで入手可能:
 	http://www.polarfox.com/vim/
@@ -91,9 +88,8 @@ NOTE: VAXではDEC Cコンパイラを使えば問題ない。VAXCコンパイ�
 解釈できる形へ変換するプログラムを使用しなければならない。詳細はINSTALLvms.txt
 を参照。
 
-MMS_VIM.EXEはVIM.EXEと一緒に構築されるが、CTAGS.EXEとXXD.EXEは手動でサブディレ
-クトリ<.CTAGS>や<.XXD>へ移動して個別に構築しなければならない。CTAGSとXXDのVMS
-用Makefileが常に最新のものとは限らないので注意を払う必要がある。
+MMS_VIM.EXEはVIM.EXEと一緒に構築されるが、XXD.EXEは手動でサブディレ
+へ移動して個別に構築しなければならない。
 
 もはやCTAGSはVimとは独立したソフトウェアになっているが、以下で述べるように
 OpenVMS特有のソースコードにはCTAGSのソースコードファイルも含まれている。
@@ -216,7 +212,7 @@ NOTE: 独立サーバやクラスタ環境で使用しているならばこの�
 	$ define VIM "<server_name>[""user password""]::device:<path>"
 	$ vi*m :== "mcr VIM:VIM.EXE"
 
-例としては: >
+例: >
 
 	$ define VIM "PLUTO::RF10:[UTIL.VIM]"
 	$ define VIM "PLUTO""ZAY mypass""::RF10:[UTIL.VIM]" ! if passwd required
@@ -326,6 +322,8 @@ NOTE: これらのうちからどれか1つを選ぶ必要がある。もっと�
 8.12 diff モード
 8.13 C 言語のキーワードに '$' を認める
 8.14 初心者のための VIMTUTOR
+8.15 コンソールモードで起動が遅い問題について
+8.16 共通の VIM ディレクトリ - 異なるアーキテクチャ
 
 8.1 バックスペースとデリート
 
@@ -383,7 +381,7 @@ NOTE: 折カッコ<,>を(device:<path>file.ext;version)のように使うこと�
 例: rf10:<user.zay.work>test.c;1
 
 (David Elins <delins@foliage.com>, Jerome Lauret
-<JLAURET@mail.chem.sunysb.edu> Vim 5.6 )
+<JLAURET@mail.chem.sunysb.edu> Vim 5.6)
 
 
 8.5 リモートホストの実際
@@ -570,7 +568,7 @@ GNU/UNIX 互換ではないので機能しない。
 他に問題の起こりそうなプログラムとして、patch や make などがある。
 www.polarhome.com では OpenVMS 上での GNU プログラムに関する問題を解決するた
 めに、Alpha や VAX 向けの GNU パッケージを配布している。
-( Zoltan Arpadffy, Vim 6.1)
+(Zoltan Arpadffy, Vim 6.1)
 
 
 8.12 diff モード
@@ -631,7 +629,7 @@ vimdiff として新しいシンボルを定義することもできる。例: >
     3. VIM  diff:  $ VIMDIFF  <FILE1> <FILE2>
     4. GVIM diff:  $ GVIMDIFF <FILE1> <FILE2>
 
-( Coen Engelbarts, Vim 6.1)
+(Coen Engelbarts, Vim 6.1)
 
 
 8.13 C 言語のキーワードに '$' を認める
@@ -652,24 +650,146 @@ DEC C では識別子に '$' を使用できる。ANSI C では使用できな�
 しい識別子を選択することができる。(VMS 上の Ctags もバージョン 5.1 から C 言
 語のキーワードに '$' を認めている)
 
-( Coen Engelbarts, Vim 6.1)
+(Coen Engelbarts, Vim 6.1)
 
 8.14 初心者のための VIMTUTOR
 
 OpenVMS 上で Vim 初心者の最初の一歩を手助けするために DCL スクリプトの
-VIMTUTOR.COM が用意されている。バイナリ配布物においては次のようにして開始で
-きるだろう: >
+VIMTUTOR.COM が用意されている。バイナリ配布物によっては次のようにして開始でき
+るだろう: >
 
 	@vim:vimtutor
 
 (Thomas.R.Wyant III, Vim 6.1)
 
+8.16 コンソールモードでの起動が遅い問題について
+
+GUI/GTK 版の Vim はコンソールモードでも同じように動作するので、多くの管理者は
+それをシステムワイドでデプロイする。
+不幸なことに、回線が遅い環境で GUI/GTK 版の実行ファイルを使ってコンソールモー
+ドで起動しようとすると、X 環境を検出しようとしてタイムアウト待ちになるため、か
+なり遅くなってしまう。
+
+幸いなことに、簡単な解決法がある。GUI/GTK 版の実行ファイルとコンソール用にビル
+ドした実行ファイルの両方をデプロイするのである。次のように: >
+
+    |- vim73
+    |----- doc
+    |----- syntax
+       vimrc    (system rc files)
+       gvimrc
+       gvim.exe (GUI/GTK 版の vim.exe をリネームしたもの)
+       vim.exe  (コンソール版の実行ファイル)
+
+以下のようなシステムシンボルを LOGIN.COM または SYLOGIN.COM で定義する: >
+
+	$ define/nolog VIM RF10:[UTIL.VIM73] ! where you VIM directory is
+	$ vi*m  :== mcr VIM:VIM.EXE
+	$ gvi*m :== mcr VIM:GVIM.EXE
+	$ ! or you can try to spawn with
+	$ gv*im :== spawn/nowait/input=NLA0 mcr VIM:GVIM.EXE -g -GEOMETRY 80x40
+
+
+このようにすれば、X 環境を持たずコンソールモードで使用したいユーザーも速度の問
+題を回避できる。
+
+(Zoltan Arpadffy, Vim 7.2)
+
+8.16 共通の VIM ディレクトリ - 異なるアーキテクチャ
+
+次のような異なるアーキテクチャのノードを含むクラスタにおいては:
+
+$show cluster
+View of Cluster from system ID 11655  node: TOR                                                                     18-AUG-2008 11:58:31
++---------------------------------+
+¦        SYSTEMS        ¦ MEMBERS ¦
++-----------------------+---------¦
+¦  NODE  ¦   SOFTWARE   ¦  STATUS ¦
++--------+--------------+---------¦
+¦ TOR    ¦ VMS V7.3-2   ¦ MEMBER  ¦
+¦ TITAN2 ¦ VMS V8.3     ¦ MEMBER  ¦
+¦ ODIN   ¦ VMS V7.3-2   ¦ MEMBER  ¦
++---------------------------------+
+
+VIM ディレクトリは共通にし、実行ファイルだけ異なるようにすると便利である。この
+問題に対しては、以下のようにいくつかの解決法がある: >
+
+解決法 1. すべての実行ファイルを同じディレクトリに違う名前で入れる
+これは以下のスクリプトを login.com か sylogin.com に入れることで簡単にできる:
+>
+
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "VAX"
+	$ then
+	$       say "VAX platform"
+	$       vi*m:== mcr vim:VIM.EXE_VAX
+	$ endif
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "ALPH"
+	$ then
+	$       say "ALPHA platform"
+	$       vi*m :== mcr vim:VIM.EXE_AXP
+	$ endif
+	$ if f$getsyi("ARCH_NAME") .eqs. "IA64"
+	$ then
+	$      say "IA64 platform"
+	$      vi*m :== mcr vim:VIM.EXE_IA64
+	$ endif
+
+解決法 2. 別々のディレクトリにする: >
+
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "VAX"
+	$ then
+	$       say "VAX platform"
+	$       define/nolog VIM RF10:[UTIL.VAX_EXE] ! VAX executables
+	$ endif
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "ALPH"
+	$ then
+	$       say "ALPHA platform"
+	$       define/nolog VIM RF10:[UTIL.AXP_EXE] ! AXP executables
+	$ endif
+	$ if f$getsyi("ARCH_NAME") .eqs. "IA64"
+	$ then
+	$      say "IA64 platform"
+	$      define/nolog VIM RF10:[UTIL.IA64_EXE] ! IA64 executables
+	$ endif
+        $! VIMRUNTIME must be defined in order to find runtime files
+	$ define/nolog VIMRUNTIME RF10:[UTIL.VIM73]
+
+このアプローチの良い例が http://www.polarhome.com/vim/ からダウンロードできる
+GNU_TOOLS.ZIP の [GNU]gnu_tools.com スクリプトである。
+
+(Zoltan Arpadffy, Vim 7.2)
+
 ==============================================================================
 
 9. VMS関連の変更点					*vms-changes*
 
-バージョン 7
+バージョン 7.3
+- CTAGS 5.8 の取り込み
+- VMS コンパイル警告の修正 - VAX の浮動小数点数オーバーフローの警告を直した
+- ファイルパス補完の修正 - ファイル名とシェルコマンドにおいて余計な文字がエス
+  ケープされていた
+- 以下のプラグインが VMS の runtime に追加された:
+	genutils 2.4, multiselect 2.2, multvals 3.1, selectbuf 4.3,
+	bufexplorer 7.1.7, taglist 4.5
+- vimrc の小さな変更 (VMS runtime 内のみ)
+- make_vms.mms - HUGE がデフォルト
+- [TESTDIR]make_vms.mms にできるだけ多くのテストを含めた
+- test30 と test54 を VMS 用に修正した
+- VMS ポートで FLOAT 機能を有効にした
+- os_vms.txt を更新した
+
+Version 7.2 (2008 Aug 9)
+- VCF ファイルの書き込みを修正
+- CTAGS 5.7 を含めた
+- make_vms.mms を修正 (VAX で構文エラーになっていた)
+
+Version 7.1 (2007 Jun 15)
+- TAGS ファイルをメニューから作成
+
+Version 7 (2006 May 8)
 - 低レベルの文字入力を改良 (コンソールモードにのみ影響する)
+- プラグインのバグを修正
+- CTAGS 5.6 を含めた
 
 (訳注: 翻訳対象から除外)
 
@@ -809,6 +929,7 @@ Version 4.5 (1996 Dec 16)
 
 OpenVMSの文章とコンパイル済みバイナリは以下がメンテナンスしている:
 Zoltan Arpadffy <arpadffy@polarhome.com>
+OpenVMS Vim page: http://www.polarhome.com/vim/
 
 この文章には、初期の著者や貢献者の書いた部分や記述が含まれている:
 	Charles E. Campbell, Jr. <cec@gryphon.gsfc.nasa.gov>

@@ -1,4 +1,4 @@
-*mbyte.txt*     For Vim バージョン 7.1.  Last change: 2006 Aug 11
+*mbyte.txt*     For Vim バージョン 7.3.  Last change: 2011 Jul 18
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar et al.
 
@@ -275,7 +275,7 @@ Note: すべてのエンコーディングは0から128までの文字がASCII�
 ならない(EBCDIC用にコンパイルした場合は除く)。
 
 'encoding'に設定できる値:				*encoding-values*
-1   latin1	8ビット文字 (ISO 8859-1)
+1   latin1	8ビット文字 (ISO 8859-1 及び cp1252)
 1   iso-8859-n	ISO_8859 シリーズ (n = 2 to 15)
 1   koi8-r	ロシア語
 1   koi8-u	ウクライナ語
@@ -332,7 +332,11 @@ u   ucs-4le	リトルエンディアンのucs-4
 例: >
 		:set encoding=8bit-cp1252
 		:set encoding=2byte-cp932
-<
+
+MS-Windows のコードページ 1252 は latin1 と良く似ています。実用的な理由から、
+二つは同じエンコーディングとして扱われ、latin1 と呼ばれます。0x80 - 0xA0 の文
+字を表示するかしないかは 'isprint' で設定できます。
+
 いくつかの別名を使用できる。別名は上記の名前のどれかとして解釈される。
 完全ではないが一覧を示す:
 
@@ -347,6 +351,8 @@ u   unicode	ucs-2と同じ
 u   ucs2be	ucs-2と同じ (ビッグエンディアン)
 u   ucs-2be	ucs-2と同じ (ビッグエンディアン)
 u   ucs-4be	ucs-4と同じ (ビッグエンディアン)
+u   utf-32	ucs-4と同じ
+u   utf-32le	ucs-4leと同じ
     default     'encoding'のデフォルト値を意味する。環境に依存する。
 
 UCSコードにはバイト順の問題がある。これは扱いが難しいので、可能なときにはいつ
@@ -543,7 +549,7 @@ X11でのフォントの取り扱いは難しい。シングルバイトフォ�
 ある。マルチバイトフォントを使うにはさらにいくつか考慮することがある。
 
 Note: この説明のほとんどはGTK+ 2にとっては関係ない。XLFDを用いたフォントの指定
-はもうサポートされていない。フォントの設定例は'guifont'を参照。下記の項|XLFD|
+はサポートされていない。フォントの設定例は'guifont'を参照。下記の項|XLFD|
 と|xfontset|は読んでも読まなくても良い。
 
 Vimは固定幅のフォントだけを扱うことができる。プロポーショナルフォントを使用す
@@ -755,7 +761,7 @@ XIMはXの国際化入力機構です。Xlibユニット型と|IM-server| (Input
 
   中国語用には、"xcin"というよくできたXIMサーバがあり、簡体中国語と繁体中国語
   の両方を入力できる。適切な入力テーブルを作成すれば、他のロケールも受け付け
-  る。Xcinはここから入手できる: http://xcin.linux.org.tw/
+  る。Xcinはここから入手できる: http://cle.linux.org.tw/xcin/
   他にはscim: http://scim.freedesktop.org/ と fcitx:
   http://www.fcitx.org/ がある。
 
@@ -772,8 +778,7 @@ XIMはXの国際化入力機構です。Xlibユニット型と|IM-server| (Input
   あるため、まず平仮名を入力し、必要なら、それを漢字や片仮名に変換する。仮名漢
   字変換サーバにはjserver(Wnnと一緒に提供されている。下記参照)やcannaなどがあ
   る。Cannaはここから入手できる:
-  ftp://ftp.nec.co.jp/pub/Canna/ (もう機能していない)
-訳注: Cannaのサイト http://www.nec.co.jp/canna/
+  http://canna.sourceforge.jp/
 
 Wnn4.2というよくできた入力システムがある。Wnn4.2は以下のものを含んでいる。
     xwnmo (|IM-server|)
@@ -900,11 +905,11 @@ kinput2 + cannaの組み合せを使用している場合、トグルキーは�
 
 {WindowsのGUI環境で|+multi_byte_ime|が有効な場合のみ利用可能}
 
-Windowsでマルチバイト文字を入力するには、Input Method Editor(IME)を使用する。
-IMEを使ったテキストの入力では、IMEの状態をオンにしたりオフにしたり、何度も何度
-も切り替えなければならない。そうしないと、IMEの状態がオンのときには、キー入力
-はすべてIMEに取られてしまうので、'j'や'k'などほぼすべてのキーを、直接Vimに入力
-することができない。
+Windowsではマルチバイト文字の入力に Input Method Editor (IME) を使うことができ
+る。IMEを使ったテキストの入力では、IMEの状態をオンにしたりオフにしたり、何度も
+何度も切り替えなければならない。そうしないと、IMEの状態がオンのときには、キー
+入力はすべてIMEに取られてしまうので、'j'や'k'などほぼすべてのキーを、直接Vimに
+入力することができない。
 
 |+multi_byte_ime|機能はそれを手助けし、IMEを手動で切り替える手間を減少させる。
 マルチバイトテキストを編集しているときでも、ノーマルモードでIMEを必要とするこ
@@ -935,26 +940,20 @@ GLOBAL IMEについて (WHAT IS GLOBAL IME)			*global-ime*
     ジョンもある。
 
     - Global IME detailed information.
-	http://www.microsoft.com/windows/ie/features/ime.asp
+	http://search.microsoft.com/results.aspx?q=global+ime
 
     - Active Input Method Manager (Global IME)
-	http://msdn.microsoft.com/workshop/misc/AIMM/aimm.asp
+	http://msdn.microsoft.com/en-us/library/aa741221(v=VS.85).aspx
 
     Global IMEのサポートは実験的な機能です。
 
 NOTE: IMEを使用するには入力したい言語をシステムに追加する必要がある。正確な設
 定方法はWindowsのバージョンによって違う。Windows XPの場合は:
-1. コントロールパネル
-2. 地域と言語のオプション
-3. 言語タブ
-4. [テキストサービスと入力言語]エリアの詳細ボタン
-5. 追加ボタン
-訳注: 原文 Windows 2000 Professionalの場合
-訳注: 1. Control Panel
-訳注: 2. Regional Options
-訳注: 3. Input Locales Tab
-訳注: 4. Add Installed input locales -> Chinese(PRC)
-訳注:    The default is still English (United Stated)
+1. コントロールパネルを開く
+2. 地域と言語のオプションを開く
+3. 言語タブを選択
+4. [テキストサービスと入力言語]エリアの詳細ボタンをクリック
+5. 追加ボタンをクリック
 
 
 IMEやXIMがオンのときのカーソルの色				*CursorIM*
@@ -1003,7 +1002,7 @@ IMEやXIMがオンのときのカーソルの色				*CursorIM*
 ドに入るとまず、(ASCII文字の)Exコマンドを入力するはずだからである。
 検索パターンの入力では、オプション'imsearch'が使われる。'iminsert'と設定を共有
 するように設定することもできる。
-
+								*lCursor*
 キーマップ(言語マップ)を使用中に、GUIカーソルの色を変えることができる。もし
 も、非標準な背景色を使用していた場合にカーソルが見えなくなることがないように、
 初期状態ではこの機能は無効になっている。次の例では、カーソルの色が明るくなるよ
@@ -1024,11 +1023,7 @@ IMEやXIMがオンのときのカーソルの色				*CursorIM*
 	b	B	comment
 
 「"」で始まる行はコメントなので無視される。空白行も無視される。マップを定義す
-る行には、参考にできるようなコメントを書くことができる。
-訳注: The lines starting with a " are comments and will be ignored.  Blank lines are
-訳注: also ignored.  The lines with the mappings may have a comment after the useful
-訳注: text.
-訳注: 自信無し
+る行には役に立つコメントを書くことができる。
 
 "b:keymap_name"にはステータスラインに表示される短い名前を設定できる。'keymap'
 の値は、言語の違いやキーボードやエンコーディングの違いを区別するために長くなり
@@ -1090,129 +1085,129 @@ IMEやXIMがオンのときのカーソルの色				*CursorIM*
 
 glyph   encoding	   keymap ~
 Char   utf-8 cp1255  hebrew  hebrewp  name ~
-??    0x5d0  0xe0     t	      a     'alef
-??    0x5d1  0xe1     c	      b     bet
-??    0x5d2  0xe2     d	      g     gimel
-??    0x5d3  0xe3     s	      d     dalet
-??    0x5d4  0xe4     v	      h     he
-??    0x5d5  0xe5     u	      v     vav
-??    0x5d6  0xe6     z	      z     zayin
-??    0x5d7  0xe7     j	      j     het
-??    0x5d8  0xe8     y	      T     tet
-??    0x5d9  0xe9     h	      y     yod
-??    0x5da  0xea     l	      K     kaf sofit
-??    0x5db  0xeb     f	      k     kaf
-??    0x5dc  0xec     k	      l     lamed
-??    0x5dd  0xed     o	      M     mem sofit
-??    0x5de  0xee     n	      m     mem
-??    0x5df  0xef     i	      N     nun sofit
-??    0x5e0  0xf0     b	      n     nun
-??    0x5e1  0xf1     x	      s     samech
-??    0x5e2  0xf2     g	      u     `ayin
-??    0x5e3  0xf3     ;	      P     pe sofit
-??    0x5e4  0xf4     p	      p     pe
-??    0x5e5  0xf5     .	      X     tsadi sofit
-??    0x5e6  0xf6     m	      x     tsadi
-??    0x5e7  0xf7     e	      q     qof
-??    0x5e8  0xf8     r	      r     resh
-??    0x5e9  0xf9     a	      w     shin
-??    0x5ea  0xfa     ,	      t     tav
+א    0x5d0  0xe0     t	      a     'alef
+ב    0x5d1  0xe1     c	      b     bet
+ג    0x5d2  0xe2     d	      g     gimel
+ד    0x5d3  0xe3     s	      d     dalet
+ה    0x5d4  0xe4     v	      h     he
+ו    0x5d5  0xe5     u	      v     vav
+ז    0x5d6  0xe6     z	      z     zayin
+ח    0x5d7  0xe7     j	      j     het
+ט    0x5d8  0xe8     y	      T     tet
+י    0x5d9  0xe9     h	      y     yod
+ך    0x5da  0xea     l	      K     kaf sofit
+כ    0x5db  0xeb     f	      k     kaf
+ל    0x5dc  0xec     k	      l     lamed
+ם    0x5dd  0xed     o	      M     mem sofit
+מ    0x5de  0xee     n	      m     mem
+ן    0x5df  0xef     i	      N     nun sofit
+נ    0x5e0  0xf0     b	      n     nun
+ס    0x5e1  0xf1     x	      s     samech
+ע    0x5e2  0xf2     g	      u     `ayin
+ף    0x5e3  0xf3     ;	      P     pe sofit
+פ    0x5e4  0xf4     p	      p     pe
+ץ    0x5e5  0xf5     .	      X     tsadi sofit
+צ    0x5e6  0xf6     m	      x     tsadi
+ק    0x5e7  0xf7     e	      q     qof
+ר    0x5e8  0xf8     r	      r     resh
+ש    0x5e9  0xf9     a	      w     shin
+ת    0x5ea  0xfa     ,	      t     tav
 
 Vowel marks and special punctuation:
-????    0x5b0  0xc0     A:      A:   sheva
-????    0x5b1  0xc1     HE      HE   hataf segol
-????    0x5b2  0xc2     HA      HA   hataf patah
-????    0x5b3  0xc3     HO      HO   hataf qamats
-????    0x5b4  0xc4     I       I    hiriq
-????    0x5b5  0xc5     AY      AY   tsere
-????    0x5b6  0xc6     E       E    segol
-????    0x5b7  0xc7     AA      AA   patah
-????    0x5b8  0xc8     AO      AO   qamats
-????    0x5b9  0xc9     O       O    holam
-????    0x5bb  0xcb     U       U    qubuts
-????    0x5bc  0xcc     D       D    dagesh
-????    0x5bd  0xcd     ]T      ]T   meteg
-????   0x5be  0xce     ]Q      ]Q   maqaf
-????    0x5bf  0xcf     ]R      ]R   rafe
-????   0x5c0  0xd0     ]p      ]p   paseq
-????    0x5c1  0xd1     SR      SR   shin-dot
-????    0x5c2  0xd2     SL      SL   sin-dot
-??    0x5c3  0xd3     ]P      ]P   sof-pasuq
-??    0x5f0  0xd4     VV      VV   double-vav
-??    0x5f1  0xd5     VY      VY   vav-yod
-??    0x5f2  0xd6     YY      YY   yod-yod
+הְ    0x5b0  0xc0     A:      A:   sheva
+הֱ    0x5b1  0xc1     HE      HE   hataf segol
+הֲ    0x5b2  0xc2     HA      HA   hataf patah
+הֳ    0x5b3  0xc3     HO      HO   hataf qamats
+הִ    0x5b4  0xc4     I       I    hiriq
+הֵ    0x5b5  0xc5     AY      AY   tsere
+הֶ    0x5b6  0xc6     E       E    segol
+הַ    0x5b7  0xc7     AA      AA   patah
+הָ    0x5b8  0xc8     AO      AO   qamats
+הֹ    0x5b9  0xc9     O       O    holam
+הֻ    0x5bb  0xcb     U       U    qubuts
+כּ    0x5bc  0xcc     D       D    dagesh
+הֽ    0x5bd  0xcd     ]T      ]T   meteg
+ה־   0x5be  0xce     ]Q      ]Q   maqaf
+בֿ    0x5bf  0xcf     ]R      ]R   rafe
+ב׀   0x5c0  0xd0     ]p      ]p   paseq
+שׁ    0x5c1  0xd1     SR      SR   shin-dot
+שׂ    0x5c2  0xd2     SL      SL   sin-dot
+׃    0x5c3  0xd3     ]P      ]P   sof-pasuq
+װ    0x5f0  0xd4     VV      VV   double-vav
+ױ    0x5f1  0xd5     VY      VY   vav-yod
+ײ    0x5f2  0xd6     YY      YY   yod-yod
 
 The following are only available in utf-8
 
 Cantillation marks:
 glyph
 Char utf-8 hebrew name
-????    0x591   C:   etnahta
-????    0x592   Cs   segol
-????    0x593   CS   shalshelet
-????    0x594   Cz   zaqef qatan
-????    0x595   CZ   zaqef gadol
-????    0x596   Ct   tipeha
-????    0x597   Cr   revia
-????    0x598   Cq   zarqa
-????    0x599   Cp   pashta
-????    0x59a   C!   yetiv
-????    0x59b   Cv   tevir
-????    0x59c   Cg   geresh
-????    0x59d   C*   geresh qadim
-????    0x59e   CG   gershayim
-????    0x59f   CP   qarnei-parah
-????    0x5aa   Cy   yerach-ben-yomo
-????    0x5ab   Co   ole
-????    0x5ac   Ci   iluy
-????    0x5ad   Cd   dehi
-????    0x5ae   Cn   zinor
-????    0x5af   CC   masora circle
+ב֑    0x591   C:   etnahta
+ב֒    0x592   Cs   segol
+ב֓    0x593   CS   shalshelet
+ב֔    0x594   Cz   zaqef qatan
+ב֕    0x595   CZ   zaqef gadol
+ב֖    0x596   Ct   tipeha
+ב֗    0x597   Cr   revia
+ב֘    0x598   Cq   zarqa
+ב֙    0x599   Cp   pashta
+ב֚    0x59a   C!   yetiv
+ב֛    0x59b   Cv   tevir
+ב֜    0x59c   Cg   geresh
+ב֝    0x59d   C*   geresh qadim
+ב֞    0x59e   CG   gershayim
+ב֟    0x59f   CP   qarnei-parah
+ב֪    0x5aa   Cy   yerach-ben-yomo
+ב֫    0x5ab   Co   ole
+ב֬    0x5ac   Ci   iluy
+ב֭    0x5ad   Cd   dehi
+ב֮    0x5ae   Cn   zinor
+ב֯    0x5af   CC   masora circle
 
 Combining forms:
-???    0xfb20  X`   Alternative `ayin
-???    0xfb21  X'   Alternative 'alef
-???    0xfb22  X-d  Alternative dalet
-???    0xfb23  X-h  Alternative he
-???    0xfb24  X-k  Alternative kaf
-???    0xfb25  X-l  Alternative lamed
-???    0xfb26  X-m  Alternative mem-sofit
-???    0xfb27  X-r  Alternative resh
-???    0xfb28  X-t  Alternative tav
-???    0xfb29  X-+  Alternative plus
-???    0xfb2a  XW   shin+shin-dot
-???    0xfb2b  Xw   shin+sin-dot
-???    0xfb2c  X..W  shin+shin-dot+dagesh
-???    0xfb2d  X..w  shin+sin-dot+dagesh
-???    0xfb2e  XA   alef+patah
-???    0xfb2f  XO   alef+qamats
-???    0xfb30  XI   alef+hiriq (mapiq)
-???    0xfb31  X.b  bet+dagesh
-???    0xfb32  X.g  gimel+dagesh
-???    0xfb33  X.d  dalet+dagesh
-???    0xfb34  X.h  he+dagesh
-???    0xfb35  Xu  vav+dagesh
-???    0xfb36  X.z  zayin+dagesh
-???    0xfb38  X.T  tet+dagesh
-???    0xfb39  X.y  yud+dagesh
-???    0xfb3a  X.K  kaf sofit+dagesh
-???    0xfb3b  X.k  kaf+dagesh
-???    0xfb3c  X.l  lamed+dagesh
-???    0xfb3e  X.m  mem+dagesh
-???    0xfb40  X.n  nun+dagesh
-???    0xfb41  X.s  samech+dagesh
-???    0xfb43  X.P  pe sofit+dagesh
-???    0xfb44  X.p  pe+dagesh
-???    0xfb46  X.x  tsadi+dagesh
-???    0xfb47  X.q  qof+dagesh
-???    0xfb48  X.r  resh+dagesh
-???    0xfb49  X.w  shin+dagesh
-???    0xfb4a  X.t  tav+dagesh
-???    0xfb4b  Xo   vav+holam
-???    0xfb4c  XRb  bet+rafe
-???    0xfb4d  XRk  kaf+rafe
-???    0xfb4e  XRp  pe+rafe
-???    0xfb4f  Xal  alef-lamed
+ﬠ    0xfb20  X`   Alternative `ayin
+ﬡ    0xfb21  X'   Alternative 'alef
+ﬢ    0xfb22  X-d  Alternative dalet
+ﬣ    0xfb23  X-h  Alternative he
+ﬤ    0xfb24  X-k  Alternative kaf
+ﬥ    0xfb25  X-l  Alternative lamed
+ﬦ    0xfb26  X-m  Alternative mem-sofit
+ﬧ    0xfb27  X-r  Alternative resh
+ﬨ    0xfb28  X-t  Alternative tav
+﬩    0xfb29  X-+  Alternative plus
+שׁ    0xfb2a  XW   shin+shin-dot
+שׂ    0xfb2b  Xw   shin+sin-dot
+שּׁ    0xfb2c  X..W  shin+shin-dot+dagesh
+שּׂ    0xfb2d  X..w  shin+sin-dot+dagesh
+אַ    0xfb2e  XA   alef+patah
+אָ    0xfb2f  XO   alef+qamats
+אּ    0xfb30  XI   alef+hiriq (mapiq)
+בּ    0xfb31  X.b  bet+dagesh
+גּ    0xfb32  X.g  gimel+dagesh
+דּ    0xfb33  X.d  dalet+dagesh
+הּ    0xfb34  X.h  he+dagesh
+וּ    0xfb35  Xu  vav+dagesh
+זּ    0xfb36  X.z  zayin+dagesh
+טּ    0xfb38  X.T  tet+dagesh
+יּ    0xfb39  X.y  yud+dagesh
+ךּ    0xfb3a  X.K  kaf sofit+dagesh
+כּ    0xfb3b  X.k  kaf+dagesh
+לּ    0xfb3c  X.l  lamed+dagesh
+מּ    0xfb3e  X.m  mem+dagesh
+נּ    0xfb40  X.n  nun+dagesh
+סּ    0xfb41  X.s  samech+dagesh
+ףּ    0xfb43  X.P  pe sofit+dagesh
+פּ    0xfb44  X.p  pe+dagesh
+צּ    0xfb46  X.x  tsadi+dagesh
+קּ    0xfb47  X.q  qof+dagesh
+רּ    0xfb48  X.r  resh+dagesh
+שּ    0xfb49  X.w  shin+dagesh
+תּ    0xfb4a  X.t  tav+dagesh
+וֹ    0xfb4b  Xo   vav+holam
+בֿ    0xfb4c  XRb  bet+rafe
+כֿ    0xfb4d  XRk  kaf+rafe
+פֿ    0xfb4e  XRp  pe+rafe
+ﭏ    0xfb4f  Xal  alef-lamed
 
 ==============================================================================
 10. UTF-8を使う (Using UTF-8)		*mbyte-utf8* *UTF-8* *utf-8* *utf8*
@@ -1222,19 +1217,35 @@ Combining forms:
 のエンコーディングでは混在させることが不可能な言語でも、一つのファイルに混在さ
 せることが可能である。
 
-ユニコードはいくつかの方法でエンコードされる。もっとも一般的なのは、16ビットで
-文字を表わすUCS-2と、1文字をそれぞれ1バイトかそれ以上の複数バイトで表わすUTF-8
-である。Vimはそれらすべてのエンコーディングをサポートしているが、ユニコードの
-内部表現には常にUTF-8が使われる。
+ユニコードにはいくつかのエンコード法がある。もっとも一般的なのは、1文字を 1 ま
+たは複数バイトで表わすUTF-8であり、ASCII と後方互換性がある。MS-Windowsでは
+UTF-16 も使われる(以前は UCS-2 と呼ばれていた)。こちらは 16 ビットを基本単位と
+する。Vimはこれらのエンコーディングすべてをサポートしているが、Vim でユニコー
+ドを使う場合、内部では常に UTF-8 が使われている。
 
 Vimは幅広くUTF-8をサポートしており、それは以下の環境で機能する:
 - utf-8サポートが有効になっているxterm
 - Athena、Motif、GTK、のGUI
 - MS-Windows GUI
+- その他いくつかのプラットフォーム
 
 全角文字は'guifontwide'や'guifontset'を使うと最もうまく表示することができる。
 'guifont'だけを設定している場合は、全角文字は通常の幅で描画され、足りない幅が
 空白で埋められる。Note:オプション'guifontset'はGTK+ 2 GUIでは使用しない。
+
+							*bom-bytes*
+ファイルを読み込むとき、BOM (Byte Order Mark)があれば、そのユニコードエンコー
+ディングを判別するのに使われる:
+	EF BB BF     utf-8
+	FE FF        utf-16 big endian
+	FF FE        utf-16 little endian
+	00 00 FE FF  utf-32 big endian
+	FF FE 00 00  utf-32 little endian
+
+UTF-8 が推奨されているエンコーディングである。UTF-16 と UTF-32 を区別するのは
+難しい。Windows ではUTF-16 がしばしば使われる。UTF-32 はファイルフォーマットと
+しては広くつかわれていない。
+
 
 					*mbyte-combining* *mbyte-composing*
 合成文字や結合文字を使うと、先行文字の意味を変えることができる。結合文字は先行
@@ -1264,20 +1275,17 @@ Overlong sequenceに対して特別な処理はされない。通常の文字と
 訳注: チしないということ。
 
 ファイルやバッファには、ユニコードで表現できる範囲(31ビット)の文字をすべて書く
-ことができる。しかし、16ビットの範囲内の文字しか表示することができない。使用し
-ているフォントがその文字を持っていない場合も表示できない。
+ことができる。ただし、それを表示できるのは使用フォントがその文字を提供している
+場合のみ。
 
 便利なコマンド:
 - "ga"はカーソル位置の文字のコードを10進数、16進数、8進数で表示する。合成文字
   も表示される。(表示が途切れてしまった場合は、":messages"を使う)。
 - "g8"は文字のUTF-8コードを16進数で表示する。合成文字も表示される。
 - ":set encoding=utf-8 fileencodings="とすると、すべてのファイルでUTF-8を使う
-  ことを強制できる。'encoding'と'fileencodings'の初期設定はロケールの値に応じ
-  て設定される。
-訳注: わからない
-訳注:- ":set encoding=utf-8 fileencodings=" forces using UTF-8 for all files.  The
-訳注:  default is to use the current locale for 'encoding' and set 'fileencodings'
-訳注:  to automatically the encoding of a file.
+  ように強制できる。'encoding'を現在のロケールに合わせて設定し、
+  'fileencodings'によって自動的にファイルのエンコーディングを判定するように設
+  定するのがデフォルトである。
 
 
 VimをUTF-8モードで起動する (STARTING VIM)
@@ -1369,8 +1377,6 @@ options.txtの説明を参照。
 		コードが256以上の)マルチバイト文字のところで改行することができ
 		る。これは、どこでも改行することができる言語を編集するときに
 		便利である。
-訳注:		at a multibyte character of 256 or higher.  Thus is useful for
-訳注:		Thusはtypo?
 
 'guifontset'	マルチバイトエンコーディングの文字に使うフォントのリスト。この
 		オプションが設定されていれば'guifont'の代りに使用される。
@@ -1381,7 +1387,7 @@ options.txtの説明を参照。
 
 マルチバイト機能は、特に以下の方々の貢献による:
 	Chi-Deok Hwang <hwang@mizi.co.kr>
-	Nam SungHyun <namsh@kldp.org>
+	SungHyun Nam <goweol@gmail.com>
 	K.Nagano <nagano@atese.advantest.co.jp>
 	Taro Muraoka  <koron@tka.att.ne.jp>
 	Yasuhiro Matsumoto <mattn@mail.goo.ne.jp>

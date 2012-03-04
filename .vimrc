@@ -411,6 +411,13 @@ function! s:FileType_sh()
 endfunction
 
 
+" scheme {{{3
+autocmd FiletypeAutoCmd FileType scheme call <SID>FileType_scheme()
+function! s:FileType_scheme()
+  nnoremap <buffer> [Space]e :!gosh %<CR>
+endfunction
+
+
 " R {{{3
 autocmd FiletypeAutoCmd FileType r call <SID>FileType_R()
 "set filetype R for .r (not set to rexx)
@@ -443,9 +450,12 @@ endfunction
 
 
 " vim {{{3
-autocmd FiletypeAutoCmd FileType vim
-      \ setlocal keywordprg=:help
-      \ | nnoremap <buffer> ,s :<C-U>source $MYVIMRC<CR>
+autocmd FiletypeAutoCmd FileType vim call <SID>FileType_vim()
+function! s:FileType_vim()
+  setlocal keywordprg=:help
+  nnoremap <buffer> [Space]e :<c-u>source %<CR>
+  nnoremap <buffer> [Space]s :<c-u>source $MYVIMRC<CR>
+endfunction
 
 
 " screen {{{3

@@ -38,6 +38,7 @@ eval `dircolors -b`
 setopt no_beep
 setopt equals
 setopt case_glob
+setopt csh_junkie_loops
 
 REPORTTIME=30
 TIMEFMT="\
@@ -81,11 +82,11 @@ autoload -U add-zsh-hook
 # vcs_info
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*'     formats       "%c%u[%r:%b]:%S"
 zstyle ':vcs_info:*'     actionformats "%c%u[%r:%b|%a]:%S"
-zstyle ':vcs_info:git:*' stagedstr     "[I]"
-zstyle ':vcs_info:git:*' unstagedstr   "[W]"
+zstyle ':vcs_info:*' stagedstr     "[I]"
+zstyle ':vcs_info:*' unstagedstr   "[W]"
 
 
 
@@ -162,6 +163,8 @@ alias quit=exit
 alias vim='screen vim'
 
 
+alias -g '...'='../..'
+alias -g '....'='../../..'
 alias -g G='|grep --color'
 alias -g T='|tee'
 alias -g L='|less'
@@ -241,6 +244,7 @@ _update_git_commit_screen_name() {
   fi
 }
 
+
 # here add pre***_functions
 preexec_functions=(_type_ls)
 precmd_functions=(_update_vcs_info_msg)
@@ -285,6 +289,9 @@ _all_window_cd() {
     fi
   done
 }
+
+
+# others {{{1
 
 
 # __END__ {{{1
