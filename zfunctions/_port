@@ -1,0 +1,86 @@
+#compdef port
+
+local cmds
+
+_arguments -C \
+  "1:command:->cmds"
+
+case $state in
+  cmds)
+  cmds=(
+    'activate:activate'
+    #'archive:archive'
+    #'archivefetch:archivefetch'
+    #'build:build'
+    #'cat:cat'
+    #'cd:cd'
+    #'checksum:checksum'
+    'clean:clean'
+    #'configure:configure'
+    #'contents:contents'
+    'deactivate:deactivate'
+    #'dependents:dependents'
+    #'deps:deps'
+    #'destroot:destroot'
+    #'dir:dir'
+    #'distcheck:distcheck'
+    #'distfiles:distfiles'
+    #'dmg:dmg'
+    #'dpkg:dpkg'
+    #'echo:echo'
+    #'ed:ed'
+    #'edit:edit'
+    #'exit:exit'
+    #'extract:extract'
+    #'fetch:fetch'
+    #'file:file'
+    #'gohome:gohome'
+    'help:help'
+    #'info:info'
+    'install:install'
+    'installed:installed'
+    #'lint:lint'
+    'list:list'
+    #'livecheck:livecheck'
+    #'load:load'
+    #'location:location'
+    #'log:log'
+    #'mdmg:mdmg'
+    #'mirror:mirror'
+    #'mpkg:mpkg'
+    #'notes:notes'
+    #'outdated:outdated'
+    #'patch:patch'
+    #'pkg:pkg'
+    #'platform:platform'
+    #'portpkg:portpkg'
+    #'provides:provides'
+    #'quit:quit'
+    #'rdependents:rdependents'
+    #'rdeps:rdeps'
+    #'rpm:rpm'
+    #'search:search'
+    #'select:select'
+    'selfupdate:selfupdate'
+    #'setrequested:setrequested'
+    #'srpm:srpm'
+    #'submit:submit'
+    'sync:sync'
+    #'test:test'
+    #'trace:trace'
+    #'unarchive:unarchive'
+    'uninstall:uninstall'
+    #'unload:unload'
+    #'unsetrequested:unsetrequested'
+    'upgrade:upgrade'
+    #'url:url'
+    #'usage:usage'
+    'variants:variants'
+    'version:version'
+    #'work:work'
+)
+  _describe -t commands 'port command' cmds
+  ;;
+esac
+
+# vim: ft=zsh

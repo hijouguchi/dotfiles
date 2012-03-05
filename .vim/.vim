@@ -1,0 +1,1 @@
+/Users/hijouguchi/dotfiles/.vim
