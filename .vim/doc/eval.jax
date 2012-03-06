@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *eval.txt*	For Vim バージョン 7.3.  Last change: 2011 Dec 14
-=======
-*eval.txt*      For Vim バージョン 7.1.  Last change: 2007 May 11
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -41,7 +37,6 @@ Vimスクリプトの利用についてはユーザマニュアルの41章|usr_4
 
 1.1 変数の型 ~
 							*E712*
-<<<<<<< HEAD
 変数には6種類の型がある:
 
 数値		32ビットまたは64ビットの符合有整数  |expr-number| *Number*
@@ -53,15 +48,6 @@ Vimスクリプトの利用についてはユーザマニュアルの41章|usr_4
 
 文字列		終端がNUL文字である8ビットの符号無し文字(バイト)
 		|expr-string| 例: "ab\txx\"--"  'x-z''a,c'
-=======
-変数には5種類の型がある:
-
-数値		32ビット符合有整数
-		例: -123 0x10 0177
-
-文字列		終端がNUL文字である8ビットの符号無し文字(バイト)
-		例: "ab\txx\"--"  'x-z''a,c'
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 Funcref		関数への参照 |Funcref|.
 		例: function("strlen")
@@ -74,7 +60,6 @@ Funcref		関数への参照 |Funcref|.
 
 数値と文字列は文脈に応じて相互に変換される。
 
-<<<<<<< HEAD
 数値から文字列への変換は数字のASCII表現によって行なわれる。例:
 	数値 123	-->	文字列 "123" ~
 	数値 0		-->	文字列 "0" ~
@@ -89,22 +74,6 @@ Funcref		関数への参照 |Funcref|.
 	文字列 "0100"	-->	数値 64 ~
 	文字列 "-8"	-->	数値 -8 ~
 	文字列 "+8"	-->	数値 0 ~
-=======
-数値から文字列への変換は数字のASCII表現によって行なわれる。例: >
-	数値 123	-->	文字列 "123"
-	数値 0		-->	文字列 "0"
-	数値 -1		-->	文字列 "-1"
-
-文字列から数値への変換は最初の数字を用いて数値に変換する。16進表記"0xf9"や8進
-表記"017"も認識される。文字列が数字で始まらない場合結果は0となる。例: >
-	文字列 "456"	-->	数値 456
-	文字列 "6bar"	-->	数値 6
-	文字列 "foo"	-->	数値 0
-	文字列 "0xf1"	-->	数値 241
-	文字列 "0100"	-->	数値 64
-	文字列 "-8"	-->	数値 -8
-	文字列 "+8"	-->	数値 0
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 文字列を強制的に数値に変換するには0を足す: >
 	:echo "0100" + 0
@@ -123,7 +92,6 @@ strlen()を使用して次のようにする。 >
 <				*E745* *E728* *E703* *E729* *E730* *E731*
 リスト、辞書、Funcrefは自動的に変換されない。
 
-<<<<<<< HEAD
 							*E805* *E806* *E808*
 数値と浮動小数点数をまぜると浮動小数点数になる。それ以外には浮動小数点数への自
 動的な変換は存在しない。文字列から浮動小数点数へは str2float () を使い、浮動小
@@ -138,14 +106,6 @@ strlen()を使用して次のようにする。 >
 	:let l = [1, 2, 3]	" エラー! l はまだ数値である
 	:let l = 4.4		" 型が数値から浮動小数点数に変わる
 	:let l = "string"	" エラー!
-=======
-								*E706*
-変数の型を変えようとするとエラーになる。このエラーを避けるには、まず|:unlet|す
-る必要がある。しかし文字列と数値は同値であると見なされる。例: >
-	:let l = "string"
-	:let l = 44		" 型が文字列から数値に変わる
-	:let l = [1, 2, 3]	" エラー!
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 1.2 関数への参照 ~
@@ -206,12 +166,7 @@ strlen()を使用して次のようにする。 >
 	:let item = mylist[0]		" 最初の要素(1)を取得
 	:let item = mylist[2]		" 3番目の要素(3)を取得
 
-<<<<<<< HEAD
 取得した要素がリストならば、さらに続けてインデックスを書くことができる: >
-=======
-When the resulting item is a list this can be repeated: >
-取得した要素がリストならば、これを続けて書くことができる: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:let item = nestlist[0][1]	" 最初のリストの2番目の要素(12)を取得
 <
 負のインデックスを指定すると、リストの末尾から数えられる。インデックス-1は最後
@@ -306,15 +261,9 @@ Note リストの比較について注意: 2つのリストは、同じ長さを
 
 	:let a = 5
 	:let b = "5"
-<<<<<<< HEAD
 	:echo a == b
 <	1 >
 	:echo [a] == [b]
-=======
-	echo a == b
-<	1 >
-	echo [a] == [b]
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 <	0
 
 
@@ -559,16 +508,11 @@ Note 辞書の要素間に順序は定まっていない。そのため":echo ad
 の関数は|Funcref|を通してのみ呼び出せる。参照している|Funcref|がなくなると、こ
 の関数は自動的に削除される。
 
-<<<<<<< HEAD
 番号付き関数には "dict" 属性を付ける必要はありません。
 
 番号付き関数でエラーが発生したときは、あるトリックを使うことで発生源を確認でき
 ます。例えば 42 という関数なら次のようにします: >
 	:function {42}
-=======
-番号つき関数に必ずしも"dict"属性は必要ではない。
-訳注: It is not necessary to use the "dict" attribute for a numbered function.
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 辞書操作関数 ~
@@ -686,11 +630,7 @@ expr2 ? expr1 : expr1
 例: >
 	:echo lnum == 1 ? "top" : lnum == 1000 ? "last" : lnum
 
-<<<<<<< HEAD
 読み易くするために、行継続|line-continuation|を利用することが推奨される: >
-=======
-読み易くするために、行継続|list-continuation|を利用することが推奨される: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:echo lnum == 1
 	:\	? "top"
 	:\	: lnum == 1000
@@ -744,7 +684,6 @@ expr5 {cmp} expr5
 
 2つの式expr5を比較し、結果が偽なら0を、真なら1を返す。
 
-<<<<<<< HEAD
 			*expr-==*  *expr-!=*  *expr->*   *expr->=*
 			*expr-<*   *expr-<=*  *expr-=~*  *expr-!~*
 			*expr-==#* *expr-!=#* *expr->#*  *expr->=#*
@@ -753,15 +692,6 @@ expr5 {cmp} expr5
 			*expr-<?*  *expr-<=?* *expr-=~?* *expr-!~?*
 			*expr-is* *expr-isnot* *expr-is#* *expr-isnot#*
 			*expr-is?* *expr-isnot?*
-=======
-				*expr-==*  *expr-!=*  *expr->*   *expr->=*
-				*expr-<*   *expr-<=*  *expr-=~*  *expr-!~*
-				*expr-==#* *expr-!=#* *expr->#*  *expr->=#*
-				*expr-<#*  *expr-<=#* *expr-=~#* *expr-!~#*
-				*expr-==?* *expr-!=?* *expr->?*  *expr->=?*
-				*expr-<?*  *expr-<=?* *expr-=~?* *expr-!~?*
-				*expr-is*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		'ignorecase'次第   大小文字考慮    大小文字無視 ~
 等しい			==		==#		==?
 等しくない		!=		!=#		!=?
@@ -771,13 +701,8 @@ expr5 {cmp} expr5
 より小さいか等しい	<=		<=#		<=?
 正規表現マッチ		=~		=~#		=~?
 正規表現非マッチ	!~		!~#		!~?
-<<<<<<< HEAD
 同一のインスタンス	is		is#		is?
 異なるインスタンス	isnot		isnot#		isnot?
-=======
-同一のインスタンス	is
-異なるインスタンス	isnot
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 例:
 "abc" ==# "Abc"	  0と評価される
@@ -798,7 +723,6 @@ expr5 {cmp} expr5
 |Funcref|は|Funcref|とだけ比較可能で、"equal"と"not equal"のみ利用できる。大文
 字小文字は常に区別される。
 
-<<<<<<< HEAD
 リスト (|List|) や 辞書 (|Dictionary|) に対して"is"や"isnot"を使うと、それらの
 式が同じリストのインスタンスを参照しているか判定される。リストのコピーと元のリ
 ストは異なると判定される。リスト以外に対して"is"は"equal"と同じ
@@ -806,13 +730,6 @@ expr5 {cmp} expr5
 しくない点が"=="とは異なる。"4 == '4'" は真、"4 is '4'" は偽、"0 is []" は偽で
 エラーにはならない、"is#"/"isnot#" と "is?"/"isnot?" は大文字小文字を区別する
 かどうかが違う。
-=======
-リスト|List|に対して"is"や"isnot"を使うと、それらの式が同じリストのインスタン
-スを参照しているか判定される。リストのコピーと元のリストは異なると判定される。
-リスト以外に対して"is"は"equal"と同じで、"isnot"は"not equal"と同じである。た
-だし"is"、"isnot"は型が異なると値が等しくない点が"=="とは異なる。「4 == '4'」
-は真で、「4 is '4'」は偽である。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 文字列と数値を比較した場合、文字列が数値に変換され、数値として比較される。これ
 は"0 == 'x'"が、'x'が数値としては0であることから、真となることを意味する。
@@ -851,26 +768,17 @@ expr6 .	 expr6 ..	文字列の連結			*expr-.*
 リストに対しては"+"のみ可能で、expr6は両方ともリストでなければならない。結果は
 2つのリストを連結した新しいリスト。
 
-<<<<<<< HEAD
 expr7 *	 expr7 ..	掛け算					*expr-star*
 expr7 /	 expr7 ..	割り算					*expr-/*
 expr7 %	 expr7 ..	剰余(割った余り)			*expr-%*
 
 "."を除く全ての演算子は自動的に文字列を数値に変換する。
 ビット演算については |and()|, |or()|, |xor()| を参照。
-=======
-expr7 *	 expr7 ..	掛け算				*expr-star*
-expr7 /	 expr7 ..	割り算				*expr-/*
-expr7 %	 expr7 ..	剰余(割った余り)		*expr-%*
-
-"."を除く全ての演算子は自動的に文字列を数値に変換する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 "+"と"."の違いに注意:
 	"123" + "456" = 579
 	"123" . "456" = "123456"
 
-<<<<<<< HEAD
 '.' は '+' と '-' と等しい優先順位を持つので、次の式は: >
 	1 . 90 + 90.0
 次のように解釈される: >
@@ -890,18 +798,13 @@ expr7 %	 expr7 ..	剰余(割った余り)		*expr-%*
 	(訳注: >0 は正の数、<0 は負の数の意味)
 	(Vim 7.2 以前では常に 0x7fffffff だった)
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 '/'の右辺(除数)が0の場合、結果は0x7ffffffになる。
 '%'の右辺(法)が0の場合、結果は0になる。
 
 これらは全て|Funcref|には適用できない。
 
-<<<<<<< HEAD
 . と % は浮動小数点数には適用できない。 *E804*
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 expr7							*expr7*
 -----
@@ -925,17 +828,11 @@ expr8							*expr8*
 -----
 expr8[expr1]		文字列またはリストの要素	*expr-[]* *E111*
 
-<<<<<<< HEAD
 expr8が数値か文字列ならば、この値は文字列 expr8 の第 expr1 番目のバイトからな
 る 1 バイトの文字列となる。expr8は文字列、expr1は数として扱われる。ただし
 expr8 がマルチバイト文字列である場合、この値は単なるバイトコードであり、1文字
 とはならないかもしれないことに注意。マルチバイト文字列に対する代替方法は
 |byteidx()| を参照。
-=======
-expr8が数値か文字列ならば、これの結果は文字列expr8のexpr1番目の単一のバイトか
-らなる文字列である。expr8は文字列、expr1は数である。ただしマルチバイトエンコー
-ディングの文字列については、単なるバイトコードであることに注意。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 インデックスが0の場合、先頭のキャラクタが得られることに注意。これはC言語のよう
 に働く。注意:カラム番号は1から始まる。例えばカーソルの下の文字を得るためには、
@@ -959,12 +856,8 @@ expr8[expr1a : expr1b]	部分文字列または部分リスト	*expr-[:]*
 
 expr8が数値か文字列ならば、expr1aバイトからexpr1bバイトまでの部分文字列となる
 (両端を含む)。expr8は文字列として扱われ、expr1aとexpr1bは数値として扱われる。
-<<<<<<< HEAD
 Note マルチバイトのエンコーディングは認識しない。マルチバイト文字列のイン
 デックスを計算する方法については |byteidx()| を参照。
-=======
-Note マルチバイトのエンコーディングは認識しない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 expr1aが省略されたときは0となる。expr1bが省略されたときは文字列の長さ-1となる。
 
@@ -979,12 +872,8 @@ expr1aが省略されたときは0となる。expr1bが省略されたときは�
 	:let c = name[-2:-2]		" 文字列の最後から2バイト目
 	:let s = line(".")[4:]		" 5バイト目から末尾まで
 	:let s = s[:-3]			" 最後の2文字を削除する
-<<<<<<< HEAD
 <
 							*sublist* *slice*
-=======
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 expr8がリストならば、インデックスexpr1aとexpr1bの間の要素からなる新しいリスト
 となる。上で説明した文字列の場合と同様だが、インデックスが範囲を超えるとエラー
 になる。例: >
@@ -997,13 +886,8 @@ expr8がリストならば、インデックスexpr1aとexpr1bの間の要素か
 
 expr8.name		辞書|Dictionary|の要素		*expr-entry*
 
-<<<<<<< HEAD
 expr8が辞書|Dictionary|のとき、ドットをつけるとその後に書かれた名前が辞書の
 キーと見なされる。例: expr8[name]。
-=======
-expr8が辞書|Dictionary|のとき、ドットをつけるとその後に書かれた名前が辞書のキ
-ーと見なされる。例: expr8[name]。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 名前は変数名と同じようにアルファベットと数字だけから構成されなければならない
 が、数字で始まってもよい。波括弧は使えない。
@@ -1028,7 +912,6 @@ expr8が|Funcref|型の変数のとき、その参照する関数を呼び出す
 							*expr9*
 数
 ------
-<<<<<<< HEAD
 number			数定数				*expr-number*
 						*hex-number* *octal-number*
 
@@ -1082,12 +965,6 @@ number			数定数				*expr-number*
 <	7.853981633974483e-01
 
 
-=======
-number			数定数			*expr-number*
-
-10進数、16進数(0xか0Xで始まる)、もしくは8進数(0で始まる)の数定数。
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 文字列							*expr-string* *E114*
 ------
@@ -1114,13 +991,9 @@ number			数定数			*expr-number*
 \t	タブ <Tab>
 \\	円記号(バックスラッシュ)
 \"	ダブルクォート
-<<<<<<< HEAD
 \<xxx>	"xxx"という名の特殊キー。 例 "\<C-W>" は CTRL-W.  これはマップで使うた
 	めのものです。utf-8 文字を得るためには <Char-xxxx> を使わずに、上述の
 	\uxxxx を使ってください。
-=======
-\<xxx>	"xxx"という名の特殊キー。 例 "\<C-W>" は CTRL-W.
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 Note "\xff"は値255の1バイトとなる。これはエンコーディングによっては無効な値か
 もしれない。現在の'encoding'の値に応じた文字255を得るには"\u00ff"を使う。
@@ -1135,13 +1008,8 @@ Note "\000"と"\x00"は強制的に文字列の終端として扱われる。
 Note シングルクォートが使われていることに注意。
 
 この文字列は文字通りに扱われる。バックスラッシュは取り除かれないし、また特別な
-<<<<<<< HEAD
 意味を持ったりもしない。唯一の例外は、2つのシングルクォートで1つのシングル
 クォートになることである。
-=======
-意味を持ったりもしない。唯一の例外は、2つのシングルクォートで1つのシングルクォ
-ートになることである。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 シングルクォートの文字列は、バックスラッシュを2重にしなくてよいため、正規表現
 パターンを表すのに便利である。以下の2つのコマンドは同値である: >
@@ -1211,13 +1079,8 @@ function(expr1, ...)	関数呼出
 
 
 ==============================================================================
-<<<<<<< HEAD
 3. 内部変数					*internal-variables* *E461*
 
-=======
-3. 内部変数					*internal-variables* *E121*
-									*E461*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 内部変数の名前には文字と、数字とアンダーバー('_')を使うことができる。しかし数
 字で始めることはできない。波括弧を使うこともできる。
 詳細は|curly-braces-names|を参照。
@@ -1268,13 +1131,8 @@ b:changedtick	現在のバッファに対する総変更の回数。変更を行
 
 						*tabpage-variable* *t:var*
 "t:"で始まる変数名は、カレントタブページにローカルな変数を意味する。これはタブ
-<<<<<<< HEAD
 ページを閉じるときに破棄される。{|+windows| 機能つきでコンパイルしたときのみ利
 用可能}
-=======
-ページを閉じるときに破棄される。{+windows 機能つきでコンパイルしたときのみ利用
-可能}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 						*global-variable* *g:var*
 関数の中からグローバル変数へアクセスするには、"g:"を付けた名前を使用する。これ
@@ -1301,10 +1159,7 @@ Vimスクリプト内では"s:"で始まる変数名を使うことができる�
 次の場面では使えない:
 - そのスクリプトからsourceされる他のスクリプト
 - マッピング
-<<<<<<< HEAD
 - メニュー
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 - など。
 
 グローバル変数との衝突を避けるにはスクリプト変数を使う。
@@ -1390,7 +1245,6 @@ v:beval_text	マウスポインタの下もしくは後ろにあるテキスト�
 
 					*v:beval_winnr* *beval_winnr-variable*
 v:beval_winnr	マウスポインタがあるウィンドウの番号。オプション'balloonexpr'
-<<<<<<< HEAD
 		を評価している最中のみ有効。一番目のウィンドウの番号はゼロです
 		(他の場所でのウィンドウ番号と異なっています)。
 
@@ -1399,12 +1253,6 @@ v:char		'formatexpr'を評価しているときの引数。また、短縮入力
 		|:map-<expr>| で <expr> を指定しているとき、タイプされた文字を
 		保持する。
 		これは |InsertCharPre| イベントでも使われる。
-=======
-		を評価している最中のみ有効。
-
-					*v:char* *char-variable*
-v:char		'formatexpr'を評価しているときの引数。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 			*v:charconvert_from* *charconvert_from-variable*
 v:charconvert_from
@@ -1440,11 +1288,8 @@ v:count		最後に実行されたノーマルモードコマンドに渡され�
 	:map _x :<C-U>echo "the count is " . count<CR>
 <		Note: <C-U>は、カウントの後に':'をタイプした時に示される、行範
 		囲指定を削除するために必要となる。
-<<<<<<< HEAD
 		"3d2w" のようにカウントが2個指定された場合、その数が掛けられる。
 		よって "d6w" となる。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		オプション'formatexpr'を評価するためにも使われる。
 		また"count"は、以前の版のVimとの互換性の為に動作する。
 
@@ -1467,14 +1312,10 @@ v:dying		通常時は0。致命的なシグナルを受信したとき1が代入
 		が正常に終了するかチェックするために使える。{Unix でのみ動作}
 		例: >
 	:au VimLeave * if v:dying | echo "\nAAAAaaaarrrggghhhh!!!\n" | endif
-<<<<<<< HEAD
 
 <		Note: v:dying が 1 のときに別の致命的なシグナルを受信した場合
 		は VimLeave 自動コマンドは実行されません。
 
-=======
-<
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 					*v:errmsg* *errmsg-variable*
 v:errmsg	最後に表示されたエラーメッセージ。この変数は代入することが許
 		されている。例: >
@@ -1597,17 +1438,10 @@ v:lc_time	時刻のメッセージに関する実行環境の現在のロケー�
 		ることはできない。
 
 						*v:lnum* *lnum-variable*
-<<<<<<< HEAD
 v:lnum		'foldexpr' |fold-expr| と 'indentexpr' に使うための行番号。ま
 		た 'guitablabel' と 'guitabtooltip' の文脈ではタブページ番号に
 		なる。これらの式のどれかを評価しているときのみ有効。サンドボッ
 		クス |sandbox| の中では読出し専用。
-=======
-v:lnum		'foldexpr'と'indentexpr'に使うための行番号。また'guitablabel'
-		と'guitabtooltip'の文脈ではタブページ番号になる。これらの式のど
-		れかを評価しているときのみ有効。サンドボックス|sandbox|の中で
-		は読出し専用。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 					*v:mouse_win* *mouse_win-variable*
 v:mouse_win	|getchar()|でマウスクリックイベントを取得したとき、この変数に
@@ -1624,7 +1458,6 @@ v:mouse_col	|getchar()|でマウスクリックイベントを取得したとき
 		桁番号が代入されている。|virtcol()|と同じく画面上の桁番号。マ
 		ウスがクリックされていないときは0となる。
 
-<<<<<<< HEAD
 					*v:oldfiles* *oldfiles-variable*
 v:oldfiles	起動時に |viminfo| から読み込まれたファイルの名前のリスト。
 		これらはマークを記憶しているファイルである。リストの長さの上限
@@ -1653,12 +1486,6 @@ v:prevcount	最後のノーマルモードコマンドに与えられたカウ�
 		ンドのv:countの値である。ビジュアルモードやオペレータ待機モー
 		ドをキャンセルし、その後にカウントを使う場合に便利である。
 		例: >
-=======
-					*v:prevcount* *prevcount-variable*
-v:prevcount	最後のノーマルモードコマンドに与えられたカウントの値。前のコマ
-		ンドのv:countの値である。ビジュアルモードをキャンセルし、その
-		後にカウントを使う場合に便利である。例: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:vmap % <Esc>:call MyFilter(v:prevcount)<CR>
 <		読出し専用。
 
@@ -1673,16 +1500,11 @@ v:progname	Vimを起動したときのプログラム名(パスは除かれる)�
 		読出し専用。
 
 					*v:register* *register-variable*
-<<<<<<< HEAD
 v:register	現在のノーマルモードコマンドに適用されるレジスタの名前。レジス
 		タが指定されなかったときはデフォルトレジスタ '"' にな
 		る。'clipboard' に "unnamed" か "unnamedplus" が含まれていると
 		きはデフォルトはそれぞれ '*' か '+' になる。
 		|getreg()| と |setreg()| も参照。
-=======
-v:register	最後のノーマルモードコマンドに指定されたレジスタの名前。レジス
-		タが指定されなかったときは空。|getreg()| |setreg()|
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 					*v:scrollstart* *scrollstart-variable*
 v:scrollstart	画面のスクロールの原因となったスクリプトや関数を説明する
@@ -1696,7 +1518,6 @@ v:scrollstart	画面のスクロールの原因となったスクリプトや関
 v:servername	|x11-clientserver|に登録されている名前。
 		読出し専用。
 
-<<<<<<< HEAD
 
 v:searchforward			*v:searchforward* *searchforward-variable*
 		検索方向: 前方検索の後なら1、後方検索の後なら0。|quote/| で示す
@@ -1706,8 +1527,6 @@ v:searchforward			*v:searchforward* *searchforward-variable*
 		|function-search-undo|。
 		読み書き両用。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			    		*v:shell_error* *shell_error-variable*
 v:shell_error	最後に実行したシェルコマンドの結果。シェルコマンドの実行時にな
 		にかエラーがあったならば、非零の値を取る。問題がなければ零にな
@@ -1759,11 +1578,7 @@ v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケ�
 		 "<Esc>[ Pp ; Pv ; Pc c"。ここでPpは端末のタイプ: 0ならvt100、
 		 1ならvt220。Pvはパッチレベル(パッチ95で導入されたため常
 		 に95以上)。Pcは常に0。
-<<<<<<< HEAD
 		{Vimが|+termresponse|機能付きでコンパイルされたときのみ有効}
-=======
-		{Vi mが|+termresponse|機能付きでコンパイルされたときのみ有効}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 				*v:this_session* *this_session-variable*
 v:this_session	最後にロードされたか、セーブされたセッションファイルの完全な
@@ -1803,7 +1618,6 @@ v:version	Vimのバージョン番号。メジャーバージョン番号は100�
 v:warningmsg	最後に表示された警告メッセージ。この変数は代入することが許され
 		ている。
 
-<<<<<<< HEAD
 					*v:windowid* *windowid-variable*
 v:windowid	X11 ベースの GUI を使っているとき、もしくは端末の Vim を使って
 		いて X サーバーに接続しているとき (|-X|) は、ウィンドウ ID が
@@ -1813,8 +1627,6 @@ v:windowid	X11 ベースの GUI を使っているとき、もしくは端末の
 		それ以外では値はゼロです。
 		Note: Vim の中のウィンドウを扱うときは |winnr()| を使います。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 ==============================================================================
 4. 組み込み関数						*functions*
 
@@ -1822,7 +1634,6 @@ v:windowid	X11 ベースの GUI を使っているとき、もしくは端末の
 
 使用法				結果	説明		~
 
-<<<<<<< HEAD
 abs( {expr})			浮動小数点数または数値	{expr}の絶対値
 acos( {expr})			浮動小数点数	{expr}のアークコサイン
 add( {list}, {item})		リスト	{item}をリスト{list}に追加する
@@ -1836,14 +1647,6 @@ asin( {expr})			浮動小数点数	{expr}のアークサイン
 atan( {expr})			浮動小数点数	{expr}のアークタンジェント
 atan2( {expr}, {expr})		浮動小数点数	{expr1} / {expr2} のアークタン
 						ジェント
-=======
-add( {list}, {item})		リスト	{item}をリスト{list}に追加する
-append( {lnum}, {string})	数値	{string}を{lnum}行目に付け加える
-append( {lnum}, {list})		Number	行{list}を{lnum}行目に付け加える
-argc()				数値	引数内のファイルの数
-argv( {nr})			文字列	引数の第{nr}番目
-argv( )				リスト	引数リスト
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 browse( {save}, {title}, {initdir}, {default})
 				文字列	ファイル選択ダイアログを表示
 browsedir( {title}, {initdir})  文字列	ディレクトリ選択ダイアログを表示
@@ -1857,7 +1660,6 @@ byte2line( {byte})		数値	{byte}番目のバイトの行番号
 byteidx( {expr}, {nr})		数値	{expr}の{nr}文字目のバイトインデックス
 call( {func}, {arglist} [, {dict}])
 				任意	引数{arglist}をつけて{func}を呼ぶ
-<<<<<<< HEAD
 ceil( {expr})			浮動小数点数	{expr} を切り上げる
 changenr()			数値	現在の変更番号
 char2nr( {expr})		数値	{expr}の先頭文字のASCIIコード
@@ -1865,23 +1667,14 @@ cindent( {lnum})		数値	{lnum}行目のCインデント量
 clearmatches()			なし	全マッチをクリアする
 col( {expr})			数値	カーソルかマークのカラム番号nr
 complete( {startcol}, {matches}) なし	インサートモード補完を設定する
-=======
-changenr()			数値	現在の変更番号
-char2nr( {expr})		数値	{expr}の先頭文字のASCIIコード
-cindent( {lnum})		数値	{lnum}行目のCインデント量
-col( {expr})			数値	カーソルかマークのカラム番号nr
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 complete({startcol}, {matches})	文字列  インサートモード補完の結果を設定する
 complete_add( {expr})		数値	補完候補を追加する
 complete_check()		数値	補完中に押されたキーをチェックする
 confirm( {msg}, {choices} [, {default} [, {type}]])
 				数値	ユーザへの選択肢と番号
 copy( {expr})			任意	{expr}の浅いコピーを作る
-<<<<<<< HEAD
 cos( {expr})			浮動小数点数	{expr} の余弦(コサイン)
 cosh( {expr})			浮動小数点数	{expr}のハイパボリックコサイン
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 count( {list}, {expr} [, {start} [, {ic}]])
 				数値	 {list}中に{expr}が何個現れるか数える
 cscope_connection( [{num} , {dbpath} [, {prepend}]])
@@ -1900,16 +1693,10 @@ eval( {string})			任意	{string}を評価し、値を得る
 eventhandler( )			数値	イベントハンドラの内側ならTRUE
 executable( {expr})		数値	実行可能な{expr}が存在するなら1
 exists( {var})			数値	変数{var}が存在したらTRUE
-<<<<<<< HEAD
 extend( {expr1}, {expr2} [, {expr3}])
 				リスト/辞書 {expr1}に{expr2}の要素を挿入
 exp( {expr})			浮動小数点数	{expr}の指数
 expand( {expr} [, {flag}])	文字列	{expr}内の特別なキーワードを展開
-=======
-extend({expr1}, {expr2} [, {expr3}])
-				リスト/辞書 {expr1}に{expr2}の要素を挿入
-expand( {expr})			文字列	{expr}内の特別なキーワードを展開
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 feedkeys( {string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
 filereadable( {file})		数値	{file}が読みこみ可能ならTRUE
 filewritable( {file})		Number	{file}が書き込み可能ならTRUE
@@ -1919,13 +1706,10 @@ finddir( {name}[, {path}[, {count}]])
 				文字列	{path}からディレクトリ{name}を探す
 findfile( {name}[, {path}[, {count}]])
 				文字列	{path}からファイル{name}を探す
-<<<<<<< HEAD
 float2nr( {expr})		数値	浮動小数点数 {expr} を数値に変換する
 floor( {expr})			浮動小数点数	{expr} を切り捨てる
 fmod( {expr1}, {expr2})		浮動小数点数	{expr1} / {expr2} の余り
 fnameescape( {fname})		文字列	{fname} 内のの特殊文字をエスケープする
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 fnamemodify( {fname}, {mods})	文字列	ファイル名を変更
 foldclosed( {lnum})		数値	{lnum}の折り畳みの最初の行(閉じている
 					なら)
@@ -1936,11 +1720,7 @@ foldtext( )			文字列	閉じた折り畳みに表示されている行
 foldtextresult( {lnum})		文字列	{lnum}で閉じている折り畳みのテキスト
 foreground( )			数値	Vimウィンドウを前面に移動する
 function( {name})		Funcref 関数{name}への参照を取得
-<<<<<<< HEAD
 garbagecollect( [{atexit}])	なし	メモリを解放する。循環参照を断ち切る
-=======
-garbagecollect()		なし	メモリを解放する。循環参照を断ち切る
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 get( {list}, {idx} [, {def}])	任意	{list}や{def}から要素{idx}を取得
 get( {dict}, {key} [, {def}])	任意	{dict}や{def}から要素{key}を取得
 getbufline( {expr}, {lnum} [, {end}])
@@ -1957,33 +1737,22 @@ getftime( {fname})		数値	ファイルの最終更新時間
 getftype( {fname})		文字列	ファイル{fname}の種類の説明
 getline( {lnum})		文字列	現在のバッファから行の内容を取得
 getline( {lnum}, {end})		リスト	カレントバッファの{lnum}から{end}行目
-<<<<<<< HEAD
 getloclist( {nr})		リスト	ロケーションリストの要素のリスト
 getmatches()			リスト	現在のマッチのリスト
 getpid()			数値	Vim のプロセス ID
-=======
-getloclist({nr})		リスト	ロケーションリストの要素のリスト
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 getpos( {expr})			リスト	カーソル・マークなどの位置を取得
 getqflist()			リスト	quickfixリストの要素のリスト
 getreg( [{regname} [, 1]])	文字列	レジスタの中身を取得
 getregtype( [{regname}])	文字列	レジスタの種類を取得
-<<<<<<< HEAD
 gettabvar( {nr}, {varname})	任意	タブ{nr}の変数{varname}
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 gettabwinvar( {tabnr}, {winnr}, {name})
 				任意	タブページ{tabnr}の{winnr}の{name}
 getwinposx()			数値	GUI vim windowのX座標
 getwinposy()			数値	GUI vim windowのY座標
 getwinvar( {nr}, {varname})	文字列	ウィンドウ{nr}の変数{varname}
 glob( {expr} [, {flag}])	文字列	{expr}内のfile wildcardを展開
-<<<<<<< HEAD
 globpath( {path}, {expr} [, {flag}])
 				文字列	{path}の全ディレクトリに対し
-=======
-globpath( {path}, {expr})	文字列	{path}の全ディレクトリに対し
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 					glob({expr})を行う
 has( {feature})			数値	機能{feature}がサポートならばTRUE
 has_key( {dict}, {key})		数値	{dict}が要素{key}を持つならTRUE
@@ -2010,10 +1779,7 @@ inputrestore()			数値	先行入力を復元する
 inputsave()			数値	先行入力を保存し、クリアする
 inputsecret( {prompt} [, {text}]) 文字列  input()だがテキストを隠す
 insert( {list}, {item} [, {idx}]) リスト  {list}に要素{item}を挿入 [{idx}の前]
-<<<<<<< HEAD
 invert( {expr})			数値  ビット反転
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 isdirectory( {directory})	数値	{directory}がディレクトリならばTRUE
 islocked( {expr})		数値	{expr}がロックされているならTRUE
 items( {dict})			リスト	{dict}のキーと値のペアを取得
@@ -2026,7 +1792,6 @@ line( {expr})			数値	行番号の取得
 line2byte( {lnum})		数値	行{lnum}のバイトカウント
 lispindent( {lnum})		数値	{lnum}行目のLispインデント量を取得
 localtime()			数値	現在時刻
-<<<<<<< HEAD
 log( {expr})			浮動小数点数	{expr}の自然対数(底e)
 log10( {expr})			浮動小数点数	浮動小数点数 {expr} の 10 を底
 						とする対数
@@ -2036,27 +1801,18 @@ matchadd( {group}, {pattern}[, {priority}[, {id}]])
 maparg( {name}[, {mode} [, {abbr} [, {dict}]]])
 				文字列/辞書
 					モード{mode}でのマッピング{name}の値
-=======
-map( {expr}, {string})		リスト/辞書  {expr}の各要素を{expr}に変える
-maparg( {name}[, {mode} [, {abbr}]])
-				文字列	モード{mode}でのマッピング{name}の値
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 mapcheck( {name}[, {mode} [, {abbr}]])
 				文字列	{name}にマッチするマッピングを確認
 match( {expr}, {pat}[, {start}[, {count}]])
 				数値	{expr}内で{pat}がマッチする位置
 matcharg( {nr})			リスト	|:match|の引数
-<<<<<<< HEAD
 matchdelete( {id})		数値	{id} で指定されるマッチを削除する
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 matchend( {expr}, {pat}[, {start}[, {count}]])
 				数値	{expr}内で{pat}が終了する位置
 matchlist( {expr}, {pat}[, {start}[, {count}]])
 				リスト	{expr}内の{pat}のマッチと部分マッチ
 matchstr( {expr}, {pat}[, {start}[, {count}]])
 				文字列	{expr}内の{count}'番目の{pat}のマッチ
-<<<<<<< HEAD
 max( {list})			数値	{list}内の要素の最大値
 min( {list})			数値	{list}内の要素の最小値
 mkdir( {name} [, {path} [, {prot}]])
@@ -2068,26 +1824,12 @@ nr2char( {expr})		文字列	ASCIIコード{expr}で示されるキャラクタ
 or( {expr}, {expr})		数値  ビット論理和
 pathshorten( {expr})		文字列	path内の短縮したディレクトリ名
 pow( {x}, {y})			浮動小数点数	{x} の {y} 乗
-=======
-max({list})			数値	{list}内の要素の最大値
-min({list})			数値	{list}内の要素の最小値
-mkdir({name} [, {path} [, {prot}]])
-				数値	ディレクトリ{name}を作成
-mode()				文字列	現在の編集モード
-nextnonblank( {lnum})		数値	{lnum}行目以降で空行でない行の行番号
-nr2char( {expr})		文字列	ASCIIコード{expr}で示されるキャラクタ
-pathshorten( {expr})		文字列	path内の短縮したディレクトリ名
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 prevnonblank( {lnum})		数値	{lnum}行目以前の空行でない行の行番号
 printf( {fmt}, {expr1}...)	文字列  文字列を組み立てる
 pumvisible()			数値    ポップアップメニューが表示されているか
 range( {expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
-<<<<<<< HEAD
 readfile( {fname} [, {binary} [, {max}]])
-=======
-readfile({fname} [, {binary} [, {max}]])
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 				リスト	ファイル{fname}から行のリストを取得
 reltime( [{start} [, {end}]])	リスト	時刻の値を取得
 reltimestr( {time})		文字列	時刻の値を文字列に変換
@@ -2099,17 +1841,12 @@ remote_peek( {serverid} [, {retvar}])
 remote_read( {serverid})	文字列	返信文字列を読み込む
 remote_send( {server}, {string} [, {idvar}])
 				文字列	キーシーケンスを送信する
-<<<<<<< HEAD
 remove( {list}, {idx} [, {end}])  任意	{list}から{idx}と{end}間の要素を削除
-=======
-remove( {list}, {idx} [, {end}])  任意	{list}から{idx}〜{end}の要素を削除
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 remove( {dict}, {key})		任意	{dict}から要素{key}を削除
 rename({from}, {to})		数値	{file}から{to}へファイル名変更
 repeat( {expr}, {count})	文字列	{expr}を{count}回繰り返す
 resolve( {filename})		文字列	ショートカットが指す先のファイル名
 reverse( {list})		文字列	{list}をその場で反転させる
-<<<<<<< HEAD
 round( {expr})			浮動小数点数	{expr} を四捨五入する
 search( {pattern} [, {flags} [, {stopline} [, {timeout}]]])
 				数値	{pattern} を検索する
@@ -2120,16 +1857,6 @@ searchpair( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])
 searchpairpos( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])
 				リスト	開始/終端のペアの他方を検索
 searchpos( {pattern} [, {flags} [, {stopline} [, {timeout}]]])
-=======
-search( {pattern} [, {flags}])	数値	{pattern}を検索する
-searchdecl({name} [, {global} [, {thisblock}]])
-				数値    変数の宣言を検索
-searchpair( {start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
-				数値	開始/終端のペアの他方を検索
-searchpairpos( {start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
-				リスト	開始/終端のペアの他方を検索
-searchpos( {pattern} [, {flags} [, {stopline}]])
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 				リスト	{pattern}を検索
 server2client( {clientid}, {string})
 				数値	返信文字列を送信する
@@ -2140,7 +1867,6 @@ setcmdpos( {pos})		数値	コマンドライン内のカーソル位置を設定
 setline( {lnum}, {line})	数値	行{lnum}に{line}(文字列)をセット
 setloclist( {nr}, {list}[, {action}])
 				数値	{list}を使ってロケーションリストを変更
-<<<<<<< HEAD
 setmatches( {list})		数値	マッチのリストを復元する
 setpos( {expr}, {list})		なし	{expr}の位置を{list}にする
 setqflist( {list}[, {action}])	数値	{list}を使ってQuickFixリストを変更
@@ -2160,35 +1886,17 @@ sin( {expr})			浮動小数点数	{expr} の正弦(サイン)
 sinh( {expr})			浮動小数点数	{expr}のハイパボリックサイン
 sort( {list} [, {func} [, {dict}]])
 				リスト	比較に{func}を使って{list}をソートする
-=======
-setpos( {expr}, {list})		なし	{expr}の位置を{list}にする
-setqflist( {list}[, {action}])	数値	{list}を使ってQuickFixリストを変更
-setreg( {n}, {v}[, {opt}])	数値	レジスタの値とタイプを設定
-settabwinvar( {tabnr}, {winnr}, {varname}, {val})  タブページ{tabnr}内のウィン
-					ドウ{nr}の変数{varname}に{val}をセット
-					{winnr} in tab page {tabnr} to {val}
-setwinvar( {nr}, {varname}, {val})	ウィンドウ{nr}の変数{varname}に{val}を
-					セット
-shellescape( {string})		文字列	{string}をシェルコマンド引数として使う
-					ためにエスケープする。
-simplify( {filename})		文字列	ファイル名を可能なかぎり簡略化する
-sort( {list} [, {func}])	リスト	比較に{func}を使って{list}をソートする
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 soundfold( {word})		文字列	{word}のsound-fold
 spellbadword()			文字列	カーソル位置のスペルミスした単語
 spellsuggest( {word} [, {max} [, {capital}]])
 				リスト	スペリング補完
 split( {expr} [, {pat} [, {keepempty}]])
 				リスト	{expr}を{pat}で区切ってリストを作る
-<<<<<<< HEAD
 sqrt( {expr})			浮動小数点数	{expr} の平方根
 str2float( {expr})		浮動小数点数	文字列を浮動小数点数に変換する
 str2nr( {expr} [, {base}])	数値	文字列を数値に変換する
 strchars( {expr})		数値	文字列{expr}の文字の数
 strdisplaywidth( {expr} [, {col}]) 数値 文字列{expr}の表示幅
-=======
-str2nr( {expr} [, {base}])	数値	文字列を数値に変換する
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 strftime( {format}[, {time}])	文字列	指定されたフォーマットでの時刻
 stridx( {haystack}, {needle}[, {start}])
 				数値	{haystack}内の{needle}のインデックス
@@ -2200,52 +1908,36 @@ strridx( {haystack}, {needle} [, {start}])
 				数値	{haystack}内の最後の{needle}のインデッ
 					クス
 strtrans( {expr})		文字列	文字列を表示可能に変更
-<<<<<<< HEAD
 strwidth( {expr})		数値	文字列{expr}の表示セル幅
 submatch( {nr})			文字列	":s"やsubstitute()における特定のマッチ
-=======
-submatch( {nr})			文字列	":substitute"における特定のマッチ
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 substitute( {expr}, {pat}, {sub}, {flags})
 				文字列	{expr}の{pat}を{sub}に置換え
 synID( {line}, {col}, {trans})	数値	{line}と{col}のsyntax IDを取得
 synIDattr( {synID}, {what} [, {mode}])
 				文字列	syntax ID{synID}の属性{what}を取得
 synIDtrans( {synID})		数値	{synID}の翻訳されたsyntax ID
-<<<<<<< HEAD
 synconcealed( {lnum}, {col})	リスト  Conceal の情報
 synstack( {lnum}, {col})	リスト	{lnum}行{col}列目における構文IDの
 					スタック
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 system( {expr} [, {input}])	文字列	シェルコマンド{expr}の出力結果
 tabpagebuflist( [{arg}])	リスト	タブページ内のバッファ番号のリスト
 tabpagenr( [{arg}])		数値	現在または最後のタブページの番号
 tabpagewinnr( {tabarg}[, {arg}])
 				数値	タブページ内の現在のウィンドウの番号
 taglist( {expr})		リスト	{expr}にマッチするタグのリスト
-<<<<<<< HEAD
 tagfiles()			リスト  使用しているタグファイルのリスト
 tempname()			文字列	テンポラリファイルの名前
 tan( {expr})			浮動小数点数	{expr}のタンジェント
 tanh( {expr})			浮動小数点数	{expr}のハイパボリックタンジェ
 						ント
-=======
-tagfiles()			リスト  使用しているタグファイルのリスと
-tempname()			文字列	テンポラリファイルの名前
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 tolower( {expr})		文字列	文字列{expr}を小文字にする
 toupper( {expr})		文字列	文字列{expr}を大文字にする
 tr( {src}, {fromstr}, {tostr})	文字列	{src}中に現れる文字{fromstr}を{tostr}
 					に変換する。
-<<<<<<< HEAD
 trunc( {expr})			浮動小数点数	浮動小数点数{expr}を切り詰める
 type( {name})			数値	変数{name}の型
 undofile( {name})		文字列	{name}に対するアンドゥファイルの名前
 undotree()			リスト	アンドゥファイルツリー
-=======
-type( {name})			数値	変数{name}の型
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 values( {dict})			リスト	{dict}の値のリスト
 virtcol( {expr})		数値	カーソルのスクリーンカラム位置
 visualmode( [expr])		文字列	最後に使われたVisualモード
@@ -2255,7 +1947,6 @@ winheight( {nr})		数値	ウィンドウ{nr}の高さ
 winline()			数値	カーソル位置のウィンドウ行
 winnr()				数値	現在のウィンドウの番号
 winrestcmd()			文字列	ウィンドウサイズを復元するコマンド
-<<<<<<< HEAD
 winrestview( {dict})		なし	現在のウィンドウのビューを復元
 winsaveview()			辞書	現在のウィンドウのビューを保存
 winwidth( {nr})			数値	ウィンドウ{nr}の幅を取得
@@ -2290,13 +1981,6 @@ acos({expr})							*acos()*
 			:echo acos(-0.5)
 <			2.094395
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
-=======
-winrestview({dict})		なし	現在のウィンドウのビューを復元
-winsaveview()			辞書	現在のウィンドウのビューを保存
-winwidth( {nr})			数値	ウィンドウ{nr}の幅を取得
-writefile({list}, {fname} [, {binary}])
-				数値	行のリストをファイル{fname}に書き込む
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 add({list}, {expr})					*add()*
@@ -2309,7 +1993,6 @@ add({list}, {expr})					*add()*
 		他の位置に要素を追加するには|insert()|を使う。
 
 
-<<<<<<< HEAD
 and({expr}, {expr})					*and()*
 		二つの引数のビット論理積。引数は数値に変換される。リスト、辞
 		書、浮動小数点数を指定するとエラーになる。
@@ -2317,8 +2000,6 @@ and({expr}, {expr})					*and()*
 			:let flag = and(bits, 0x80)
 
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 append({lnum}, {expr})					*append()*
 		{expr}がリスト|List|のときは、各要素をカレントバッファの{lnum}
 		行目以降にテキストとして追加する。
@@ -2343,18 +2024,13 @@ argv([{nr}])	結果は引数リスト内の、{nr}番目のファイル。|argli
 		"argv(0)"は一番最初のファイルを示す。例: >
 	:let i = 0
 	:while i < argc()
-<<<<<<< HEAD
 	:  let f = escape(fnameescape(argv(i)), '.')
-=======
-	:  let f = escape(argv(i), '. ')
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:  exe 'amenu Arg.' . f . ' :e ' . f . '<CR>'
 	:  let i = i + 1
 	:endwhile
 <		引数{nr}が指定されなかった場合は、引数リスト|arglist|全体を
 		返す。
 
-<<<<<<< HEAD
 asin({expr})						*asin()*
 		{expr} の逆正弦 (アークサイン) をラジアンで返す。
 		値は [-pi/2, pi/2] の範囲の浮動小数点数 (|Float|)。
@@ -2393,8 +2069,6 @@ atan2({expr1}, {expr2})					*atan2()*
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*browse()*
 browse({save}, {title}, {initdir}, {default})
 		ファイル選択ダイアログを起動。"has("browser")"が非零を返すとき
@@ -2433,25 +2107,19 @@ bufexists({expr})
 		バッファリストにないバッファも検索される。
 		Note |:buffers|の出力で、ヘルプファイルは短い名前でリストされ
 		ているが、bufexists()は長い名前でないと見つけることができない。
-<<<<<<< HEAD
 		ある名前を bufexists() に与えて非零になったとしても、その名前
 		をコマンド |:buffer| に与える際には |expand()| を使って展開し
 		なければならない場合がある。特に MS-Windows の "c:\DOCUME~1"
 		という 8.3 名形式において。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		代替ファイル名が存在するかを判定するには"bufexists(0)"を使う。
 							*buffer_exists()*
 		以前の名前: buffer_exists().
 
-<<<<<<< HEAD
 buflisted({expr})					*buflisted()*
 		戻り値は数値で、{expr}と呼ばれるバッファが存在しリストされてい
 		る ('buflisted' オプションがオンになっている) ならば結果は非零
 		となる。引数{expr}は|bufexists()|と同じように扱われる。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*bufloaded()*
 bufloaded({expr})
 		戻り値は数値で、{expr}と呼ばれるバッファが存在しロード済み(
@@ -2464,21 +2132,12 @@ bufname({expr})
 		戻り値はバッファの名前。バッファ名はコマンド":ls"で表示される
 		ものと同様。
 		{expr}が数値ならば、その番号のバッファ名が返される。0は現在の
-<<<<<<< HEAD
 		ウィンドウの代替バッファを意味する。{expr}が文字列ならば、バッ
 		ファ名に対してファイル名マッチング|file-pattern|を行なうパター
 		ンとなる。このマッチングは常に、'magic'をセットし'cpoptions'を
 		空にした状態で行なわれる。複数マッチしてしまった場合には空文字
 		列が返される。""や"%"は現在のバッファを意味し、"#"は代替バッファ
 		を意味する。
-=======
-		ウィンドウの裏バッファを意味する。{expr}が文字列ならば、バッファ
-		名に対してファイル名マッチング|file-pattern|を行なうパターンと
-		なる。このマッチングは常に、'magic'をセットし'cpoptions'を空に
-		した状態で行なわれる。複数マッチしてしまった場合には空文字列が
-		返される。""や"%"は現在のバッファを意味し、"#"は裏バッファを意
-		味する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		完全マッチのものが優先され、完全マッチがなければ、バッファ名の
 		先頭でのマッチ、末尾でのマッチ、中間でのマッチが探される。完全
 		マッチのみを探すには、パターン先頭に"^"を、末尾に"$"をつける。
@@ -2555,7 +2214,6 @@ call({func}, {arglist} [, {dict}])			*call()* *E699*
 		{dict}は"dict"属性つきの関数用で、これがローカル変数"self"に代
 		入される。|Dictionary-function|を参照。
 
-<<<<<<< HEAD
 ceil({expr})							*ceil()*
 		{expr} 以上となる最小の整数を浮動小数点数 |Float| で返す
 		(切り上げる)。
@@ -2569,8 +2227,6 @@ ceil({expr})							*ceil()*
 <			4.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 changenr()						*changenr()*
 		最も最近の変更の番号を返す。|:undolist|で表示される番号と同じ
 		であり、|:undo|コマンドの引数として使うことができる。
@@ -2586,12 +2242,8 @@ char2nr({expr})
 <		現在の'encoding'の値が適用される。"utf-8"のときの例: >
 			char2nr("á")	 	returns 225
 			char2nr("á"[0])	returns 195
-<<<<<<< HEAD
 <		合成文字は個別の文字として扱われる。
 		|nr2char()| はこの逆を行う。
-=======
-<		nr2char()はこの逆を行う。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 cindent({lnum})						*cindent()*
 		'cindent'で使われるのと同じC言語用のインデント規則に従った場合
@@ -2602,13 +2254,10 @@ cindent({lnum})						*cindent()*
 		るときは-1を返す。
 		|C-indenting|を参照。
 
-<<<<<<< HEAD
 clearmatches()						*clearmatches()*
 		|matchadd()| と コマンド |:match| により定義されたマッチをすべ
 		て消去する。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*col()*
 col({expr})	
 		戻り値は数値で、{expr}で与えられる位置の桁番号(バイトインデッ
@@ -2616,13 +2265,10 @@ col({expr})
 		    .	    現在の位置
 		    $	    カレント行の末尾(カレント行のバイト数+1を返す)
 		    'x	    マークxの位置(マークが設定されていない場合0)
-<<<<<<< HEAD
 		さらに {expr} は [lnum, col] という行番号と桁番号のリストで
 		あってもよい。col に "$" を指定して、ある行の最後の桁を取得す
 		るのにとても便利である。"lnum" か "col" が範囲外である場合は
 		0 を返す。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		行番号を取得するには|line()|を使う。行番号と桁番号両方を取得す
 		るには|getpos()|を使う。
 		画面上の桁番号を取得するには|virtcol()|を使う。
@@ -2689,19 +2335,13 @@ confirm({msg}, {choices} [, {default} [, {type}]])
 		値は選択した番号になる。最初の選択肢が1である。
 		Note: confirm()は、ダイアログサポートを有効にしてコンパイルし
 		た時にだけ動作する。|+dialog_con|と|+dialog_gui|を参照。
-<<<<<<< HEAD
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		ダイアログには{msg}に加えて{choices}の選択肢が表示される。
 		{choices}が指定されない、または空の場合は選択肢"&OK"が表示され
 		る(使用している言語に翻訳される)。
 		{msg}は文字列で'\n'を改行として使用できる。幾つかのシステムで
 		は、長すぎる行は自動的に折り返される。
-<<<<<<< HEAD
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{choices}は文字列で、個々の選択肢は'\n'によって区切られる。
 		例: >
 			confirm("Save changes?", "&Yes\n&No\n&Cancel")
@@ -2711,15 +2351,11 @@ confirm({msg}, {choices} [, {default} [, {type}]])
 			confirm("file has been modified", "&Save\nSave &All")
 <		コンソールでは、デフォルトのショートカットキーとして、各選択肢
 		の最初の文字が使われる。
-<<<<<<< HEAD
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		省略可能な引数{default}は<CR>キーを叩いた時に選択される選択肢
 		の番号を指定する。最初の選択肢をデフォルトにするならば1を使用
 		する。デフォルトを設定したくないのならば0を使用する。
 		{default}を省略した場合、0が使用される。
-<<<<<<< HEAD
 
 		省略可能な引数{type}はダイアログの種類を指定する。これは GTK,
 		Mac, Motif, Win32 の GUI でアイコンを指定するのに使われる。
@@ -2727,13 +2363,6 @@ confirm({msg}, {choices} [, {default} [, {type}]])
 		一つを指定する。以上のうちの先頭の文字だけで指定できる。{type}
 		が省略された場合、"Generic"が使用される。
 
-=======
-		省略可能な引数{type}はダイアログの種類を指定する。これは
-		Win32 GUI版でアイコンを指定するのに使う。"Error", "Question",
-		"Info", "Warning", "Generic"のうちどれか一つを指定する。以上の
-		うちの先頭の文字だけで指定できる。{type}が省略された場合、
-		"Generic"が使用される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		ユーザが<Esc>やCTRL-Cや、その他の割りこみキーでダイアログを中
 		断した場合、confirm()は0を返す。
 
@@ -2760,7 +2389,6 @@ copy({expr})	{expr}のコピーを作る。数値と文字列の場合は、{exp
 		通で、片方の要素に対し変更を加えると、もう一方の要素も変更され
 		る。|deepcopy()|も参照。
 
-<<<<<<< HEAD
 cos({expr})						*cos()*
 		{expr} の余弦(コサイン)をラジアンで浮動小数点数 |Float| で返す。
 		{expr} は |Float| または |Number| に評価されなければならない。
@@ -2785,8 +2413,6 @@ cosh({expr})						*cosh()*
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 count({comp}, {expr} [, {ic} [, {start}]])			*count()*
 		リスト|List|または辞書|Dictionary| {comp}の中に値{expr}が何回
 		現れるかを返す。
@@ -2850,10 +2476,7 @@ cursor({list})
 		'virtualedit'が有効のとき、{off}は文字の先頭からの画面上のオフ
 		セットを指定する。例えば、<Tab>の中の位置や最後の文字より後な
 		どへも移動できる。
-<<<<<<< HEAD
 		カーソルを移動できたときは 0 を、できなかったときは-1 を返す。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 deepcopy({expr}[, {noref}])				*deepcopy()* *E698*
 		{expr}のコピーを作る。数値と文字列の場合は、{expr}そのものとコ
@@ -2871,15 +2494,9 @@ deepcopy({expr}[, {noref}])				*deepcopy()* *E698*
 		要素があると、{noref}が1の場合は失敗する。
 		|copy()|も参照。
 
-<<<<<<< HEAD
 delete({fname})							*delete()*
 		{fname}という名前のファイルを削除する。戻り値は数値で、削除に
 		成功したら0、失敗したら0以外が返る。
-=======
-							*delete()*
-delete({fname})	{fname}という名前のファイルを削除する。戻り値は数値で、削除に
-		成功したら0、失敗したら1が返る。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		リスト|List|から要素を削除するには|remove()|を使う。
 
 							*did_filetype()*
@@ -2921,7 +2538,6 @@ escape({string}, {chars})				*escape()*
 			:echo escape('c:\program files\vim', ' \')
 <		結果: >
 			c:\\program\ files\\vim
-<<<<<<< HEAD
 <		|shellescape()| も参照。
 
 							*eval()*
@@ -2929,13 +2545,6 @@ eval({string})	{string}を評価し、値を返す。|string()|の戻り値を�
 		に非常に便利である。数値、浮動小数点数文字列、それらの複合に対
 		して動作する。実際に存在する関数への|Funcref|に対しても動作す
 		る。
-=======
-
-<							*eval()*
-eval({string})	{string}を評価し、値を返す。|string()|の戻り値を元の値に戻すの
-		に非常に便利である。数値、文字列、それらの複合に対して動作する。
-		実際に存在する関数への|Funcref|に対しても動作する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 eventhandler()						*eventhandler()*
 		イベントハンドラの中では1を返す。つまり、ユーザの文字入力を待っ
@@ -2979,7 +2588,6 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば1となり、�
 			varname		内部変数(|internal-variables|)
 					|curly-braces-names|, |Dictionary|の要
 					素、|List|の要素などに対しても動作する。
-<<<<<<< HEAD
 					インデックスの評価で無効な式であるとエ
 					ラーメッセージが出る可能性があることに
 					注意。例: >
@@ -2989,11 +2597,6 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば1となり、�
 					   :echo exists("l[xx]")
 <					   E121: Undefined variable: xx
 					   0
-=======
-					これを使うと関数を呼び出し、無効な式に
-					よりエラーメッセージが出る可能性がある
-					ことに注意。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:cmdname	exコマンド: 組み込みコマンド、ユーザ定
 					義コマンド、コマンド修飾子|:command|。
 					戻り値:
@@ -3049,7 +2652,6 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば1となり、�
 <		これは変数"bufcount"の存在を判定するのではなく、bufcountの値を
 		渡し、それが存在するかどうか判定してしまう。
 
-<<<<<<< HEAD
 exp({expr})						*exp()*
 		{expr} の指数を返す。
 		値は [0, inf] の範囲の浮動小数点数 (|Float|)。
@@ -3067,12 +2669,6 @@ exp({expr})						*exp()*
 expand({expr} [, {flag}])
 		ワイルドカードと{expr}内の特殊なキーワードを展開する。戻り値は
 		文字列。 'wildignorecase' が適用される。
-=======
-							*expand()*
-expand({expr} [, {flag}])
-		ワイルドカードと{expr}内の特殊なキーワードを展開する。戻り値は
-		文字列。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		複数の候補があった場合、それらは文字<NL>で区切られる。[注意:
 		バージョン5.0では空白文字が用いられ、スペースを含むファイル名
@@ -3086,21 +2682,13 @@ expand({expr} [, {flag}])
 		る。ここに簡単な概略を示す:
 
 			%		現在のファイル名
-<<<<<<< HEAD
 			#		代替バッファのファイル名
 			#n		n番の代替バッファのファイル名
-=======
-			#		裏バッファのファイル名
-			#n		n番の裏バッファのファイル名
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			<cfile>		カーソルのしたのファイル名
 			<afile>		autocmdのファイル名
 			<abuf>		autocmdのバッファ名
 			<sfile>		取り込み(source)中のファイル名
-<<<<<<< HEAD
 			<slnum>		取り込み(source)中の行番号
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			<cword>		カーソル下の単語(word)
 			<cWORD>		カーソル下の単語(WORD)
 			<client>	最後に受け取ったメッセージの{clientid}
@@ -3128,7 +2716,6 @@ expand({expr} [, {flag}])
 		変数と変換子の間には空白文字があってはならない。関数
 		|fnamemodify()|が通常のファイル名の変換には使用可能である。
 
-<<<<<<< HEAD
 		カレントバッファや代替バッファの名前が未定義のときに'%'や'#'を
 		使うと空文字列になる。"%:p"を名無しのバッファに使用した場合、
 		結果はカレントディレクトリに'/'が付加されたものになる。
@@ -3139,18 +2726,6 @@ expand({expr} [, {flag}])
 		も結果の文字列に含まれる。"**"を使うとディレクトリツリーを検索
 		できる。例えば、カレントディレクトリ以下にある全ての"README"を
 		見つけるには次のようにする: >
-=======
-		カレントバッファや裏バッファの名前が未定義のときに'%'や'#'を使
-		うと空文字列になる。"%:p"を名無しのバッファに使用した場合、結
-		果はカレントディレクトリに'/'が付加されたものになる。
-
-		'%'や'#'や'<'で始まらない{expr}は、コマンドラインのファイル名
-		と同じように展開される。オプションの{flag}が使用され、その値が
-		非ゼロでない時以外は'suffixes'と'wildignore'が使用される。存在
-		しないファイルの名前も結果の文字列に含まれる。"**"を使うとディ
-		レクトリツリーを検索できる。例えば、カレントディレクトリ以下に
-		ある全ての"README"を見つけるには次のようにする: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:echo expand("**/README")
 < 
 		expand()は、シェルの持っている変数や環境変数を展開することがで
@@ -3167,26 +2742,18 @@ extend({expr1}, {expr2} [, {expr3}])			*extend()*
 		|Dictionaries|でなければならない。
 
 		両方ともリストであるなら、{expr2}を{expr1}に付け加える。
-<<<<<<< HEAD
 		{expr3}が指定された場合は、{expr1}の第{expr3}番目の要素の前に
-=======
-		{expr3}が指定された場合は{expr1}の中の要素{expr1}の前に
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{expr2}の要素を挿入する。{expr3}が0のときは最初の要素の前に挿
 		入する。{expr3}がlen({expr1})に等しいときは末尾に{expr2}が付け
 		加えられる。
 		例: >
 			:echo sort(extend(mylist, [7, 5]))
 			:call extend(mylist, [2, 3], 1)
-<<<<<<< HEAD
 <		{expr1} が {expr2} と同じリストである場合、コピーされる要素の
 		数はリストの元の長さと同じである。
 		例として {expr3} が 1 のとき、最初の要素の N 個の新しいコピー
 		が挿入される(ここで N はリストの元の長さ)。
 		リストに1個の要素を加えるには|add()|を使う。2つのリストを連結
-=======
-<		リストに1個の要素を加えるには|add()|を使う。2つのリストを連結
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		して新しいリストを作るには演算子+を使う: >
 			:let newlist = [1, 2, 3] + [4, 5]
 <
@@ -3280,11 +2847,7 @@ finddir({name}[, {path}[, {count}]])				*finddir()*
 		レクトリでなく、{count}番目に見つかったディレクトリを返す。
 		{count}が負の場合は、見つかったディレクトリ全てのリスト|List|
 		を返す。これはexコマンド|:find|によく似ている。
-<<<<<<< HEAD
 		{|+file_in_path| 機能付きでコンパイルされたときのみ利用可能}
-=======
-		{+file_in_path機能付きでコンパイルされたときのみ利用可能}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 findfile({name}[, {path}[, {count}]])				*findfile()*
 		|finddir()|と同様だが、ディレクトリでなくファイルを検索する。
@@ -3294,7 +2857,6 @@ findfile({name}[, {path}[, {count}]])				*findfile()*
 <		この例は、カレントファイルがあるディレクトリから上方に
 		"tags.vim"を見つけるまで再帰的に検索する。
 
-<<<<<<< HEAD
 float2nr({expr})					*float2nr()*
 		{expr} の小数点以下を切り捨てて |Number| に変換する。
 		{expr} は |Float| または |Number| に評価されなければならない。
@@ -3361,10 +2923,6 @@ fnameescape({string})					*fnameescape()*
 			edit \+some\ str\%nge\|name
 
 fnamemodify({fname}, {mods})				*fnamemodify()*
-=======
-							*fnamemodify()*
-fnamemodify({fname}, {mods})
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		ファイル名{fname}を{mods}にしたがって変更する。{mods}はコマン
 		ドラインで使われるのと同様な文字列である。詳細は
 		|filename-modifiers|を参照。
@@ -3372,18 +2930,8 @@ fnamemodify({fname}, {mods})
 			:echo fnamemodify("main.c", ":p:h")
 <		結果: >
 			/home/mool/vim/vim/src/
-<<<<<<< HEAD
 <		Note: {fname}の中の環境変数は展開されない。環境変数を展開させ
 		るには|expand()|を使うこと。
-=======
-<		Note: {fname}の中の環境変数と"~"は展開されない。これらを展開さ
-		せるには、最初に|expand()|を使うこと。
-		訳注: 環境変数は展開されないが、"~"は使えるようだ？
-		訳注: echo fnamemodify("~/.vimrc", ":p:h")
-		訳注: => "/home/myname"
-		訳注: echo fnamemodify("$HOME/.vimrc", ":p:h")
-		訳注: => "$HOME" 
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 foldclosed({lnum})					*foldclosed()*
 		結果は数値。{lnum}行目が閉じた折り畳みの中にあるなら、その折り
@@ -3443,27 +2991,17 @@ function({name})					*function()* *E700*
 		関数でも組み込み関数でもよい。
 
 
-<<<<<<< HEAD
 garbagecollect([{atexit}])				*garbagecollect()*
-=======
-garbagecollect()					*garbagecollect()*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		循環参照を持ち、使われていないリスト|List|と辞書|Dictionaries|
 		をクリーンアップする。これはメモリ不足に陥ったときや、
 		'updatetime'経過後ユーザのキー入力を待っているときに自動的に行
 		われるので、この関数を呼ぶ必要があることはほとんどない。
-<<<<<<< HEAD
 		循環参照を持たない要素は、使われなくなったとき必ず解放される。
 		長時間実行されるスクリプトの中で循環参照を持つ非常に大きなリス
 		トや辞書を削除したときに有用である。
 		省略可能な引数 {atexit} に 1 を指定すると、Vim を終了するとき
 		にもガベージコレクションが行われる。これはメモリリークを発見す
 		るのに役に立つ。
-=======
-		循環参照を持たない要素は、使われなくなったとき必ず開放される。
-		長時間実行されるスクリプトの中で循環参照を持つ非常に大きなリス
-		トや辞書を削除したときに有用である。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 get({list}, {idx} [, {default}])			*get()*
 		リスト|List| {list}から{idx}番目の要素を取得する。この要素を取
@@ -3502,11 +3040,8 @@ getbufline({expr}, {lnum} [, {end}])
 getbufvar({expr}, {varname})				*getbufvar()*
 		バッファ{expr}のオプションの値やバッファローカル変数{varname}
 		の値を返す。Note "b:"をつけない変数名を指定すること。
-<<<<<<< HEAD
 		{varname} が空文字列の場合、全てのバッファローカル変数からなる
 		辞書を返す。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		グローバルオプション、バッファローカルオプションのどちらに対し
 		ても動作するが、グローバル変数、ウィンドウローカル変数、ウィン
 		ドウローカルオプションに対しては動作しない。
@@ -3531,21 +3066,14 @@ getchar([expr])						*getchar()*
 		ドして文字列にして返す。
 		特殊キーとは0x80(10進数で128)で始まるバイト列である。これは
 		文字列"\<Key>"と同じ値である(例: "\<Left>")。戻り値は文字列で
-<<<<<<< HEAD
 		あり、修飾キー(shift, control, alt)は含まれない。
-=======
-		あり、修飾キー(shift, contro, alt)は含まれない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		{expr}が1のときは最初のバイトだけを返す。1バイト文字の場合、こ
 		れはその文字そのものを表す数値である。これを文字列に変換するに
 		はnr2char()を使う。
 
-<<<<<<< HEAD
 		修飾キーを取得するには getcharmod() を使う。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		ユーザがマウスをクリックしたときはマウスイベントを返す。クリッ
 		クした位置は|v:mouse_col|, |v:mouse_lnum|, |v:mouse_win|で得ら
 		れる。以下の例は、普通にマウスがクリックされたときと同じように
@@ -3584,18 +3112,11 @@ getcharmod()						*getcharmod()*
 			2	shift
 			4	control
 			8	alt (meta)
-<<<<<<< HEAD
 			16	meta (ALT と META が区別される場合)
 			32	マウスのダブルクリック
 			64	マウスのトリプルクリック
 			96	マウスのクアドラプルクリック (== 32 + 64)
 			128	command (Macintosh のみ)
-=======
-			16	マウスダブルクリック
-			32	マウストリプルクリック
-			64	マウスクアドラプルクリック
-			128	Macintoshのみ: command
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		文字自身に含まれていない修飾キーのみ取得できる。つまり、
 		Shift-aは修飾キーなしの"A"となる。
 
@@ -3634,10 +3155,7 @@ getfsize({fname})					*getfsize()*
 		で返す。
 		{fname}がディレクトリのときは0を返す。
 		ファイル{fname}が見つからないときは-1を返す。
-<<<<<<< HEAD
 		{fname} のサイズが |Number| の範囲外の場合は -2 を返す。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 getfontname([{name}])					*getfontname()*
 		引数なしで使われた場合には現在の通常のフォント名を返す。ハイラ
@@ -3717,7 +3235,6 @@ getloclist({nr})					*getloclist()*
 		{nr}に0を指定するとカレントウィンドウになる。ロケーションリス
 		トウィンドウに対して使用すると、そこに表示されているロケーショ
 		ンリストが返る。ウィンドウ番号{nr}が無効な場合は、空リストが返
-<<<<<<< HEAD
 		る。それ以外は|getqflist()|と同じ。
 
 getmatches()						*getmatches()*
@@ -3741,10 +3258,6 @@ getmatches()						*getmatches()*
 			'pattern': 'FIXME', 'priority': 10, 'id': 2}] >
 			:unlet m
 <
-=======
-		る。それ以外はgetqflist()と同じ。
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 getqflist()						*getqflist()*
 		現在の全quickfixエラーのリストを返す。リストの各要素は辞書で、
 		以下の要素を持つ:
@@ -3792,15 +3305,12 @@ getregtype([{regname}])					*getregtype()*
 		<CTRL-V>は値0x16の1文字である。
 		{regname}を指定しないときは|v:register|が使われる。
 
-<<<<<<< HEAD
 gettabvar({tabnr}, {varname})				*gettabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を取得する。
 		|t:var|
 		タブの番号は 1 から始まる。
 		Note: 指定する変数名は "t:" を除いた名前。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 gettabwinvar({tabnr}, {winnr}, {varname})		*gettabwinvar()*
 		タブページ{tabnr}内のウィンドウ{winnr}のウィンドウローカル変数
 		{varname}の値を取得する。
@@ -3809,15 +3319,9 @@ gettabwinvar({tabnr}, {winnr}, {varname})		*gettabwinvar()*
 		タブページ番号は1から始まる。カレントタブページを指定するには
 		|getwinvar()|を指定する。
 		{winnr}が0のときはカレントウィンドウとなる。
-<<<<<<< HEAD
 		グローバルオプション、バッファローカルオプション、ウィンドウ
 		ローカルオプションに対しても動作するが、グローバル変数やバッ
 		ファローカル変数に対しては動作しない。
-=======
-		グローバルオプション、バッファローカルオプション、ウィンドウロ
-		ーカルオプションに対しても動作するが、グローバル変数やバッファ
-		ローカル変数に対しては動作しない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{varname}が空のときは全ウィンドウローカル変数からなる辞書を返
 		す。
 		Note {varname}は"w:"をつけずに指定しなければならない。
@@ -3840,7 +3344,6 @@ getwinvar({winnr}, {varname})				*getwinvar()*
 			:let list_is_on = getwinvar(2, '&list')
 			:echo "myvar = " . getwinvar(1, 'myvar')
 
-<<<<<<< HEAD
 glob({expr} [, {flag}])					*glob()*
 		{expr}内のファイル名のワイルドカードを展開する。特殊文字につい
 		ては|wildcards|を参照。結果は文字列。
@@ -3849,13 +3352,6 @@ glob({expr} [, {flag}])					*glob()*
 		用される。つまり'wildignore' のパターンにマッチする名前はス
 		キップされ、'suffixes' がマッチの順番に影響を与える。
 		'wildignorecase' は常に適用される。
-=======
-							*glob()*
-glob({expr})	
-		{expr}内のファイル名のワイルドカードを展開する。特殊文字につい
-		ては|wildcards|を参照。結果は文字列。
-		結果が複数存在する場合、各々が文字<NL>によって区切られる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		展開が失敗した場合、結果は空文字列。結果には、存在しないファイ
 		ル名は含まれない。
 
@@ -3870,15 +3366,9 @@ glob({expr})
 		特殊なVimの変数を展開するためには|expand()|を参照。外部コマン
 		ドの生の出力を得るためには|system()|を参照。
 
-<<<<<<< HEAD
 globpath({path}, {expr} [, {flag}])			*globpath()*
 		{path}の中の全ディレクトリに対して|glob()|を実行し、結果を連結
 		する。例: >
-=======
-globpath({path}, {expr})				*globpath()*
-		{path}の中の全ディレクトリに対してglob()を実行し、結果を連結す
-		る。例: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:echo globpath(&rtp, "syntax/c.vim")
 <		{path}はコンマ区切りのディレクトリのリスト。各ディレクトリを
 		{expr}の前に付加し、glob()と同様にそれを展開する。必要に応じて
@@ -3889,27 +3379,18 @@ globpath({path}, {expr})				*globpath()*
 		スケープと見なされてしまうので、バックスラッシュは削除すること。
 		どれかのディレクトリに対して展開が失敗してもエラーメッセージは
 		表示されない。
-<<<<<<< HEAD
 		{flag} に非零が指定されない限り、オプション'wildignore'が適用
 		される。つまり、'wildignore'のパターンにマッチする名前はスキッ
 		プされる。
-=======
-		オプション'wildignore'が適用される。つまり、'wildignore'の
-		パターンにマッチする名前はスキップされる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		"**"を使ってディレクトリツリーを再帰的に検索することができる。
 		例えば、'runtimepath'とそれ以下のディレクトリから全ての
 		"README.txt"を探すには次のようにする: >
 			:echo globpath(&rtp, "**/README.txt")
-<<<<<<< HEAD
 <		上向き検索と、"**" の深さの限界はサポートされていない。よって
 		オプション 'path' の値をそのまま使うとうまく動かないことが
 		ある。
 
-=======
-< 
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*has()*
 has({feature})	結果は機能{feature}がサポートされる場合1、されない場合0とな
 		る。引数{feature}は文字列。下記の|feature-list|を参照。
@@ -3936,11 +3417,7 @@ hasmapto({what} [, {mode} [, {abbr}]])			*hasmapto()*
 		{mode}に対しては以下の文字が利用できる:
 			n	ノーマルモード
 			v	ビジュアルモード
-<<<<<<< HEAD
 			o	オペレータ待機モード (Operator-pending)
-=======
-			o	モーション待ちモード (Operator-pending)
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			i	インサートモード
 			l	Language-Argumentモード ("r", "f", "t"など)
 			c	コマンドラインモード
@@ -3973,24 +3450,14 @@ histdel({history} [, {item}])				*histdel()*
 		{history}の内容を削除する。例えば総てのエントリを消すこともで
 		きる。{history}の部分に可能な値は|hist-names|を参照。
 
-<<<<<<< HEAD
 		パラメータ{item}が文字列に評価される場合、これは正規表現と
-=======
-		パラメータ{item}が文字列として与えられた場合、これは正規表現と
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		して扱われる。その表現にマッチする総てのエントリがhistoryから
 		削除される(複数あっても)。
 		"\c"をつけない場合、大文字・小文字が一致しなければならない。
 		|/\c|。
-<<<<<<< HEAD
 		{item}が数値に評価される場合、インデックスとして解釈される。イ
 		ンデックスについては|:history-indexing|を参照。関連するエント
 		リ(訳注:The respective entry)も、存在すれば削除される。
-=======
-		{item}が数値ならば、インデックスとして解釈される。インデックス
-		については|:history-indexing|を参照。関連するエントリ(訳注:The
-		respective entry)も、存在すれば削除される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		結果は数値: 削除に成功すれば1を、そうでなければ0が返る。
 
@@ -4038,13 +3505,8 @@ hlexists({name})					*hlexists()*
 		結果は数値で、{name}という名のハイライトグループが存在すれば、
 		非ゼロの値が返される。これはなんらかの方法でそのグループが既に
 		定義されている時にのみ起こる。これの為に実際に何らかのハイライ
-<<<<<<< HEAD
 		ティングアイテムが設定されている必要はなく、単に構文アイテムと
 		しても使われるだろう。
-=======
-		ティングアイテムが設定されている必要はなく、単にシンタックスの
-		アイテムとしても使われるだろう。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*highlight_exists()*
 		以前の名前: highlight_exists().
 
@@ -4065,12 +3527,8 @@ hostname()						*hostname()*
 iconv({expr}, {from}, {to})				*iconv()*
 		文字列{expr}をエンコーディング{from}からエンコーディング{to}に
 		変換した文字列を返す。
-<<<<<<< HEAD
 		変換が完全に失敗したときは空文字列を返す。一部の文字が変換でき
 		なかった場合、その文字は "?" に置き換わる。
-=======
-		変換が失敗したときは空文字列を返す。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		エンコーディング名はライブラリ関数iconv()が受け付けるものなら
 		なんでもよい。":!man 3 iconv"を参照。
 		ほとんどの変換は、Vimが|+iconv|機能つきでコンパイルされている
@@ -4084,11 +3542,7 @@ iconv({expr}, {from}, {to})				*iconv()*
 		UCS-2との変換を行おうとしても、自動的にUTF-8との変換に変更され
 		る。いずれにせよ、UCS-2はNULバイトを含むため、文字列にUCS-2を
 		使うことはできない。
-<<<<<<< HEAD
 		{|+multi_byte| 機能付きでコンパイルされたときのみ利用可能}
-=======
-		{+multi_byte機能付きでコンパイルされたときのみ利用可能}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*indent()*
 indent({lnum})	カレントバッファの{lnum}行目のインデント量を数値で返す。この
@@ -4099,14 +3553,10 @@ indent({lnum})	カレントバッファの{lnum}行目のインデント量を�
 
 index({list}, {expr} [, {start} [, {ic}]])			*index()*
 		リスト|List| {list}の中で、{expr}に等しい要素の最小のインデッ
-<<<<<<< HEAD
 		クスを返す。自動的な変換は行われないので、文字列の "4" は数値
 		の 4 とは異なると判定される。そして数値の 4 は浮動小数点数の
 		4.0 とも異なる。'ignorecase' はここでは適用されず、つねに大文
 		字・小文字は区別される。
-=======
-		クスを返す。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{start}が指定された場合はインデックス{start}から要素の検索を始
 		める(負数を指定すると末尾からの相対位置となる)。
 		{ic}に0でない値が指定された場合、大文字・小文字は区別されない。
@@ -4118,15 +3568,9 @@ index({list}, {expr} [, {start} [, {ic}]])			*index()*
 
 input({prompt} [, {text} [, {completion}]])		*input()*
 		結果は文字列で、ユーザがコマンドラインに入力したものが返される。
-<<<<<<< HEAD
 		引数 {prompt} にはプロンプト文字列か空文字列を指定する。空文字
 		列の場合はプロンプトなしになる。'\n'を使ってプロンプトに改行を
 		含めることができる。|:echohl|によるハイライトの設定がプロン
-=======
-		引数はプロンプト用文字列であり、プロンプトが必要なければ空文字
-		列でかまわない。新しい行から入力させるために'\n'をプロンプトに
-		使用することができる。|:echohl|によるハイライトの設定がプロン
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		プトに適用される。入力はコマンドラインと同様に行え、同じ編集コ
 		マンドやキーマップが使用できる。input()に入力された文字列には、
 		他の履歴とは独立した履歴が与えられる。
@@ -4166,13 +3610,8 @@ input({prompt} [, {text} [, {completion}]])		*input()*
 			:endfunction
 
 inputdialog({prompt} [, {text} [, {cancelreturn}]])		*inputdialog()*
-<<<<<<< HEAD
 		|input()|と同様。GUIで動作していて、テキストダイアログがサポー
 		トされている場合はダイアログを表示してテキストを入力させる。
-=======
-		input()と同様。GUIで動作していて、テキストダイアログがサポート
-		されている場合はダイアログを表示してテキストを入力させる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		例: >
 			:let n = inputdialog("value for shiftwidth", &sw)
 			:if n != ""
@@ -4200,11 +3639,7 @@ inputlist({textlist})					*inputlist()*
 				\ '2. green', '3. blue'])
 
 inputrestore()						*inputrestore()*
-<<<<<<< HEAD
 		前回の|inputsave()|で保存しておいた先行入力を復元する。
-=======
-		前回のinputsave()で保存しておいた先行入力を復元する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		inputsave()と同じ回数だけ呼ぶようにしなければならない。しかし
 		多く呼びすぎても害はない。復元するものがなければ1を、そうでな
 		ければ0を返す。
@@ -4239,14 +3674,11 @@ insert({list}, {item} [, {idx}])			*insert()*
 		Note {item}がリストの場合は、1個の要素として追加される。リスト
 		を連結するには|extend()|を使うこと。
 
-<<<<<<< HEAD
 invert({expr})						*invert()*
 		ビット反転。引数は数値に変換される。リスト、辞書、浮動小数点数
 		を指定するとエラーになる。例: >
 			:let bits = invert(bits)
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*isdirectory()*
 isdirectory({directory})
 		結果は数値で、{directory}という名前のディレクトリが存在すれば
@@ -4266,11 +3698,7 @@ islocked({expr})					*islocked()* *E786*
 			:echo islocked('alist[1]')	" 0
 
 <		{expr}が存在しない変数のときはエラーメッセージが表示される。変
-<<<<<<< HEAD
 		数の存在を確認するには|exists()|を使う。
-=======
-		数の存在を確認するには|exist()|を使う。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 items({dict})						*items()*
 		{dict}の全要素のキー・値のペアからなるリストを返す。戻り値の各
@@ -4312,11 +3740,7 @@ libcall({libname}, {funcname}, {argument})
 		もしも引数が数値ならば、関数にはint型の引数が1つ渡される。引数
 		が文字列の場合には、関数にはヌル終端記号を持つ文字列が引数とし
 		て渡される。
-<<<<<<< HEAD
 		|restricted-mode|の中で呼ぶと失敗する。
-=======
-		|restrict-mode|の中で呼ぶと失敗する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		libcall()によってVimを再コンパイルすることなく'plug-in'と呼ば
 		れる独自の拡張を行なうことができるようになる。それは(直接)シス
@@ -4342,7 +3766,6 @@ libcall({libname}, {funcname}, {argument})
 		は、フルパスで指定する必要がある。
 		Unixでは、独自のプラグインをコンパイルするときはオブジェクトコー
 		ドを位置独立('PIC')としてコンパイルしなければならない。
-<<<<<<< HEAD
 		{Win32 といくつかの Unix で、|+libcall| 機能が有効になっている
 		ときのみ利用可能}
 		例: >
@@ -4354,18 +3777,6 @@ libcallnr({libname}, {funcname}, {argument})
 		{Win32と、|+libcall|機能が有効になっているUnixでのみ利用可能}
 		例: >
 			:echo libcallnr("/usr/lib/libc.so", "getpid", "")
-=======
-		{Win32と、|+libcall|機能が有効になっているUnixでのみ利用可能}
-		例: >
-			:echo libcall("libc.so", "getenv", "HOME")
-			:echo libcallnr("/usr/lib/libc.so", "getpid", "")
-< 
-							*libcallnr()*
-libcallnr({libname}, {funcname}, {argument})
-		libcall()とほぼ同様だが、文字列でなくintを返す関数に使う。
-		{Win32と、|+libcall|機能が有効になっているUnixでのみ利用可能}
-		例 (あまり役に立たないが…): >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:call libcallnr("libc.so", "printf", "Hello World!\n")
 			:call libcallnr("libc.so", "sleep", 10)
 <
@@ -4378,12 +3789,9 @@ line({expr})	結果は数値で、{expr}で与えられた位置のファイル�
 			    る)
 		    w0	    カレントウィンドウの最上行
 		    w$	    カレントウィンドウの最下行
-<<<<<<< HEAD
 		    v	    ビジュアルモードでは: ビジュアル選択領域の開始行
 			    (カーソルがその端)。ビジュアルモード以外ではカーソ
 			    ル位置を返す。すぐに更新される点が |'<| と違う。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		Note 他のファイルのマークも使える。その場合、戻り値はそのファ
 		イルの行番号となる。
 		桁番号を取得するには|col()|を使う。両方を取得するには
@@ -4396,11 +3804,7 @@ line({expr})	結果は数値で、{expr}で与えられた位置のファイル�
 		このオートコマンドはファイルを開いた時に、最後に開かれていた時
 		の行へ自動的にジャンプするものである。これは'"マークがセットさ
 		れている時にのみ有効である: >
-<<<<<<< HEAD
 	:au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-=======
-	:au BufReadPost * if line("'\"") | exe "normal '\"" | endif
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*line2byte()*
 line2byte({lnum})
@@ -4428,7 +3832,6 @@ localtime()
 		現在の時刻、1970年1月1日からの経過秒数を返す。|strftime()|と
 		|getftime()|も参照。
 
-<<<<<<< HEAD
 
 log({expr})						*log()*
 		{expr} の自然対数 (底e) を浮動小数点数 (|Float|) で返す。
@@ -4453,18 +3856,13 @@ log10({expr})						*log10()*
 <			-2.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 		
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 map({expr}, {string})					*map()*
 		{expr}はリスト|List|または辞書|Dictionary|。
 		{expr}の各要素を、{string}を評価した結果で置き換える。
 		{string}の中では|v:val|が現在の要素の値を保持している。
 		辞書の場合は|v:key|が現在の要素のキーを保持している。
-<<<<<<< HEAD
 		リストの場合は|v:key|が現在の要素のインデックスを保持してい
 		る。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		例: >
 			:call map(mylist, '"> " . v:val . " <"')
 <		これは"mylist"の各要素の前に"> "をつけ、後に" <"をつける。
@@ -4481,7 +3879,6 @@ map({expr}, {string})					*map()*
 		ラーが発生した場合は、それ以降の要素は処理されない。
 
 
-<<<<<<< HEAD
 maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		{dict}が省略されたかゼロのとき: モード{mode}におけるキーマップ
 		{name}のrhsを返す。結果の文字列内の特殊文字は、":map"コマンド
@@ -4523,25 +3920,6 @@ maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		  "sid"	     <sid> マッピングで使用されるスクリプトローカルID
 			     (|<SID>|)。
 
-=======
-maparg({name}[, {mode} [, {abbr}]])			*maparg()*
-		モード{mode}におけるキーマップ{name}のrhsを返す。{name}という
-		キーマップが存在しない場合、空文字列が返される。{mode}には次の
-		文字が使用可能:
-			"n"	ノーマル
-			"v"	ビジュアル
-			"o"	モーション待ち (Operator-pending)
-			"i"	インサート
-			"c"	コマンドライン
-			"l"	langmap |language-mapping|
-			""	ノーマル、ビジュアル、及びモーション待ち
-		{mode}が省略された場合、""が使用される。
-		{abbr}が指定され、0でない場合はマッピングでなく短縮入力を対象
-		とする。
-		{name}には":map"コマンドで使用可能な、特殊なキー名が指定でき
-		る。結果の文字列内の特殊文字は、":map"コマンドでリスト表示した
-		時のように変換される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		まずカレントバッファにローカルなマッピングを探し、次のグローバ
 		ルマッピングを探す。
 		この関数を使うと、あるキーに対して既にマップがされているとき、
@@ -4587,10 +3965,7 @@ match({expr}, {pat}[, {start}[, {count}]])			*match()*
 		値を返す。
 		最初の文字またはリストの最初の要素にマッチしたときは0を返す。
 		マッチがないときは-1を返す。
-<<<<<<< HEAD
 		サブマッチを取得するには |matchlist()| を参照。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		例: >
 			:echo match("testing", "ing")	" 結果は 4
 			:echo match([1, 'x'], '\a')	" 結果は 1
@@ -4637,7 +4012,6 @@ match({expr}, {pat}[, {start}[, {count}]])			*match()*
 		を設定できる。'smartcase'は適用されない。マッチングは常に
 		'magic'をオン、'cpoptions'を空にした状態で行われる。
 
-<<<<<<< HEAD
 					*matchadd()* *E798* *E799* *E801*
 matchadd({group}, {pattern}[, {priority}[, {id}]])
 		カレントウィンドウで強調表示するパターンを定義する。このパター
@@ -4671,8 +4045,6 @@ matchadd({group}, {pattern}[, {priority}[, {id}]])
 <		|matchadd()| と |:match| で定義したマッチのリストは
 		|getmatches()| で取得できる。全てのマッチを削除するのは
 		|clearmatches()| 一発でできる。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 matcharg({nr})							*matcharg()*
 		|:match|、|:2match|、|:3match|によって設定されているマッチパター
@@ -4683,7 +4055,6 @@ matcharg({nr})							*matcharg()*
 			引数で指定した検索パターン
 		{nr}が1、2、3のどれでもないときは空リストを返す。
 		マッチパターンがセットされていないときは['', '']を返す。
-<<<<<<< HEAD
 		|:match|を保存し、復元するのに便利である。
 		|:match| を使った強調は 3 個までに限られている。
 		|matchadd()| にはこの制限はない。
@@ -4696,14 +4067,6 @@ matchdelete({id})			       *matchdelete()* *E802* *E803*
 
 matchend({expr}, {pat}[, {start}[, {count}]])			*matchend()*
 		|match()|と同じだが、返されるのはマッチした部分文字列の終了後の
-=======
-		|:match|を保存し、復元するために使われる。
-
-
-							*matchend()*
-matchend({expr}, {pat})
-		match()と同じだが、返されるのはマッチした部分文字列の終了後の
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		インデックスである。例: >
 			:echo matchend("testing", "ing")
 <		結果は"7"。
@@ -4714,26 +4077,15 @@ matchend({expr}, {pat})
 			:let span = matchend(line, '[^a-zA-Z]')
 <		ただしマッチがないときには-1を返すところが異なる。
 
-<<<<<<< HEAD
 		{start}は|match()|の場合と同じ意味を持つ。 >
-=======
-		{start}はmatch()の場合と同じ意味を持つ。 >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:echo matchend("testing", "ing", 2)
 <		結果は"7"。 >
 			:echo matchend("testing", "ing", 5)
 <		結果は"-1"。
-<<<<<<< HEAD
 		{expr}がリストの場合、戻り値は |match()| と等しくなる。
 
 matchlist({expr}, {pat}[, {start}[, {count}]])			*matchlist()*
 		|match()| と同じだがリストを返す。リストの最初の要素は、
-=======
-		{expr}がリストの場合、戻り値はmatch()と等しくなる。
-
-matchlist({expr}, {pat}[, {start}[, {count}]])			*matchlist()*
-		match()と同じだがリストを返す。リストの最初の要素は、
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		matchstr()が返すのと同じマッチした文字列。それ以降の要素は
 		|:substitute|における"\1"、"\2"のようなサブマッチである。\1か
 		ら\9までの間で、指定されなかったものは空文字列となる。例: >
@@ -4742,19 +4094,11 @@ matchlist({expr}, {pat}[, {start}[, {count}]])			*matchlist()*
 		マッチしなかったときは空リストを返す。
 
 matchstr({expr}, {pat}[, {start}[, {count}]])			*matchstr()*
-<<<<<<< HEAD
 		|match()| と同じだが、マッチした文字列を返す。例: >
 			:echo matchstr("testing", "ing")
 <		結果は"ing"。
 		マッチしなかったときは""を返す。
 		{start}の意味は |match()| の場合と同じ。 >
-=======
-		match()と同じだが、マッチした文字列を返す。例: >
-			:echo matchstr("testing", "ing")
-<		結果は"ing"。
-		マッチしなかったときは""を返す。
-		{start}の意味はmatch()の場合と同じ。 >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:echo matchstr("testing", "ing", 2)
 <		結果は"ing"。 >
 			:echo matchstr("testing", "ing", 5)
@@ -4782,23 +4126,17 @@ mkdir({name} [, {path} [, {prot}]])
 		そうでないときは""にすること。
 		{prot}は作成するディレクトリの保護ビット。デフォルトは0755
 		(rwxr-xr-x: 所有者は読み書き可能、他の人は読み込み可能)。
-<<<<<<< HEAD
 		他の人が読み込めないようにするには0700とすること。{prot} は
 		{name} の最後の部分にのみ適用される。なので、/tmp/foo/bar
 		を作成すると /tmp/foo は 0755 で作成される。
 		例: >
 			:call mkdir($HOME . "/tmp/foo/bar", "p", 0700)
 <		|sandbox|の中ではこの関数は使用できない。
-=======
-		他の人が読み込めないようにするには0700とすること。
-		|sandbox|の中ではこの関数は使用できない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		システムによっては利用できない場合がある。これを確認するには次
 		のようにする: >
 			:if exists("*mkdir")
 <
 							*mode()*
-<<<<<<< HEAD
 mode([expr])		現在のモードを示す文字列を返す。
 			[expr] に 0 でない数値か空でない文字列(|non-zero-arg|)
 			を指定した場合、フルモードが返される。それ以外の場合は
@@ -4807,10 +4145,6 @@ mode([expr])		現在のモードを示す文字列を返す。
 
 			n	ノーマル
 			no	オペレータ待機
-=======
-mode()		現在のモードを示す文字列を返す。
-			n	ノーマル
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			v	文字指向ビジュアル
 			V	行指向ビジュアル
 			CTRL-V	矩形指向ビジュアル
@@ -4818,7 +4152,6 @@ mode()		現在のモードを示す文字列を返す。
 			S	行指向セレクト
 			CTRL-S	矩形指向セレクト
 			i	インサート
-<<<<<<< HEAD
 			R	置換 |R|
 			Rv	仮想置換 |gR|
 			c	コマンドライン
@@ -4849,13 +4182,6 @@ mzeval({expr})							*mzeval()*
 		    :echo mzeval("h")
 <
 		{|+mzscheme| 機能を有効にしてコンパイルしたときのみ有効}
-=======
-			R	置換
-			c	コマンドライン
-			r	Hit-enter プロンプト
-		これらはオプション'statusline'の中で使うと便利である。他のほと
-		んどの場所では"c"または"n"しか返さない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 nextnonblank({lnum})					*nextnonblank()*
 		{lnum}行以降({lnum}行を含む)の最初の非空行の行番号を返す。
@@ -4876,13 +4202,10 @@ nr2char({expr})
 		る。nr2char(0)は真のNUL文字(文字列の終端)となるので、空文字列
 		を返す。
 
-<<<<<<< HEAD
 							*getpid()*
 getpid()	Vim のプロセス ID を数値で返す。Unix と MS-Windows では Vim が
 		終了するまでこれは一意な数値である。MS-DOS では常にゼロである。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*getpos()*
 getpos({expr})	{expr}の位置を返す。{expr}として指定できる値については
 		|line()|を参照。
@@ -4901,7 +4224,6 @@ getpos({expr})	{expr}の位置を返す。{expr}として指定できる値に�
 			call setpos('.', save_cursor)
 <		|setpos()|も参照。
 
-<<<<<<< HEAD
 or({expr}, {expr})					*or()*
 		二つの引数のビット論理和。引数は数値に変換される。リスト、辞
 		書、浮動小数点数を指定するとエラーになる。
@@ -4909,8 +4231,6 @@ or({expr}, {expr})					*or()*
 			:let bits = or(bits, 0x80)
 
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 pathshorten({expr})					*pathshorten()*
 		パス{expr}におけるディレクトリ名を短縮して返す。拡張子、ファイ
 		ル名はそのまま保たれる。パスのその他の構成要素は1文字に縮めら
@@ -4919,7 +4239,6 @@ pathshorten({expr})					*pathshorten()*
 <			~/.v/a/myfile.vim ~
 		パスが実際に存在するかどうかは関係ない。
 
-<<<<<<< HEAD
 pow({x}, {y})						*pow()*
 		{x} の {y} 乗を |Float| で返す。{x} と {y} は |Float| または
 		|Number| に評価されなければならない。
@@ -4932,8 +4251,6 @@ pow({x}, {y})						*pow()*
 <			2.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 		
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 prevnonblank({lnum})					*prevnonblank()*
 		{lnum}行以前({lnum}行を含む)の最初の非空行の行番号を返す。
 		例: >
@@ -4960,14 +4277,11 @@ printf({fmt}, {expr1} ...)				*printf()*
 		  %04x  0で埋めて少なくとも4文字にした16進数値
 		  %X    16進数値(大文字)
 		  %o    8進数値
-<<<<<<< HEAD
 		  %f	123.456 形式の浮動小数点数
 		  %e	1.234e3 形式の浮動小数点数
 		  %E	1.234E3 形式の浮動小数点数
 		  %g	浮動小数点数。値によって %f または %e となる
 		  %G	浮動小数点数。値によって %f または %E となる
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		  %%    文字 % そのもの
 
 		変換子指示は'%'で始まり、変換文字で終わる。それ以外の全ての文
@@ -5016,10 +4330,7 @@ printf({fmt}, {expr1} ...)				*printf()*
 			数字文字列を省略した場合、精度は0になる。d, o, x, X変
 			換における最低桁数を指定する。また、s変換における最大
 			バイト数を指定する。
-<<<<<<< HEAD
 			浮動小数点数の場合は小数点以下の桁数。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		型
 			変換の型を指定する1文字。下記を参照。
@@ -5034,10 +4345,7 @@ printf({fmt}, {expr1} ...)				*printf()*
 
 		変換指示子の意味は以下の通り: 
 
-<<<<<<< HEAD
 				*printf-d* *printf-o* *printf-x* *printf-X*
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		doxX    数値の引数を符号付き10進数(d)、符号なし8進数(o)、符号
 			なし16進数(xまたはX)の書式に変換する。xの場合は
 			"abcdef"と小文字を使い、Xのの場合は"ABCDEF"と大文字を
@@ -5048,7 +4356,6 @@ printf({fmt}, {expr1} ...)				*printf()*
 			の幅を切り詰めることは決してない。変換結果がフィールド
 			幅より多くの桁を必要とする場合は、十分な幅に広げられる。
 
-<<<<<<< HEAD
 							*printf-c*
 		c	引数の数値を1バイトに変換し、結果の文字列を書き出す。
 
@@ -5089,19 +4396,6 @@ printf({fmt}, {expr1} ...)				*printf()*
 		浮動小数点数または文字列の引数を受け取る変換指示子には、数値を
 		与えることもできる。変換は自動的に行われる。
 		それ以外の型の引数を与えるとエラーメッセージが表示される。
-=======
-		c	引数の数値を1バイトに変換し、結果の文字列を書き出す。
-
-		s	引数の文字列を出力する。精度を指定した場合、その数値以
-			下のバイト数のみを書き出す。
-
-		%	単一の'%'を書き出す。引数は変換しない。完全な変換指定
-			は"%%"となる。
-
-		各引数には数値か文字列を受け取り、変換指示子に合うように自動的
-		に変換される。引数の型がそれ以外の場合はエラーメッセージが表示
-		される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*E766* *E767*
 		{expr1}以降の引数の数と"%"変換指示子の個数がちょうど一致しなけ
@@ -5120,11 +4414,7 @@ range({expr} [, {max} [, {stride}]])				*range()*
 		以下のような数値のリスト|List|を返す。
 		- {expr}のみを指定したときは:  [0, 1, ..., {expr} - 1]
 		- {max}を指定したときは: [{expr}, {expr} + 1, ..., {max}]
-<<<<<<< HEAD
 		- {stride}を指定したときは: [{expr}, {expr} + {stride}, ...,
-=======
-		- {string}を指定したときは: [{expr}, {expr} + {stride}, ...,
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		  {max}] ({max}を超えないように{expr}を{stride}ずつ増加させる)
 		最大値が開始位置より1だけ前のときは空リストを返す。最大値が開
 		始位置より1以上前のときはエラーになる。
@@ -5141,10 +4431,7 @@ readfile({fname} [, {binary} [, {max}]])
 		ファイル{fname}を読み込み、各行を要素とするリスト|List|を返す。
 		行はNL文字で終わるものとする。改行文字がCRであるMacintoshのファ
 		イルは単一の長い行となる(どこかにNLが現れない限り)。
-<<<<<<< HEAD
 		すべての NUL 文字は NL 文字に置換される。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{binary}が"b"に等しい場合、次のようにバイナリモードになる:
 		- 最後の行がNLで終わるときは、リストの末尾に余分な空文字列が追
 		  加される。
@@ -5152,12 +4439,8 @@ readfile({fname} [, {binary} [, {max}]])
 		バイナリモードでない場合:
 		- NLの前に現れるCR文字を除去する。
 		- 最後の行がNLで終わるかどうかは関係ない。
-<<<<<<< HEAD
 		- 'encoding' がユニコードのときは UTF-8 のバイトオーダーマーク
 		  は取り除かれる。
-=======
-		NUL文字はすべてNL文字に置換される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{max}を指定すると、読み込む行数の最大値となる。ファイルの最初
 		の10行をチェックするときに役に立つ: >
 			:for line in readfile(fname, '', 10)
@@ -5181,11 +4464,7 @@ reltime([{start} [, {end}]])				*reltime()*
 		を返す。
 		2個の引数を指定すると、{start}と{end}の間の経過時間を返す。
 		{start}と{end}はreltime()で返される値でなければならない。
-<<<<<<< HEAD
 		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
-=======
-		{+reltime機能付きでコンパイルされたときのみ利用可能}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 reltimestr({time})				*reltimestr()*
 		時刻値{time}を表現する文字列を返す。秒、ドット、マイクロ秒とい
@@ -5199,11 +4478,7 @@ reltimestr({time})				*reltimestr()*
 		スペースを取り除くにはsplit()を使えばよい。 >
 			echo split(reltimestr(reltime(start)))[0]
 <		|profiling|も参照。
-<<<<<<< HEAD
 		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
-=======
-		{+reltime機能付きでコンパイルされたときのみ利用可能}
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*remote_expr()* *E449*
 remote_expr({server}, {string} [, {idvar}])
@@ -5305,11 +4580,8 @@ rename({from}, {to})					*rename()*
 		ファイルの名前を{from}から{to}へ変える。ファイルシステムを越え
 		てファイルを移動するのにも使用できる。結果は数値で、成功すれば
 		0、失敗すれば非ゼロになる。
-<<<<<<< HEAD
 		NOTE: ファイル {to} がすでに存在する場合、警告なしに上書きされ
 		る。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		|sandbox|の中ではこの関数は利用できない。
 
 repeat({expr}, {count})					*repeat()*
@@ -5339,7 +4611,6 @@ reverse({list})	{list}の要素の順序をその場で(in-place)反転させる
 		リストを変更させないでおくには、最初にコピーを作る: >
 			:let revlist = reverse(copy(mylist))
 
-<<<<<<< HEAD
 round({expr})							*round()*
 		{expr} を最も近い整数に丸め、|Float| を返す。{expr} が二つの整
 		数の真ん中にある場合、大きい方(0 から遠い方)になる。
@@ -5356,9 +4627,6 @@ round({expr})							*round()*
 		
 		
 search({pattern} [, {flags} [, {stopline} [, {timeout}]]])	*search()*
-=======
-search({pattern} [, {flags} [, {stopline}]])			*search()*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		正規表現パターン{pattern}を検索する。検索はカーソル位置から開
 		始する(検索位置を指定するには|cursor()|を使えばよい)。
 
@@ -5367,11 +4635,7 @@ search({pattern} [, {flags} [, {stopline}]])			*search()*
 		'c'     カーソル位置のマッチを受け入れる
 		'e'	マッチの末尾へ移動する
 		'n'	カーソルを移動させない
-<<<<<<< HEAD
 		'p'	部分パターン(後述)のマッチの番号を返す
-=======
-		'p'	部分パターン(後述)のマッチの個数を返す
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		's'	以前のカーソル位置をマーク'に記録する
 		'w'	ファイルの末尾で循環する
 		'W'	ファイルの末尾で循環しない
@@ -5388,7 +4652,6 @@ search({pattern} [, {flags} [, {stopline}]])			*search()*
 			let end = search('END', '', line("w$"))
 <		{stopline}に0でない値が指定されたときは、暗黙にファイルの末尾
 		で循環しなくなる。
-<<<<<<< HEAD
 		0 の値は、引数を省略したときと同じになる。
 
 		{timeout} が指定された場合、そのミリ秒が経過したところで検索が
@@ -5405,27 +4668,12 @@ search({pattern} [, {flags} [, {stopline}]])			*search()*
 		フラグ 'p' を指定すると、戻り値は \(\) によるグループ化のうち
 		最初にマッチしたものの番号プラス 1 となる。パターン全体はマッ
 		チしたがどのグループもマッチしなかったときは 1 を返す。
-=======
-
-		マッチがない場合は0を返し、カーソルは移動しない。エラーメッセ
-		ージは表示されない。
-		マッチが見つかった場合はその行番号を返す。
-							*search()-sub-match*
-		フラグ'p'が指定されたときは戻り値は\(\)による最初の部分マッチ
-		より1大きい値となる。パターン全体はマッチしたが部分マッチはマ
-		ッチしなかったときは1を返す。
-		訳注: 上よくわからない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		桁番号を取得するには|searchpos()|を使う。
 
 		フラグ'n'が指定されていない場合、マッチ位置にカーソルが移動す
 		る。
 
-<<<<<<< HEAD
 		例 (引数リストの全ファイルにわたって検索して置換する): >
-=======
-		例 (引数リストの全ファイルにわたる): >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		    :let n = 1
 		    :while n <= argc()   " arglist中の全ファイルに対してループ
 		    :  exe "argument " . n
@@ -5473,12 +4721,8 @@ searchdecl({name} [, {global} [, {thisblock}]])			*searchdecl()*
 			endif
 <
 							*searchpair()*
-<<<<<<< HEAD
 searchpair({start}, {middle}, {end} [, {flags} [, {skip}
 				[, {stopline} [, {timeout}]]]])
-=======
-searchpair({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		ネストしたstart・endのペアを検索する。これを使うと、"if"に対応
 		する"endif"を見つけることができる。それらの間にある他のif・
 		endifのペアは無視される。
@@ -5498,17 +4742,11 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
 		{flags}には|search()|と同様に'b', 'c', 'n', 's', 'w', 'W' が使
 		える。それに加えて以下のフラグが利用できる。
 		'r'	それ以上マッチが見つからなくなるまで繰り返す。つまり最
-<<<<<<< HEAD
 			も外側のペアを探す。'W' も自動的にオンになる。
 		'm'	マッチ位置の行番号でなくマッチの個数を返す。'r'を使っ
 			ているときは > 1 となる。
 		Note: ほとんどつねに 'W' を使ってファイルの末尾で循環しないよ
 		うにするのがよい考えである。
-=======
-			も外側のペアを探す。
-		'm'	マッチ位置の行番号でなくマッチの個数を返す。'r'を使っ
-			ているときは > 1 となる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		{start}、{middle}、{end}のマッチが見つかると、マッチの開始位置
 		にカーソルを移動し、式{skip}を評価する。このマッチがコメントや
@@ -5518,11 +4756,7 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
 		{skip}を評価している最中にエラーが発生すると、検索は異常終了し
 		-1を返す。
 
-<<<<<<< HEAD
 		{stopline} と {timeout} については|search()|を参照。
-=======
-		{stopline}については|search()|を参照。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		'ignorecase'の値が適用される。'magic'の値は無視され、オンのと
 		きと同じ様に動作する。
@@ -5546,21 +4780,12 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
 	:echo searchpair('\<if\>', '\<el\%[seif]\>', '\<en\%[dif]\>', 'W',
 			\ 'getline(".") =~ "^\\s*\""')
 
-<<<<<<< HEAD
 <		これを使うには、マッチを見つけたい"if"の上、またはそれ以降に
 		カーソルを置くこと。Note バックスラッシュを二重にしなくてもよ
 		いようにシングルクォート文字列を使っている。式skipにより、コメ
 		ントだけの行を無視するようにしている。コマンドの後のコメントは
 		無視していない。また、行の途中の"en"や"if"という単語にマッチし
 		てしまう。
-=======
-<		これを使うには、マッチを見つけたい"if"の上、またはそれ以降にカ
-		ーソルを置くこと。Note バックスラッシュを二重にしなくてもよい
-		ようにシングルクォート文字列を使っている。式skipにより、コメン
-		トだけの行を無視するようにしている。コマンドの後のコメントは無
-		視していない。また、行の途中の"en"や"if"という単語にマッチして
-		しまう。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		もう1つの例: "}"に対応する"{"を検索する: >
 
 	:echo searchpair('{', '', '}', 'bW')
@@ -5573,7 +4798,6 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
 	     \ 'synIDattr(synID(line("."), col("."), 0), "name") =~? "string"')
 <
 							*searchpairpos()*
-<<<<<<< HEAD
 searchpairpos({start}, {middle}, {end} [, {flags} [, {skip}
 				[, {stopline} [, {timeout}]]]])
 		|searchpair()|と同様だが、マッチの行番号と桁番号からなるリスト
@@ -5581,23 +4805,11 @@ searchpairpos({start}, {middle}, {end} [, {flags} [, {skip}
 		チの桁位置のバイトインデックスである。マッチが見つからなかった
 		場合は[0, 0]を返す。 >
 
-=======
-searchpairpos({start}, {middle}, {end} [, {flags} [, {skip} [, {stopline}]]])
-		searchpair()と同様だが、マッチの行番号と桁番号からなるリスト
-		|List|を返す。このリストの最初の要素は行番号で、次の要素はマッ
-		チの桁位置のバイトインデックスである。マッチが見つからなかった
-		場合は[0, 0]を返す。
->
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			:let [lnum,col] = searchpairpos('{', '', '}', 'n')
 <
 		より大規模で役に立つ例に関しては|match-parens|を参照。
 
-<<<<<<< HEAD
 searchpos({pattern} [, {flags} [, {stopline} [, {timeout}]]])	*searchpos()*
-=======
-searchpos({pattern} [, {flags} [, {stopline}]])		*searchpos()*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		|search()|と同様だが、マッチの行番号と桁番号からなるリスト
 		|List|を返す。このリストの最初の要素は行番号で、次の要素はマッ
 		チの桁位置のバイトインデックスである。マッチが見つからなかった
@@ -5658,19 +4870,11 @@ setcmdpos({pos})					*setcmdpos()*
 		小さいときの結果は未定義である。
 		成功なら0、コマンドラインを編集しているとき以外には1を返す。
 
-<<<<<<< HEAD
 setline({lnum}, {text})					*setline()*
 		カレントバッファの{lnum}行目を{text}にする。
 		{lnum}は|getline()|のときと同じように解釈される。
 		{lnum}が最後の行の次の行の場合、新規行として{text}を追加する。
 		成功したら0を返す。失敗したら(大抵{lnum}が無効な値のとき)1を返
-=======
-setline({lnum}, {line})					*setline()*
-		カレントバッファの{lnum}行目を{line}にする。
-		{lnum}は|getline()|のときと同じように解釈される。
-		{lnum}が最後の行の次の行の場合、新規行として{line}を追加する。
-		成功したら0を返す。失敗したら(大抵{lnun}が無効な値のとき)1を返
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		す。例: >
 			:call setline(5, strftime("%c"))
 <		{line}がリスト|List|の場合、{lnum}行目とそれ以降の行にリストの
@@ -5687,7 +4891,6 @@ setloclist({nr}, {list} [, {action}])			*setloclist()*
 		{nr}が0のときはカレントウィンドウを対象にする。ロケーションリ
 		ストウィンドウの場合、そこに表示しているロケーションリストが修
 		正される。ウィンドウ番号{nr}が無効な場合、-1を返す。
-<<<<<<< HEAD
 		それ以外は|setqflist()|と同じ。
 		|location-list| も参照。
 
@@ -5695,9 +4898,6 @@ setmatches({list})					*setmatches()*
 		|getmatches()| で取得したマッチのリストを復元する。成功なら 
 		0、失敗なら -1 を返す。リストを復元するに先立って、現在のマッ
 		チはすべて消去される。|getmatches()| の例を参照。
-=======
-		それ以外はsetqflist()と同じ。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*setpos()*
 setpos({expr}, {list})
@@ -5715,23 +4915,16 @@ setpos({expr}, {list})
 		ジャンプリストは変更されない。
 
 		"lnum"と"col"はバッファ内の位置。桁番号は1から始まる。"lnum"を
-<<<<<<< HEAD
 		0にするとそのマークを削除する。"col" が 1 より小さいときは 1
 		が使われる。
-=======
-		0にするとそのマークを削除する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		数値"off"は'virtualedit'がオンのときのみ使われ、その文字の開始
 		位置からの画面上の桁のオフセットとなる。例えば、<Tab>の中、ま
 		たは最後の文字より後に設定したいときに使う。
 
-<<<<<<< HEAD
 		位置をセットできたときは 0 を、そうでなければ -1 を返す。
 		{expr} が無効なときはエラーメッセージが出る。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		|getpos()|も参照。
 
 		縦方向に移動するときの望ましい桁を復元しない。それには
@@ -5762,11 +4955,8 @@ setqflist({list} [, {action}])				*setqflist()*
 		使われる。"filename"と"bufnr"の両方ともない場合、または"lnum"
 		と"pattern"の両方ともない場合、その要素はエラー行として扱われ
 		ない。"pattern"と"lnum"の両方があるときは"pattern"が使われる。
-<<<<<<< HEAD
 		{list} に空のリストを指定すると QuickFix リストはクリアされ
 		る。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		このリストは|getqflist()|が返すものと正確に同じではないことに
 		注意。
 
@@ -5815,7 +5005,6 @@ setreg({regname}, {value} [,{options}])
 <		空文字列を追加すると、レジスタの種類を変更することができる: >
 			:call setreg('a', '', 'al')
 
-<<<<<<< HEAD
 settabvar({tabnr}, {varname}, {val})			*settabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を {val} に設
 		定する。 |t:var|
@@ -5825,8 +5014,6 @@ settabvar({tabnr}, {varname}, {val})			*settabvar()*
 		TabEnter の自動コマンドが実行される。
 		この関数はサンドボックス (|sandbox|) の中では使えない。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 settabwinvar({tabnr}, {winnr}, {varname}, {val})	*settabwinvar()*
 		ウィンドウ{winnr}のオプションやローカル変数{varname}の値を
 		{val}にセットする。
@@ -5852,11 +5039,7 @@ setwinvar({nr}, {varname}, {val})			*setwinvar()*
 			:call setwinvar(1, "&list", 0)
 			:call setwinvar(2, "myvar", "foobar")
 
-<<<<<<< HEAD
 shellescape({string} [, {special}])			*shellescape()*
-=======
-shellescape({string})					*shellescape()*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		シェルコマンドの引数として利用できるように{string}をエスケープ
 		する。
 		MS-WindowsとMS-DOSでは、'shellslash'が設定されていない場合、
@@ -5864,7 +5047,6 @@ shellescape({string})					*shellescape()*
 		全て二重にする。
 		他のシステムでは、{string}をシングルクォートで囲み、"'"を
 		"'\''"で置き換える。
-<<<<<<< HEAD
 		{special} が指定され、0 でない数値または空でない文字列の場合
 		(|non-zero-arg|)、"!", "%", "#", "<cword>" などの特殊なアイテ
 		ムの前にはバックスラッシュがつく。コマンド |:!| に
@@ -5881,14 +5063,6 @@ shellescape({string})					*shellescape()*
 <		これはカーソル下のファイルを dir コマンドで表示する。
 		|system()| を使う場合の例: >
 		    :call system("chmod +w -- " . shellescape(expand("%")))
-=======
-		例: >
-			:echo shellescape('c:\program files\vim')
-<		結果:
-			"c:\program files\vim" ~
-		使用例: >
-			:call system("chmod +x -- " . shellescape(expand("%")))
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 simplify({filename})					*simplify()*
@@ -5906,7 +5080,6 @@ simplify({filename})					*simplify()*
 		|resolve()|を使う。
 
 
-<<<<<<< HEAD
 sin({expr})						*sin()*
 		{expr} の正接(サイン)をラジアンで |Float| で返す。{expr} は
 		|Float| または |Number| に評価されなければならない。
@@ -5932,9 +5105,6 @@ sinh({expr})						*sinh()*
 
 
 sort({list} [, {func} [, {dict}]])			*sort()* *E702*
-=======
-sort({list} [, {func}])					*sort()* *E702*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{list}の要素をその場で(in-place)ソートする。{list}を返す。リス
 		トを変更したくない場合は、最初にコピーを作っておくこと: >
 			:let sortedlist = sort(copy(mylist))
@@ -5942,34 +5112,22 @@ sort({list} [, {func}])					*sort()* *E702*
 		数値は文字列より後になり、リストは数値より後になる。
 		カレントバッファのテキストをソートするには|:sort|を使うこと。
 		{func}に1を指定すると、大文字・小文字を区別しなくなる。
-<<<<<<< HEAD
 		{dict} は "dict" 属性付きの関数と一緒に使う。値はローカル変数
 		"self" として使われる。 |Dictionary-function|
 		{func}に|Funcref|または関数名を指定すると、その関数を使って要
 		素を比較する。その関数は2つの要素を引数として受け取り、それら
 		が等しいときは0、1番目の引数を2番目より後にするなら1以上、1番
 		目の方を前にするなら-1以下を返す。例: >
-=======
-		{func}に|Funcref|または関数名を指定すると、その関数を使って要
-		素を比較する。その関数は2つの要素を引数として受け取り、それら
-		が等しいときは0、1番目の引数を2番目より後にするなら1、1番目の
-		方を前にするなら-1を返す。例: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			func MyCompare(i1, i2)
 			   return a:i1 == a:i2 ? 0 : a:i1 > a:i2 ? 1 : -1
 			endfunc
 			let sortedlist = sort(mylist, "MyCompare")
-<<<<<<< HEAD
 <		この例の場合、より短く次のように書くことができる。ただしオーバー
 		フローは無視される: >
 			func MyCompare(i1, i2)
 			   return a:i1 - a:i2
 			endfunc
 <
-=======
-<
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*soundfold()*
 soundfold({word})
 		{word}と同値でsound-foldされた単語を返す。カレントウィンドウの
@@ -6049,7 +5207,6 @@ split({expr} [, {pattern} [, {keepempty}]])			*split()*
 <		これの逆を行う関数は|join()|である。
 
 
-<<<<<<< HEAD
 sqrt({expr})						*sqrt()*
 		浮動小数点数 {expr} の非負平方根を |Float| で返す。
 		{expr} は |Float| または |Number| に評価されなければならな
@@ -6078,8 +5235,6 @@ str2float( {expr})					*str2float()*
 			let f = str2float(substitute(text, ',', '', 'g'))
 <		{|+float| 機能つきでコンパイルされたときのみ有効}
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 str2nr( {expr} [, {base}])				*str2nr()*
 		文字列{expr}を数値に変換する。
 		{base}は変換の底。8、10、16のいずれか。
@@ -6090,7 +5245,6 @@ str2nr( {expr} [, {base}])				*str2nr()*
 		外の底の場合は0となる。
 		数値の後のテキストは暗黙に無視される。
 
-<<<<<<< HEAD
 strchars({expr})					*strchars()*
 		文字列 {expr} 内の文字の数を返す。合成文字は別々にカウントされ
 		る。
@@ -6108,8 +5262,6 @@ strdisplaywidth({expr}[, {col}])			*strdisplaywidth()*
 		きは、文字幅は 'ambiwidth' の設定に依存する。
 		|strlen()|, |strwidth()|, |strchars()| も参照。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*strftime()*
 strftime({format} [, {time}])
 		結果は文字列で、{format}に従って日付や時間がフォーマットされた
@@ -6135,13 +5287,8 @@ stridx({haystack}, {needle} [, {start}])		*stridx()*
 		のバイトインデックスを表す。{start}を指定すると、インデックス
 		{start}の位置から検索を開始する。
 		2番目のマッチを探すには次のようにする: >
-<<<<<<< HEAD
 			:let colon1 = stridx(line, ":")
 			:let colon2 = stridx(line, ":", colon1 + 1)
-=======
-			:let comma1 = stridx(line, ",")
-			:let comma2 = stridx(line, ",", comma1 + 1)
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 <		検索は大文字・小文字を区別する。
 		検索パターンについては|match()|を使う。
 		{haystack}の中に{needle}がないときは-1を返す。
@@ -6155,7 +5302,6 @@ stridx({haystack}, {needle} [, {start}])		*stridx()*
 		のときはstrchr()と同じように動作する。
 
 							*string()*
-<<<<<<< HEAD
 string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮動小数点数、文字
 		列、それらの複合の場合は、この戻り値を|eval()|でパースして復元
 		できる。
@@ -6163,13 +5309,6 @@ string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮�
 			文字列		'string'
 			数値		123
 			浮動小数点数	123.123456 or 1.123456e8
-=======
-string({expr})	{expr}を文字列に変換して返す。{expr}が数値、文字列、それらの複
-		合の場合は、この戻り値を|eval()|でパースして復元できる。
-			{expr} 型	結果 ~
-			文字列		'string'
-			数値		123
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			Funcref		function('name')
 			リスト		[item, item]
 			辞書		{key: value, key: value}
@@ -6185,12 +5324,8 @@ strlen({expr})	結果は数値で、文字列{expr}の長さ。
 <
 		引数が数値の場合は、まず文字列に変換される。
 		それ以外の型の場合はエラーとなる。
-<<<<<<< HEAD
 		|len()|, |strchars()|, |strdisplaywidth()|, |strwidth()| も参
 		照。
-=======
-		|len()|も参照。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 							*strpart()*
@@ -6233,7 +5368,6 @@ strtrans({expr})
 <		これはレジスタの中の改行を、改行として表示する代わりに"^@"と表
 		示する。
 
-<<<<<<< HEAD
 strwidth({expr})					*strwidth()*
 		文字列 {expr} のスクリーン上での表示セル幅を返す。タブ文字の幅
 		は 1 として数えられる (タブ文字の幅も考慮したい場合は
@@ -6247,12 +5381,6 @@ submatch({nr})						*submatch()*
 		マッチしたテキストの{nr} 番目の部分マッチを返す。{nr}が0のとき
 		はマッチしたテキスト全体を返す。
 		|sub-replace-expression| も参照。
-=======
-submatch({nr})						*submatch()*
-		|:substitute|の中の式でのみ使われる。マッチしたテキストの{nr}
-		番目の部分マッチを返す。{nr}が0のときはマッチしたテキスト全体
-		を返す。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		例: >
 			:s/\d\+/\=submatch(0) + 1/
 <		この例は、行の中で最初の数値を検索し、それに1を加える。改行は
@@ -6261,22 +5389,17 @@ submatch({nr})						*submatch()*
 							*substitute()*
 substitute({expr}, {pat}, {sub}, {flags})
 		結果は文字列で、{expr}内で最初に{pat}にマッチした部分を{sub}に
-<<<<<<< HEAD
 		置換えたコピーになる。
 		{flags} が "g" なら、{expr} 内の {pat} にマッチした部分をすべ
 		て置換する。そうしたくない場合は {flags} は "" にすべきであ
 		る。
 
 		これはコマンド":substitute"(一切のフラグ
-=======
-		置換えたコピーになる。これはコマンド":substitute"(一切のフラグ
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		無し)のように働く。しかしマッチングは常にオプション'magic'が設
 		定され、オプション'cpoptions'は空にして実行される(スクリプトを
 		ポータブルにするため)。しかし'ignorecase'は適用される。
 		'smartcase'は適用されない。
 		{pat}がどう扱われるかについては|string-match|を参照。
-<<<<<<< HEAD
 
 		また、{sub}内の"~"は前回の{sub}に置換されない。
 		{sub}内の幾つかのコードには|sub-replace-special|の特殊な意味
@@ -6286,23 +5409,12 @@ substitute({expr}, {pat}, {sub}, {flags})
 		{pat}が{expr}の何処にもマッチしなければ、{expr}が何の変更も受
 		けずに返される。
 
-=======
-		また、{sub}内の"~"は前回の{sub}に置換されない。
-		{sub}内の幾つかのコードには|sub-replaced-special|の特殊な意味
-		があることに注意。例えば、何かの文字列をリテラルの"\n"に置換え
-		るためには、"\\\\n"か'\\n'を使う必要がある。
-		{pat}が{expr}の何処にもマッチしなければ、{expr}が何の変更も受
-		けずに返される。
-		{flags}が"g"であれば{expr}内の{pat}にマッチする全ての部分が置
-		換される。それを希望しない場合には{flags}は""にすべきである。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		例: >
 			:let &path = substitute(&path, ",\\=[^,]*$", "", "")
 <		これはオプション'path'の最後のコンポーネントを削除する。 >
 			:echo substitute("testing", ".*", "\\U\\0", "")
 <		結果は"TESTING"となる。
 
-<<<<<<< HEAD
 		{sub} が "\=" で開始している場合は、その後ろの文字列は式として
 		解釈される。|sub-replace-expression| 参照。例: >
 			:echo substitute(s, '%\(\x\x\)',
@@ -6313,13 +5425,6 @@ synID({lnum}, {col}, {trans})				*synID()*
 		構文ID。
 		構文IDは|synIDattr()|と|synIDtrans()|に渡すことで、テキストに
 		ついての構文情報を取得するのに使用できる。
-=======
-synID({lnum}, {col}, {trans})				*synID()*
-		結果は数値で、現在のウィンドウ内での位置{lnum}と{col}の位置の
-		シンタックスID。
-		シンタックスIDは|synIDattr()|と|synIDtrans()|に渡すことで、テ
-		キストについてのシンタックス情報を取得するのに使用できる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		
 		最左のカラムを指定するには{col}に1を、最初の行を指定するには
 		{line}に1を指定する。'synmaxcol'が適用され、長すぎる行では0が
@@ -6328,7 +5433,6 @@ synID({lnum}, {col}, {trans})				*synID()*
 		{trans}が非ゼロならば、透過属性のアイテムは省略され、実際に表
 		示されているアイテムが評価対象になる。これは実際に有効になって
 		いるカラーを知りたい時に役に立つ。{trans}がゼロならば、透過属
-<<<<<<< HEAD
 		性のアイテムが返される。これはどの構文アイテムが有効になってい
 		るかを知りたい時に役に立つ(例:カッコの中とか)。
 		警告: この関数は非常に遅い。ファイルを順方向に走査する時にだけ
@@ -6342,20 +5446,6 @@ synID({lnum}, {col}, {trans})				*synID()*
 synIDattr({synID}, {what} [, {mode}])
 		結果は文字列で、{synID}の属性{what}の内容を示す。これは構文
 		アイテムの情報を取得するのに使用できる。
-=======
-		性のアイテムが返される。これはどのシンタックスアイテムが有効に
-		なっているかを知りたい時に役に立つ(例:カッコの中とか)。
-		警告: この関数は非常に遅い。ファイルを順方向に走査する時にだけ
-		ベストなスピードが得られる。
-
-		例(カーソルの下のシンタックスアイテムの名前を表示する): >
-			:echo synIDattr(synID(line("."), col("."), 1), "name")
-<
-							*synIDattr()*
-synIDattr({synID}, {what} [, {mode}])
-		結果は文字列で、{synID}の属性{what}の内容を示す。これはシン
-		タックスアイテムの情報を取得するのに使用できる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{mode}には取得したいモードの属性に応じて、"gui"か"cterm"か
 		"term"が指定できる。{mode}が省略されるか、無効な値が指定された
 		場合、現在有効になっているハイライトモードが使用される(GUI、
@@ -6363,7 +5453,6 @@ synIDattr({synID}, {what} [, {mode}])
 		ハイライトグループにリンクされた属性を取得するにはsynIDtrans()
 		を使用する。
 		{what}		結果
-<<<<<<< HEAD
 		"name"		構文アイテムの名前
 		"fg"		前景色(GUI:カラー名、cterm:文字列としてのカ
 				ラー番号、term空文字列)
@@ -6374,35 +5463,19 @@ synIDattr({synID}, {what} [, {mode}])
 		"fg#"		"fg"同様だが、"#RRGGBB"のフォーマットで
 		"bg#"		"bg"同様だが、"#RRGGBB"のフォーマットで
 		"sp#"		"sp"同様だが、"#RRGGBB"のフォーマットで
-=======
-		"name"		シンタックスアイテムの名前
-		"fg"		前景色(GUI:カラー名、cterm:文字列としてのカ
-				ラー番号、term空文字列)
-		"bg"		背景色("fg"同様)
-		"fg#"		"fg"同様だが、"#RRGGBB"のフォーマットで
-		"bg#"		"bg"同様だが、"#RRGGBB"のフォーマットで
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		"bold"		太字なら"1"
 		"italic"	斜体なら"1"
 		"reverse"	反転なら"1"
 		"inverse"	反転(原文inverse)なら"1"(reverseと等価)
-<<<<<<< HEAD
 		"standout"	強調 (standout) なら "1"
 		"underline"	下線付きなら"1"
 		"undercurl"	波線付きなら"1"
 
 		例(カーソルの下の構文アイテムの名前を表示する): >
-=======
-		"underline"	下線付きなら"1"
-		"undercurl"	波線付きなら"1"
-
-		例(カーソルの下のシンタックスアイテムの名前を表示する): >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:echo synIDattr(synIDtrans(synID(line("."), col("."), 1)), "fg")
 <
 							*synIDtrans()*
 synIDtrans({synID})
-<<<<<<< HEAD
 		結果は数値で、{synID}を構文IDに変換したもの。キャラク
 		タをハイライト表示している構文グループのIDである。
 		":highlight link"によって与えられるハイライトのリンクはこれに
@@ -6436,43 +5509,23 @@ synstack({lnum}, {col})					*synstack()*
 <		{lnum} と {col} が不正な場所を指しているときは返り値なし。行の
 		最後の文字の一つ後ろと空行の一番目の列は有効な位置である。
 
-=======
-		結果は数値で、{synID}をシンタックスIDに変換したもの。キャラク
-		タをハイライト表示しているシンタックスグループのIDである。
-		":highlight link"によって与えられるハイライトのリンクはこれに
-		従っている。
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 system({expr} [, {input}])				*system()* *E677*
 		シェルコマンド{expr}の実行結果を得る。
 		{input}が与えられた場合は、この文字列はファイルに書き出され、
 		コマンドの標準入力として渡される。この文字列はそのまま(as-is)
 		書き出され、正しい改行文字を使うよう自分自身で気を付けなければ
 		ならない。パイプは使われない。
-<<<<<<< HEAD
 		注意: |shellescape()| を使ってコマンドの引数をエスケープするこ
 		と。{expr}内に改行が含まれるとコマンドが失敗する可能性がある。
-=======
-		注意: {expr}内の改行はコマンドを失敗させるだろう。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		'shellquote'と'shellxquote'に入っている文字は問題を引き起こす
 		かもしれない。
 		対話的なコマンドを使用することはできない。
 		戻り値は文字列。例: >
-<<<<<<< HEAD
 		    :let files = system("ls " .  shellescape(expand('%:h')))
 
 <		システムに依存しないような戻り値にするために、シェルの出力を
 		フィルタリングし、マッキントッシュにおいては<CR>を<NL>に変換
 		し、DOS系のシステムにおいては<CR><NL>を<NL>に変換している。
-=======
-
-			:let files = system("ls")
-
-<		システムに依存しないような戻り値にするために、シェルの出力をフ
-		ィルタリングし、マッキントッシュにおいては<CR>を<NL>に変換し、
-		DOS系のシステムにおいては<CR><NL>を<NL>に変換している。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		実行されるコマンドはいくつかのオプションを適用して構成される:
 	'shell' 'shellcmdflag' 'shellxquote' {expr} 'shellredir' {tmp} 'shellxquote'
 		({tmp}は自動的に生成されるファイル名)
@@ -6483,11 +5536,7 @@ system({expr} [, {input}])				*system()* *E677*
 		ンドを中断できる(少なくともUnixでは)。
 
 		エラーコードは|v:shell_error|に格納される。
-<<<<<<< HEAD
 		この関数は|restricted-mode|では失敗する。
-=======
-		この関数は|restrict-mode|では失敗する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		Note 上記のオプションに不正な値が入っていると、この関数の呼び
 		出しが失敗する可能性がある。セキュリティエージェントアプリケー
@@ -6519,11 +5568,7 @@ tabpagenr([{arg}])					*tabpagenr()*
 
 
 tabpagewinnr({tabarg}, [{arg}])				*tabpagewinnr()*
-<<<<<<< HEAD
 		|winnr()|と同様だが、タブページ{tabarg}を対象とする。
-=======
-		|winnr()|と同様だが、タブページ{arg}を対象とする。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{tabarg}は対象とするタブページの番号を指定する。
 		{arg}は|winnr()|の場合と同じように扱われる。すなわち:
 		- 省略するとカレントウィンドウの番号を返す。これは、このタブペー
@@ -6558,15 +5603,9 @@ taglist({expr})							*taglist()*
 					|static-tag|を参照。
 		タグファイルの内容によってはこれ以上の要素が存在することもある。
 		例: アクセス、実装、継承、シグネチャ。これらのフィールドについ
-<<<<<<< HEAD
 		ての情報はctagsのドキュメントを参照。Cのソースにおいては、
 		フィールド"struct"、"class"、"enum"が現れることがある。これら
 		は、タグを含んでいるものの名前を示す。
-=======
-		ての情報はctagsのドキュメントを参照。Cのソースにおいては、フィ
-		ールド"struct"、"class"、"enum"が現れることがある。これらは、
-		タグを含んでいるものの名前を示す。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		exコマンド'cmd'は検索パターンか、行番号か、行番号とバイト番号
 		のいずれかである。
@@ -6588,7 +5627,6 @@ tempname()
 		の呼出しまでは違う名前を生成することが保証される。例: >
 			:let tmpfile = tempname()
 			:exe "redir > " . tmpfile
-<<<<<<< HEAD
 <		Unix では、ファイルはプライベートなディレクトリに置かれる。
 		|tempfile|
 		MS-Windowsでは、'shellslash'がオンのときか'shellcmdflag'が'-'
@@ -6621,16 +5659,6 @@ tanh({expr})						*tanh()*
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
 
-=======
-<		Unixでは、symlink攻撃や、他の人がそのファイルを読んでしまうな
-		どのセキュリティ上の問題を防ぐために、このファイルはプライベー
-		ト(現在のユーザのみアクセス可能)なディレクトリの中に置かれる。
-		Vimが終了するとき、そのディレクトリとその中の全ファイルは削除
-		される。
-		MS-Windowsでは、'shellslash'がオンのときか'shellcmdflag'が'-'
-		で始まるときはスラッシュが使われる。
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 tolower({expr})						*tolower()*
 		引数の文字列の大文字を小文字に変換してできた文字列を返す(文字
 		列に|gu|を適用するのとちょうど同じ)。
@@ -6652,7 +5680,6 @@ tr({src}, {fromstr}, {tostr})				*tr()*
 			echo tr("<blob>", "<>", "{}")
 <		戻り値は "{blob}" となる。
 
-<<<<<<< HEAD
 trunc({expr})							*trunc()*
 		{expr} をゼロ方向に切りつめた整数を |Float| で返す。
 		{expr} は |Float| または |Number| に評価されなければならない。
@@ -6666,8 +5693,6 @@ trunc({expr})							*trunc()*
 <			4.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 		
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*type()*
 type({expr})	{expr}の型を示す数値を返す:
 			数値:	    0
@@ -6675,17 +5700,13 @@ type({expr})	{expr}の型を示す数値を返す:
 			Funcref:    2
 			リスト:	    3
 			辞書:	    4
-<<<<<<< HEAD
 			浮動小数点数:	    5
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		マジックナンバーを使わずに、次のような使い方をすべきである: >
 			:if type(myvar) == type(0)
 			:if type(myvar) == type("")
 			:if type(myvar) == type(function("tr"))
 			:if type(myvar) == type([])
 			:if type(myvar) == type({})
-<<<<<<< HEAD
 			:if type(myvar) == type(0.0)
 
 undofile({name})					*undofile()*
@@ -6738,8 +5759,6 @@ undotree()						*undotree()*
 		  "alt"		切り替えエントリ。同じアンドゥブロックのリスト
 				が入れ子にされている。それぞれのアイテムはさら
 				に "alt" アイテムを持っていることがある。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 values({dict})						*values()*
 		{dict}の全ての値からなるリスト|List|を返す。このリストの順序は
@@ -6751,7 +5770,6 @@ virtcol({expr})						*virtcol()*
 		スクリーン座標(の桁)でどこに存在するかである。<Tab>(タブ文字)
 		が指定した位置にあった場合には、戻り値はそのタブの最後のカラム
 		(桁)位置になる。具体的に、'ts'が8に設定された状態で第1桁に
-<<<<<<< HEAD
 		<Tab>があった場合、戻り値は8になる。
 		バイト位置については |col()| を使う。
 		{expr}の解釈の仕方については|col()|を参照。
@@ -6760,16 +5778,6 @@ virtcol({expr})						*virtcol()*
 		のオフセットである。例えば、<Tab>の中の位置や、行の最後の文字
 		以降の位置を示すために使う。"off" が省略された場合はゼロが使わ
 		れる。
-=======
-		<Tab>があった場合、戻ってくる値は8になる。
-		{expr}の解釈の仕方については|col()|を参照。それに加えて、
-		[lnum, col]という行番号と桁番号のリストを指定できる。"lnum"か
-		"col"が範囲外の場合は0を返す。
-		'virtualedit'がオンのときは[lnum, col, off]というリストを指定
-		することもできる。"off"は文字の開始位置からのスクリーン座標で
-		のオフセットである。例えば、<Tab>の中の位置や、行の最後の文字
-		以降の位置を示すために使う。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		現在のモードに対して仮想編集がオンのときは、行末を越えた位置が
 		返ってくることもある。|'virtualedit'|
 		可能な位置指定:
@@ -6799,7 +5807,6 @@ visualmode([expr])						*visualmode()*
 <		これは最後に使われたのと同じビジュアルモードに入る。また、スク
 		リプトの動作を、最後に使われたビジュアルモードに応じて変更した
 		い場合にも便利だろう。
-<<<<<<< HEAD
 		ビジュアルモードにいるときは |mode()| を使ってビジュアルモード
 		の種類を取得できる。(|:vmap| などの中などで)
 
@@ -6809,12 +5816,6 @@ visualmode([expr])						*visualmode()*
 		文字列ではないことに注意。よってモードがクリアされる。リス
 		ト、辞書、浮動小数点数は数値でも文字列でもないのでモードはクリ
 		アされない。
-=======
-
-		{expr}に0以外の数値か空文字列以外の文字列を指定した場合は、ビ
-		ジュアルモードがクリアされ、以前の値を返す。Note " "と"0"は空
-		文字列ではないことに注意。よってモードがクリアされる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*winbufnr()*
 winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付けられているバッファ
@@ -6918,18 +5919,12 @@ writefile({list}, {fname} [, {binary}])
 		ない。
 		既存のファイルは上書きされる(上書き可能ならば)。
 		書き込みが失敗したときは-1を返す。そうでなければ0を返す。ファ
-<<<<<<< HEAD
 		イルを作成できないときや、書き込みが失敗したときはエラーメッ
 		セージが表示される。
-=======
-		イルを作成できないときや、書き込みが失敗したときはエラーメッセ
-		ージが表示される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		|readfile()|も参照。
 		バイト単位でファイルをコピーするには次のようにする: >
 			:let fl = readfile("foo", "b")
 			:call writefile(fl, "foocopy", "b")
-<<<<<<< HEAD
 
 
 xor({expr}, {expr})					*xor()*
@@ -6939,9 +5934,6 @@ xor({expr}, {expr})					*xor()*
 			:let bits = xor(bits, 0x80)
 
 
-=======
-<
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*feature-list*
 機能は大別して3つの系統に分けられる:
 1.  コンパイル時に|+feature-list|とした時にだけサポートされる機能。例: >
@@ -6973,28 +5965,17 @@ cmdline_compl		|cmdline-completion| コマンドライン補完をサポート
 cmdline_hist		|cmdline-history| コマンドライン履歴をサポート
 cmdline_info		'showcmd'と'ruler'をサポート
 comments		|'comments'|をサポート
-<<<<<<< HEAD
 compatible		Vi互換度を非常に高めてコンパイルされている
 cryptv			暗号化をサポート |encryption|
 cscope			|cscope|をサポート
-=======
-cryptv			暗号化をサポート |encryption|
-cscope			|cscope|をサポート
-compatible		Vi互換度を非常に高めてコンパイルされている
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 debug			デバッグバージョンである
 dialog_con		コンソールダイアログのサポート
 dialog_gui		GUIダイアログのサポート
 diff			Compiled with |vimdiff| and 'diff' support.
 digraphs		digraphsをサポート
 dnd			レジスタ"~をサポート |quote_~|.
-<<<<<<< HEAD
 dos16			16ビットDOSバージョン
 dos32			32ビットDOSバージョン (DJGPP)
-=======
-dos32			32ビットDOSバージョン (DJGPP)
-dos16			16ビットDOSバージョン
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 ebcdic			EBCDIC文字集合のマシン用
 emacs_tags		Emacs式のタグファイルをサポート
 eval			式評価をサポート。もちろん常に真。
@@ -7005,10 +5986,7 @@ file_in_path		|gf|と|<cfile>|をサポート
 filterpipe		'shelltemp'がオフのとき、シェルの読み込み・書き込み・
 			フィルタコマンドにパイプを使う。
 find_in_path		includeファイル内の検索をサポート |+find_in_path|
-<<<<<<< HEAD
 float			浮動小数点数 |Float| サポート
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 fname_case		ファイル名の大文字小文字が区別される(Amiga,MS-DOS,
 			そしてWindowsでは区別されないので偽)
 folding			|folding| 折り畳みをサポート
@@ -7017,24 +5995,15 @@ fork			system()の代わりにfork()/exec()を用いている
 gettext			翻訳メッセージをサポート |multi-lang|
 gui			GUIが有効である
 gui_athena		AthenaのGUIが有効である
-<<<<<<< HEAD
 gui_gnome		Gnomeサポート(gui_gtkも定義される)
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 gui_gtk			GTK+のGUIが有効である
 gui_gtk2		GTK+ 2のGUIが有効である (gui_gtkも定義される)
 gui_mac			マッキントッシュのGUIが有効である
 gui_motif		MotifのGUIが有効である
 gui_photon		PhotonのGUIが有効である
-<<<<<<< HEAD
 gui_running		VimがGUIモードで起動している、もしくは間もなくする
 gui_win32		Win32のGUIが有効である
 gui_win32s		Win32sのGUIが有効である (Windows 3.1)
-=======
-gui_win32		Win32のGUIが有効である
-gui_win32s		Win32sのGUIが有効である (Windows 3.1)
-gui_running		VimがGUIモードで起動している、もしくは間もなくする
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 hangul_input		ハングル入力サポート
 iconv			iconv()をサポート
 insert_expand		インサートモード時にCTRL-Xの展開がサポートされる
@@ -7047,25 +6016,17 @@ lispindent		lisp式のインデントをサポート
 listcmds		バッファリスト用のコマンド|:files|と引数リスト用のコマ
 			ンド|arglist|をサポート
 localmap		ローカルなマッピングと短縮入力をサポート|:map-local|
-<<<<<<< HEAD
 lua			Lua インターフェースをサポート |Lua|.
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 mac			マッキントッシュバージョン
 macunix			Unixファイル用のマッキントッシュバージョン(OS-X)
 menu			|:menu|をサポート
 mksession		|:mksession|をサポート
 modify_fname		ファイル名変換子をサポート |filename-modifiers|
 mouse			マウスをサポート
-<<<<<<< HEAD
-=======
-mouseshape		'mouseshape'をサポート
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 mouse_dec		DECのターミナルマウスをサポート
 mouse_gpm		gpmをサポート (Linuxのコンソールマウス)
 mouse_netterm		nettermのマウスをサポート
 mouse_pterm		qnx ptermのマウスをサポート
-<<<<<<< HEAD
 mouse_sysmouse		sysmouse (*BSD コンソールマウス)をサポート
 mouse_urxvt		urxvt のマウスをサポート
 mouse_xterm		xtermのマウスをサポート
@@ -7087,22 +6048,6 @@ printer			|:hardcopy| をサポート
 profile			|:profile| をサポート
 python			Python 2.x インターフェースをサポート |has-python|
 python3			Python 3.x インターフェースをサポート |has-python|
-=======
-mouse_xterm		xtermのマウスをサポート
-multi_byte		中国語・日本語・韓国語その他の言語をサポート
-multi_byte_ime		IMEによる入力をサポート
-multi_lang		複数言語をサポート
-mzscheme		MzSchemeインターフェイスをサポート |mzscheme|.
-netbeans_intg		|netbeans|をサポート
-netbeans_enabled	|netbeans|をサポートし、現在使用している
-ole			Win32にてOLEオートメーションをサポート
-os2			OS/2バージョン
-osfiletype		osfiletypesをサポート |+osfiletype|
-path_extra		'path'と'tags'の上方・下方検索をサポート
-perl			Perlインターフェイスをサポート
-postscript		PostScriptファイルの印刷をサポート
-python			Pythonインターフェイスをサポート
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 qnx			QNXバージョン
 quickfix		|quickfix|をサポート
 reltime			|reltime()|をサポート
@@ -7113,18 +6058,11 @@ showcmd			'showcmd'をサポート
 signs			|:sign|をサポート
 smartindent		'smartindent'をサポート
 sniff			SniFFインターフェイスをサポート
-<<<<<<< HEAD
 spell			スペルチェックをサポート |spell|
 startuptime		|--startuptime| をサポート
 statusline		'statusline', 'rulerformat'そして'titlestring'と
 			'iconstring'の特殊フォーマットをサポート
 sun_workshop		Sun |workshop|をサポート
-=======
-statusline		'statusline', 'rulerformat'そして'titlestring'と
-			'iconstring'の特殊フォーマットをサポート
-sun_workshop		Sun |workshop|をサポート
-spell			スペルチェックをサポート |spell|
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 syntax			構文ハイライトをサポート
 syntax_items		現在のバッファに有効なシンタックスが設定されている
 system			fork()/exec()の代わりにsystem()が使用されている
@@ -7140,15 +6078,9 @@ title			ウィンドウタイトルをサポート |'title'|.
 toolbar			|gui-toolbar|をサポート
 unix			UNIXバージョン
 user_commands		ユーザ定義コマンドをサポート
-<<<<<<< HEAD
 vertsplit		ウィンドウの垂直分割をサポート |:vsplit|
 vim_starting		Vimの初期化プロセス中は真となる。|startup|
 viminfo			viminfoをサポート
-=======
-viminfo			viminfoをサポート
-vim_starting            Vimの初期化プロセス中は真となる
-vertsplit		ウィンドウの垂直分割をサポート |:vsplit|
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 virtualedit		オプション'virtualedit'をサポート
 visual			ビジュアルモードをサポート
 visualextra		拡張Visualモードをサポート |blockwise-operators|
@@ -7156,7 +6088,6 @@ vms			VMSバージョン
 vreplace		コマンド|gR|と|gr|をサポート
 wildignore		オプション'wildignore'をサポート
 wildmenu		オプション'wildmenu'を指定してコンパイル
-<<<<<<< HEAD
 win16			Win16バージョン(MS-Windows 3.1)
 win32			Win32バージョン(MS-Windows 95 以上の 32 or 64 ビット)
 win32unix		Win32バージョン。Unixファイルを使用 (Cygwin)
@@ -7164,15 +6095,6 @@ win64			Win64バージョン(MS-Windows 64 bit)
 win95			Win32バージョン。MS-Windows 95/98/ME用。
 winaltkeys		オプション'winaltkeys'を指定してコンパイル
 windows			複数ウィンドウをサポート
-=======
-windows			複数ウィンドウをサポート
-winaltkeys		オプション'winaltkeys'を指定してコンパイル
-win16			Win16バージョン(Windows 3.1)
-win32			Win32バージョン(Windows 95/98/ME/NT/2000/XP)
-win64			Win64バージョン(Windows 64 bit)
-win32unix		Win32バージョン。Unixファイルを使用 (Cygwin)
-win95			Win32バージョン。MS-Windows 95/98/ME用。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 writebackup		オプション'writebackup'が起動時にonになる
 xfontset		X fontsetをサポート |xfontset|
 xim			XIMをサポート |xim|
@@ -7245,11 +6167,7 @@ x11			X11をサポート
 <
 より詳しくは|:verbose-cmd|を参照。
 
-<<<<<<< HEAD
 							*E124* *E125* *E853*
-=======
-							*E124* *E125*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 :fu[nction][!] {name}([arguments]) [range] [abort] [dict]
 			{name}という名前で新しい関数を定義する。関数名はアル
 			ファベットと数字と'_'からなり、通常の関数はアルファベッ
@@ -7288,16 +6206,11 @@ x11			X11をサポート
 			素を通してしか呼べなくなる。そしてその辞書にローカル変
 			数"self"が定義される。|Dictionary-function|を参照。
 
-<<<<<<< HEAD
 						*function-search-undo*
 			関数の実行によって、最後に使用されたサーチパターン、及
 			びredoコマンドの"."の内容は変更されない。したがって、
 			関数内で|:nohlsearch| を行っても、関数から戻ると検索結
 			果のハイライトが元に戻ることになる。
-=======
-			関数の実行によって、最後に使用されたサーチパターン、及
-			びredoコマンドの"."の内容は変更されない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 					*:endf* *:endfunction* *E126* *E193*
 :endf[unction]		関数定義の終了。このコマンド1つで1行とすること。他のコ
@@ -7547,7 +6460,6 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 :let {var-name}[{idx}] = {expr1}			*E689*
 			リストの要素に式{expr1}の結果をセットする。{var-name}
 			はリストを参照し、{idx}はそのリストの有効なインデック
-<<<<<<< HEAD
 			スでなければならない。ネストしたリストに対してはイン
 			デックスを繰り返すことができる。
 			このコマンドはリストに要素を追加するためには使えない。
@@ -7555,11 +6467,6 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			には次のようにする: >
 				:let var = var[0:2] . 'X' . var[4:]
 <
-=======
-			スでなければならない。ネストしたリストに対してはインデ
-			ックスを繰り返すことができる。
-			このコマンドはリストに要素を追加するためには使えない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*E711* *E719*
 :let {var-name}[{idx1}:{idx2}] = {expr1}		*E708* *E709* *E710*
@@ -7675,12 +6582,8 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 :let [{name}, ..., ; {lastname}] -= {expr1}
 			上と同様だが、リスト|List|の各要素に対して連結・足し算
 			・引き算を行う。
-<<<<<<< HEAD
 
 								*E121*
-=======
-							*E106*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 :let {var-name}	..	変数{var-name}の値を一覧表示する。変数の名前を複数指定
 			することができる。以下の特別な名前が認識される:	*E738*
 			  g:	グローバル変数
@@ -7710,13 +6613,10 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 <			辞書からは一度に1個の要素を削除することができる: >
 				:unlet dict['two']
 				:unlet dict.two
-<<<<<<< HEAD
 			グローバル変数とスクリプトローカル変数をクリーンアップ
 			するために特に便利である(これらはスクリプト終了時に検
 			出されない)。関数ローカルな関数は、その関数から抜ける
 			ときに自動的に削除される。
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 :lockv[ar][!] [depth] {name} ...			*:lockvar* *:lockv*
 			内部変数{name}をロックする。ロックすると、それ以降変更
@@ -7829,29 +6729,18 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			ため副作用なしに現在の要素を削除することができる。それ
 			以降の要素を変更すると、それが見つからなくなる。つまり
 			以下の例は動作する(リストを空にする非効率な方法): >
-<<<<<<< HEAD
 				for item in mylist
 				   call remove(mylist, 0)
 				endfor
-=======
-				:for item in mylist
-				   :call remove(mylist, 0)
-				:endfor
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 <			Note リストを並べ替える(例えばsort()やreverse()で)と予
 			期しない結果になることがある。
 			Note {var}の型が変わってしまうのを避けるために、リスト
 			の各要素の型は同じでなければならない。ループの末尾でこ
-<<<<<<< HEAD
 			の変数をunletすれば要素の型が同一でなくてもよくなる: >
 				for item in ["foo", ["bar"]]
 				   echo item
 				   unlet item  " これがないと E706 になる
 				endfor
-=======
-			の変数をunletすれば要素の型が同一でなくてもよくなる。
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 :for [{var1}, {var2}, ...] in {listlist}
 :endfo[r]
@@ -7914,11 +6803,7 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 		:try | edit | catch /^Vim(edit):E\d\+/ | echo "error" | endtry
 <
 					*:cat* *:catch* *E603* *E604* *E605*
-<<<<<<< HEAD
 :cat[ch] /{pattern}/	{pattern}にマッチする例外が発生し、より前の|:catch|
-=======
-:cat[ch] /{pattern}/	{pattern}にマッチする例外が発生し、より前の":catch"
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			で捕捉されなかった場合、このコマンドから次の|:catch|,
 			|:finally|, |:endtry|までのコマンドが実行される。その
 			ような例外が発生しなかった場合、そのコマンドはスキップ
@@ -7962,31 +6847,21 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			外が捕捉されない場合、コマンドの処理は終了する。
 			例: >
 		:try | throw "oops" | catch /^oo/ | echo "caught" | endtry
-<<<<<<< HEAD
 <			Note: エラーによって行のパースがスキップされ、"|" によ
 			るコマンド区切りが解釈されないような場合は "catch" は
 			行を分けて書く必要があります。
 
-=======
-< 
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*:ec* *:echo*
 :ec[ho] {expr1} ..	各{expr1}をスペースで区切って表示する。最初の{expr1}の
 			表示は、常に新しい行から始まる。
 			|:comment|も参照。
-<<<<<<< HEAD
 			改行が必要な場合 "\n" を使用する。カーソルを第1桁に
 			持って行くには "\r" を使用する。
-=======
-			改行が必要な場合"\n"を使用する。カーソルを第1列(カラ
-			ム)に持って行くには"\r"を使用する。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			色強調を行うにはコマンド|:echohl|を使用する。
 			コメント文を同じ行に続けることはできない。
 			例: >
 		:echo "the value of 'shell' is" &shell
 <							*:echo-redraw*
-<<<<<<< HEAD
 			このコマンドの後、再描画を行うと表示したメッセージが消
 			えてしまう。Vim は一連のコマンドが完了するまで再描画を
 			後回しにするため、この現象は頻繁に発生する。例えば、
@@ -7995,14 +6870,6 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			しばしばユーザが何か入力するまで後回しにされる)。この
 			問題を避けるには、|:redraw| を使って強制的に再描画する
 			こと。例: >
-=======
-			後で再描画を行うとこのメッセージが消えてしまう。そして
-			Vimはコマンド列が完了するまで再描画を後回しにするので
-			この現象はよく起きる。":echo"の前に実行したコマンドが
-			後で再描画を引き起こす(再描画はしばしばユーザが何か入
-			力するまで後回しにされる)というこの問題を避けるには、
-			|:redraw|コマンドにより再描画を強制すること。例: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		:new | redraw | echo "there is a new window"
 <
 
@@ -8055,13 +6922,8 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			メッセージ履歴|message-history|に保存する。スクリプト
 			や関数の中で使用されたときは行番号が付け加えられる。
 			|:echo|コマンドと同様に引数の間にスペースが挿入される。
-<<<<<<< HEAD
 			try条件文の中で使用されたときは、このメッセージがエ
 			ラー例外として投げられる。(|try-echoerr|を参照)
-=======
-			try条件文の中で使用されたときは、このメッセージがエラ
-			ー例外として投げられる。(|try-echoerr|を参照)
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			例: >
 		:echoerr "This script just failed!"
 <			
@@ -8071,24 +6933,15 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 <
 							*:exe* *:execute*
 :exe[cute] {expr1} ..	{expr1}の評価結果の文字列をExコマンドとして実行する。
-<<<<<<< HEAD
 			複数の引数は連結され、間にスペースが挿入される。余計な
 			スペースを入れたくない場合は "." オペレータを使って文
 			字列を連結してください。
-=======
-			複数の引数は連結され、間にスペースが挿入される。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			{expr1}は処理されたコマンドとして扱われ、コマンドライ
 			ン編集用のキーは認識されない。
 			コメント文を同じ行に続けることはできない。
 			例: >
-<<<<<<< HEAD
 		:execute "buffer" nextbuf
 		:execute "normal" count . "w"
-=======
-		:execute "buffer " nextbuf
-		:execute "normal " count . "w"
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 <
 			":execute"は'|'を受けつけないコマンドに、次のコマンドを
 			続けて実行させるのにも使用できる。例: >
@@ -8100,7 +6953,6 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 		:execute "normal ixxx\<Esc>"
 <			これで<Esc>文字を表す。|expr-string|を参照。
 
-<<<<<<< HEAD
 			ファイル名の中の特殊文字を正しくエスケープするように
 			注意すること。Vim コマンドに与えるファイル名をエス
 			ケープするには |fnameescape()| を使う。|:!| コマンドに
@@ -8109,8 +6961,6 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 		:execute "e " . fnameescape(filename)
 		:execute "!ls " . shellescape(expand('%:h'), 1)
 <
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			注意:executeに渡す文字列としては、"while"や"if"系のコ
 			マンドが始まったり終ったりするだけのようなものは不適格
 			である。よって次のような例は認められない: >
@@ -8122,11 +6972,7 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 		:execute 'while i < 5 | echo i | let i = i + 1 | endwhile'
 <
 
-<<<<<<< HEAD
 							*:exe-comment*
-=======
-							*:comment*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			":execute"や":echo"そして":echon"は、同一行に直接コメ
 			ントを続けることはできない。何故ならそれらのコマンドに
 			とって'"'は文字列の始まりに見えてしまうからである。し
@@ -8150,17 +6996,10 @@ TRY 条件文					*try-conditionals*
 条件文を使う事によってcatch節(これが例外を捕捉する)やfinally節(後始末のために
 実行される)を指定する事ができる。
 try条件文はコマンド|:try|によって始まり、対応するコマンド|:endtry|によって終了
-<<<<<<< HEAD
 する。その間でコマンド|:catch|によりcatch節を定めたり、コマンド|:finally|に
 よってfinally節を定めることができる。catch節は1個もなかったり、複数個あっても
 よい。しかしfinally節は1個までしか持てない。finally節の後にcatch節があってはな
 らない。catch節とfinally節の前の部分はtryブロックと呼ばれる。
-=======
-する。その間でコマンド|:catch|によりcatch節を定めたり、コマンド|:finally|によ
-ってfinally節を定めることができる。catch節は1個もなかったり、複数個あってもよ
-い。しかしfinally節は1個までしか持てない。finally節の後にcatch節があってはなら
-ない。catch節とfinally節の前の部分はtryブロックと呼ばれる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
      :try
      :  ...
@@ -8561,19 +7400,11 @@ finally節におけるエラーにより、割り込みが正しく動作しな�
 
 エラーを変更する					*catch-errors*
 
-<<<<<<< HEAD
 特定のエラーを捕捉するには、監視したいコードをtryブロックに入れ、そのエラー
 メッセージに対するcatch節を加えるだけでよい。try条件節が存在すると全てのエラー
 は例外に変換される。そのため、メッセージはまったく表示されず、|v:errmsg|は設定
 されない。":catch"コマンドに対する正しい正規表現を作るには、エラー例外のフォー
 マットがどのようなものか知っていなければならない。
-=======
-特定のエラーを捕捉するには、監視したいコードをtryブロックに入れ、そのエラーメ
-ッセージに対するcatch節を加えるだけでよい。try条件節が存在すると全てのエラーは
-例外に変換される。そのため、メッセージはまったく表示されず、|v:errmsg|は設定さ
-れない。":catch"コマンドに対する正しい正規表現を作るには、エラー例外のフォーマ
-ットがどのようなものか知っていなければならない。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
    エラー例外は次のフォーマットを持つ: >
 
 	Vim({cmdname}):{errmsg}
@@ -8967,11 +7798,7 @@ Note: 全てを捕捉すると、期待していた以上のものを捕捉し�
 	:
 	:function! Write(file)
 	:  try
-<<<<<<< HEAD
 	:    execute "write" fnameescape(a:file)
-=======
-	:    execute "write" a:file
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:  catch /^Vim(write):/
 	:    throw "EXCEPT:IO(" . getcwd() . ", " . a:file . "):WRITEERR"
 	:  endtry
@@ -9039,11 +7866,7 @@ Vimスクリプト言語では、エラーの後もスクリプトや関数が�
 トからそのようなコードを使いたいとは思わないだろう。
 
 							*except-syntax-err*
-<<<<<<< HEAD
 例外処理コマンドにおける構文エラーは、それが属するtry条件文のどの":catch"コマ
-=======
-例外処理コマンドにおける構文エラーは、それが族するtry条件文のどの":catch"コマ
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 ンドでも決して捕捉されない。しかしfinally節は実行される。
    例: >
 
@@ -9117,11 +7940,7 @@ try条件文の中のエラー例外の値は次になる: >
 
 16進数で表示する ~
 >
-<<<<<<< HEAD
   :" 関数 Nr2Bin() は数値の2進文字列表現を返す。
-=======
-  :" 関数 Nr2Bin() は数値の2進文字列を返す。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
   :func Nr2Bin(nr)
   :  let n = a:nr
   :  let r = ""
@@ -9230,20 +8049,12 @@ Michael Geddesによる)。
 ==============================================================================
 11. サンドボックス				*eval-sandbox* *sandbox* *E48*
 
-<<<<<<< HEAD
 オプション 'foldexpr', 'formatexpr', 'includeexpr', 'indentexpr',
 'statusline', 'foldtext' はサンドボックスの中で評価される。これによって、悪質
 な副作用を持つ式からの保護がなされている。これによって、これらのオプションが
 モードラインから設定された場合にある種の安全性がもたらされている。tagsファイル
 からのコマンドが実行されたときとコマンドラインでのCTRL-R =に対してもサンドボッ
 クスが使われる。
-=======
-オプション 'foldexpr', 'includeexpr', 'indentexpr', 'statusline', 'foldtext' 
-はサンドボックスの中で評価される。これによって、悪質な副作用を持つ式からの保護
-がなされている。これによって、これらのオプションがモードラインから設定された場合
-にある種の安全性がもたらされている。tagsファイルからのコマンドが実行されたとき
-とコマンドラインでのCTRL-R =に対してもサンドボックスが使われる。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 コマンド|:sandbox|に対してもサンドボックスが使われる。
 
 サンドボックス内では以下の事が禁止される:

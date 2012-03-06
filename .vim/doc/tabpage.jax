@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *tabpage.txt*   For Vim バージョン 7.3.  Last change: 2010 Jul 31
-=======
-*tabpage.txt*   For Vim バージョン 7.2.  Last change: 2007 Mar 11
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -45,13 +41,8 @@
 
 タブページを開くには:
 
-<<<<<<< HEAD
 Vim を "vim -p filename ..." と起動すると、それぞれのファイルごとに (最大
 'tabpagemax' までの) タブページを開けます。|-p| 参照。
-=======
-Vim を "vim -p filename ..." と起動すると、それぞれのファイルごとに
-('tabpagemax' までの) タブページを開けます。|-p|
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 CUI の Vim でタブページラインをダブルクリックすると新しいタブページが作成され
 ます。新しいタブページはクリックした場所の左に作成されます。最初のクリックが他
@@ -62,7 +53,6 @@ CUI の Vim でタブページラインをダブルクリックすると新し�
 
 GUI でタブページラインを右クリックするとメニューが表示されます。|tabline-menu|
 
-<<<<<<< HEAD
 :[count]tabe[dit]				*:tabe* *:tabedit* *:tabnew*
 :[count]tabnew
 		カレントタブページの後ろに空のウィンドウを持った新しいタブペー
@@ -76,19 +66,6 @@ GUI でタブページラインを右クリックするとメニューが表示�
 :[count]tabf[ind] [++opt] [+cmd] {file}			*:tabf* *:tabfind*
 		'path' 内の {file} を新しいタブページで開きます。|:find| と同
 		じです。[count] については下記 |:tab| 参照。
-=======
-:tabe[dit]				*:tabe* *:tabedit* *:tabnew*
-:tabnew		カレントタブページの後ろに空のウィンドウを持った新しいタブペー
-		ジを作成します。
-
-:tabe[dit] [++opt] [+cmd] {file}
-:tabnew [++opt] [+cmd] {file}
-		{file} を新しいタブページで開きます。|:edit| と同じです。
-
-:tabf[ind] [++opt] [+cmd] {file}			*:tabf* *:tabfind*
-		'path' 内の {file} を新しいタブページで開きます。|:find| と同
-		じです。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 		{|+file_in_path| が有効な場合のみ利用できます}
 
 :[count]tab {cmd}					*:tab*

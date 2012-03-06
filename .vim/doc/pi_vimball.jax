@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *pi_vimball.txt*	For Vim バージョン 7.3.  Last change: 2011 Sep 26
-=======
-*pi_vimball.txt*	For Vim バージョン 7.0.  Last change: 2006 May 01
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 			       ----------------
 			       Vimball Archiver
@@ -10,18 +6,13 @@
 
 Author:  Charles E. Campbell, Jr.  <NdrOchip@ScampbellPfamily.AbizM>
 	  (remove NOSPAM from Campbell's email first)
-<<<<<<< HEAD
 Copyright: (c) 2004-2011 by Charles E. Campbell, Jr.	*Vimball-copyright*
-=======
-Copyright: (c) 2004-2006 by Charles E. Campbell, Jr.	*Vimball-copyright*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	   The VIM LICENSE applies to Vimball.vim, and Vimball.txt
 	   (see |copyright|) except use "Vimball" instead of "Vim".
 	   No warranty, express or implied.
 	   Use At-Your-Own-Risk!
 
 ==============================================================================
-<<<<<<< HEAD
 1. 目次					*vba* *vimball* *vimball-contents*
 
 	1. 目次..........................................: |vimball-contents|
@@ -112,36 +103,6 @@ VIMBALL を展開するディレクトリの設定			*g:vimball_home*
 
 	vimball によって使用される |'runtimepath'| を指定したい場合は
 	g:vimball_home 変数を設定してください。
-=======
-1. 目次						*vimball* *vimball-contents*
-
-	1. 目次..........................................: |vimball-contents|
-	2. 使い方........................................: |vimball-manual|
-	3. 開発履歴......................................: |vimball-history|
-
-
-==============================================================================
-2. 使い方						*vimball-manual*
-
-							*:MkVimball*
-		:[range]MkVimball[!] filename
-
-	vimball ファイルに含めるファイルのパスを書いた行を指定してこのコマンド
-	を実行します。例: >
-		plugin/something.vim
-		doc/something.txt
-<	これらの行を指定して MkVimball を呼び出すと "filename.vba" というファ
-	イルが作成されます。このファイルは、Vimball.vim を使うことで、元のファ
-	イルに戻すことができます。"filename.vba" がすでに存在する場合、
-	MkVimball は警告メッセージを表示し、ファイルを作成しません。Note: ファ
-	イルのパスは、.vim (vimfile) ディレクトリからの相対パスで指定します。
-	ファイルはそのディレクトリの中に置いてください。vimball プラグインは、
-	'runtimepath' から実際に存在するディレクトリを探し、最初に見つかったも
-	のを相対パスのルートとして使います。絶対パスを使うことはできません。
-
-	感嘆符 (!) を付けた場合は、"filename.vba" が存在した場合でもファイルが
-	作成されます。この動作は |:w| と同じです。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*vimball-extract*
 		vim filename.vba
@@ -152,18 +113,13 @@ VIMBALL を展開するディレクトリの設定			*g:vimball_home*
 	Vimball ファイルの一行目が "Vimball Archiver by Charles E. Campbell,
 	Jr., Ph.D." となっている場合のみ、ファイルを展開できます。
 
-<<<<<<< HEAD
 VIMBALL 内のファイルを一覧表示する				*:VimballList*
 
 		:VimballList
-=======
-		:VimballList				*vimball-vimballlist*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 	このコマンドを実行すると、Vimball ファイルに含まれているファイルと、そ
 	れぞれの行数が表示されます。
 
-<<<<<<< HEAD
 VIMBALL の展開を手動で呼び出す					*:UseVimball*
 
 		:UseVimball [path]
@@ -275,29 +231,15 @@ WINDOWS							*vimball-windows*
 			  * RmVimball implemented
 	15 : Jun 13, 2006 * bugfix
 	14 : May 26, 2006 * bugfixes
-=======
-
-==============================================================================
-3. 開発履歴						*vimball-history* {{{1
-
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	13 : May 01, 2006 * exists("&acd") used to determine if the acd
 			    option exists
 	12 : May 01, 2006 * bugfix - the |'acd'| option is not always defined
 	11 : Apr 27, 2006 * VimballList would create missing subdirectories that
-<<<<<<< HEAD
 			    the vimball specified were needed.  Fixed.
 	10 : Apr 27, 2006 * moved all setting saving/restoration to a pair of
 			    functions.  Included some more settings in them
 			    which frequently cause trouble.
 	9  : Apr 26, 2006 * various changes to support Windows' predilection
-=======
-			    the vimball specified were needed.	Fixed.
-	10 : Apr 27, 2006 * moved all setting saving/restoration to a pair of
-			    functions.	Included some more settings in them
-			    which frequently cause trouble.
-	9  : Apr 26, 2006 * various changes to support Windows prediliction
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			    for backslashes and spaces in file and directory
 			    names.
 	7  : Apr 25, 2006 * bypasses foldenable
@@ -308,11 +250,7 @@ WINDOWS							*vimball-windows*
 			    only fires once, so the "Source this file..."
 			    message is now issued only once.
 	3  : Mar 20, 2006 * removed query, now requires sourcing to be
-<<<<<<< HEAD
 			    extracted (:so %).  Message to that effect
-=======
-			    extracted (:so %).	Message to that effect
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 			    included.
 			  * :VimballList  now shows files that would be
 			    extracted.

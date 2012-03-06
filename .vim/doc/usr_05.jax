@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *usr_05.txt*	For Vim バージョン 7.3.  Last change: 2009 Jun 04
-=======
-*usr_05.txt*	For Vim バージョン 7.2.  Last change: 2007 May 11
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -207,13 +203,8 @@ textwidth=78" はそのファイルの 'textwidth' オプションを 78 に設�
 
 							*restore-cursor*  >
 	autocmd BufReadPost *
-<<<<<<< HEAD
 	    \ if line("'\"") > 1 && line("'\"") <= line("$") |
 	    \   exe "normal! g`\"" |
-=======
-	    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-	    \   exe "normal g`\"" |
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	    \ endif
 
 オートコマンドをもう一つ。ファイルを読み込んだ直後に実行されるオートコマンドを
@@ -377,11 +368,7 @@ Vim の配布パッケージにはたくさんのファイルタイププラグ�
 
 ファイルタイププラグインは正しいディレクトリにコピーするだけで追加できます。
 ディレクトリの場所はグローバルプラグインと同じですが、ディレクトリ名の最後の部
-<<<<<<< HEAD
 分が "ftplugin" となります。例えば "stuff" ファイルタイプ用のプラグインを Unix
-=======
-分が "ftplugin" となります。例えば "staff" ファイルタイプ用のプラグインを Unix
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 システムに入れるとしましょう。入手したファイルを次のコマンドで ftplugin ディレ
 クトリに移します: >
 
@@ -412,11 +399,7 @@ MS-DOS では長いファイル名が使えません。プラグインを追加�
 	ftplugin/<filetype>/<name>.vim
 
 "<name>" の部分はどんな文字列でも構いません。
-<<<<<<< HEAD
 以下は Unix での "stuff" ファイルタイプの例です: >
-=======
-以下は Unix での "staff" ファイルタイプの例です: >
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 	~/.vim/ftplugin/stuff.vim
 	~/.vim/ftplugin/stuff_def.vim

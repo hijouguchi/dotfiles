@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *pi_tar.txt*	For Vim バージョン 7.3.  Last change: 2011 May 31
-=======
-*pi_tar.txt*	For Vim バージョン 7.2.  Last change: 2008 Aug 09
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		       +====================+
 		       | Tar File Interface |
@@ -10,11 +6,7 @@
 
 Author:  Charles E. Campbell, Jr.  <NdrOchip@ScampbellPfamily.AbizM>
 	  (remove NOSPAM from Campbell's email first)
-<<<<<<< HEAD
 Copyright 2005-2010: The GPL (gnu public license) applies to	*tar-copyright*
-=======
-Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	   tar.vim, tarPlugin.vim, and pi_tar.txt.
 	   No warranty, express or implied.  Use At-Your-Own-Risk.
 
@@ -33,7 +25,6 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
    い。編集後に保存することもできます。tar ファイルに新しいファイルを追加する
    ことはまだできません。
 
-<<<<<<< HEAD
 						*:Vimuntar*
    VIMUNTAR~
 
@@ -61,8 +52,6 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
 	let g:loaded_tar      = 1
 <
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 ==============================================================================
 3. オプション						*tar-options*
 
@@ -71,11 +60,7 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
    *g:tar_browseoptions*  "Ptf"   ファイル一覧を取得するときに使われる
    *g:tar_readoptions*    "OPxf"  tar ファイルを展開するときに使われる
    *g:tar_cmd*            "tar"   tar プログラムの名前
-<<<<<<< HEAD
    *g:tar_nomax*            0     trueならファイルウィンドウが最大化されない
-=======
-   *g:tar_nomax*            0     true ならファイルウィンドウが最大化されない
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
    *g:tar_secure*         undef   変数が存在する場合:
 					"--" を使って、ファイル名がオプション
 					指定として解釈されるのを防ぎます。
@@ -83,7 +68,6 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
 					があります。Posix 互換の tar なら対応
 					しているはずです。
 				  変数が存在しない場合:
-<<<<<<< HEAD
 					tar プラグインは "-" で始まる tar ファ
 					イルまたは中のファイルを受け付けませ
 					ん。
@@ -91,20 +75,11 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
 				  ではないので、初期設定では無効になっていま
 				  す。
    *g:tar_writeoptions*   "uf"    ファイルを更新/置換するときに使われる
-=======
-					tar プラグインは "-" で始まるファイル
-					名を受け付けません。
-				  すべての tar が "--" をサポートしているわけ
-				  ではないので、初期設定では無効になっていま
-				  す。
-   *g:tar_writeoptions*   "uf"    ファイルを更新するときに使われる
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 ==============================================================================
 4. 開発履歴						*tar-history*
 
-<<<<<<< HEAD
 
    v27 May 31, 2011 * moved cygwin detection before g:tar_copycmd handling
    		    * inserted additional |:keepj| modifiers
@@ -115,8 +90,6 @@ Copyright 2005-2008: The GPL (gnu public license) applies to	*tar-copyright*
    v25 Jun 19, 2010 * (Jan Steffens) added support for xz compression
    v24 Apr 07, 2009 * :Untarvim command implemented
        Sep 28, 2009 * Added lzma support
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
    v22 Aug 08, 2008 * security fixes
    v16 Jun 06, 2008 * tarfile:: used instead of tarfile: when editing files
 		      inside tarballs.  Fixes a problem with tarballs called

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *usr_90.txt*	For Vim バージョン 7.3.  Last change: 2008 Sep 10
-=======
-*usr_90.txt*	For Vim バージョン 7.2.  Last change: 2008 Sep 10
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -385,11 +381,7 @@ Q: Backspace キーと Delete キーが正しく動いていないようです
 機能しなくなります。これ以外の解決方法は |:fixdel| を参照してください。
 
 
-<<<<<<< HEAD
 Q: 私は RedHat Linux を使っています。システム付属の Vim は使えますか？
-=======
-Q: 私は RedHad Linux を使っています。システム付属の Vim は使えますか？
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 RedHat にはデフォルトで最小構成の Vim がインストールされます。
 "Vim-enhanced-version.rpm" のような名前の RPM パッケージを探して、それをインス
@@ -401,11 +393,7 @@ Q: テキストを色付きで表示するには？ プラグインを動かす�
 サンプルの vimrc スクリプトを使ってください。説明は |not-compatible| にありま
 す。
 
-<<<<<<< HEAD
 構文強調表示については第 6 章を参照してください: |usr_06.txt|。
-=======
-構文協調表示については第 6 章を参照してください: |usr_06.txt|。
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 Q: 便利な vimrc ファイルの例はありますか？

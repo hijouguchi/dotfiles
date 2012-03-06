@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 *os_amiga.txt*  For Vim バージョン 7.3.  Last change: 2010 Aug 14
-=======
-*os_amiga.txt*  For Vim バージョン 7.0.  Last change: 2005 Mar 29
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -12,12 +8,9 @@
 このファイルは Amiga version の Vim 特有の事柄に関して記述されています。
 下には特別に|MorphOS|についてのセクションが設けられています。
 
-<<<<<<< HEAD
 NOTE: Amiga 用のコードはまだソースに含まれていますが、メンテナンスもテストもさ
 れていません。
 
-=======
->>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 Amiga へのインストール:
 - "VIm:" を Vim の "doc" ディレクトリがある場所に割り当てます。help コマンドで
   "VIM:doc/help.txt" が検索されます。
