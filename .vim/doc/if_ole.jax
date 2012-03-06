@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 *if_ole.txt*    For Vim バージョン 7.3.  Last change: 2008 Aug 16
+=======
+*if_ole.txt*    For Vim バージョン 7.0.  Last change: 2006 Apr 30
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		  VIM REFERENCE MANUAL    by Paul Moore
@@ -41,12 +45,15 @@ Perlなどからアクセス可能な、OLEオートメーションサーバと�
 	use Win32::OLE;
 	$vim = new Win32::OLE 'Vim.Application';
 
+<<<<<<< HEAD
 [C#] >
         // プロジェクトに VIM への参照を追加する。
         // COM タブを選択する。
         // "VIM Ole Interface 1.1 Type Library" を選択する。
 	Vim.Vim vimobj = new Vim.Vim();
 
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 Vimは、他の一部のOLEサーバがサポートしているような、"hidden"なOLEサーバとして
 の機能をサポートしていない。クライアントがVimのインスタンスを起動する場合、そ
 のインスタンスは即座に可視化される。単にVimインスタンスとのOLE接続を閉じるだ
@@ -71,6 +78,7 @@ SendKeys(keys)		一連のキー操作を実行する。
 	Vim.SendKeys "ihello<Esc>"
 	Vim.SendKeys "ma1GV4jy`a"
 
+<<<<<<< HEAD
 これらの例は、Vimがノーマルモードで始まるものと仮定している。必ずノーマルモー
 ドにするには、一連のキーを次のように CTRL-\ CTRL-N で始めるとよい >
 
@@ -78,6 +86,15 @@ SendKeys(keys)		一連のキー操作を実行する。
 
 CTRL-\ CTRL-N は、挿入モード、コマンドラインモードにいるとき、Vimをノーマル
 モードに戻す。これらはVimコマンドの途中に入れると機能しないことに注意せよ。
+=======
+これらの例は、Vimがノーマルモードで始まるものと仮定している。必ずノーマルモ
+ードにするには、一連のキーを次のように CTRL-\ CTRL-N で始めるとよい >
+
+	Vim.SendKeys "<C-\><C-N>ihello<Esc>"
+
+CTRL-\ CTRL-N は、挿入モード、コマンドラインモードにいるとき、Vimをノーマルモ
+ードに戻す。これらはVimコマンドの途中に入れると機能しないことに注意せよ。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 							*ole-eval*
 Eval(expr)		式(expr)を実行する。
@@ -130,7 +147,11 @@ VimをOLEサーバとして動作させる前に、システムレジストリ�
 
 
 OLEサーバーが登録されていないとき、OLEをサポートしたgvimを起動すると警告ダイア
+<<<<<<< HEAD
 ログが出ます。"Yes"を選択するとレジストリに登録できます。
+=======
+ログが出ます。"Yes"をを選択するとレジストリに登録できます。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 レジストリが書き込み可能でないときには登録はできません。もし登録できないときは
 "Administrator"権限でgvimを起動してください。

@@ -163,8 +163,6 @@ alias quit=exit
 alias vim='screen vim'
 
 
-alias -g '...'='../..'
-alias -g '....'='../../..'
 alias -g G='|grep --color'
 alias -g T='|tee'
 alias -g L='|less'

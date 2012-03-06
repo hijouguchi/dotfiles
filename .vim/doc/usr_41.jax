@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 *usr_41.txt*	For Vim バージョン 7.3.  Last change: 2011 Jun 19
+=======
+*usr_41.txt*	For Vim バージョン 7.2.  Last change: 2008 Jun 21
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -552,7 +556,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 の一覧は |functions| を参照してください。関数の名前の上で CTRL-] を押すと、詳
 細な説明にジャンプできます。
 
+<<<<<<< HEAD
 文字列繰作:						*string-functions*
+=======
+文字列繰作:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	nr2char()		ASCII値から文字を得る
 	char2nr()		文字のASCII値を得る
 	str2nr()		文字列を数値に変換する
@@ -573,7 +581,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	strridx()		文字列の中で部分文字列が見つかった最後の位置
 	strlen()		文字列の長さ
 	substitute()		パターンにマッチする文字列を置換
+<<<<<<< HEAD
 	submatch()		":s" と substitute() の中で部分マッチを得る
+=======
+	submatch()		":substitute" の中で部分マッチを得る
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	strpart()		文字列の一部分を得る
 	expand()		特殊キーワードを展開する
 	iconv()			テキストのエンコーディングを変換する
@@ -581,7 +593,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	repeat()		文字列を複数回繰り返す
 	eval()			文字列を式として評価する
 
+<<<<<<< HEAD
 リスト操作:						*list-functions*
+=======
+リスト操作:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	get()			要素を取得。存在しないインデックスでもエラーを
 				出さない
 	len()			リスト中の要素の個数
@@ -607,7 +623,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	count()			ある要素がリスト中に出現する回数を返す
 	repeat()		リストを複数回繰り返す
 
+<<<<<<< HEAD
 辞書操作:						*dict-functions*
+=======
+辞書操作:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	get()			辞書の要素を返す。存在しないキーでもエラーを出
 				さない
 	len()			辞書の要素の個数
@@ -627,7 +647,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	min()			辞書中の最小値
 	count()			ある値が出現する回数を返す
 
+<<<<<<< HEAD
 浮動小数点数の計算:					*float-functions*
+=======
+浮動小数点数の計算:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	float2nr()		Float を Number に変換
 	abs()			絶対値 (Numberも処理可能)
 	round()			丸め
@@ -637,6 +661,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	log10()			10 を底とする対数
 	pow()			x の y 乗
 	sqrt()			平方根
+<<<<<<< HEAD
 	sin()			sine
 	cos()			cosine
 	tan()			tangent
@@ -649,12 +674,20 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	tanh()			hyperbolic tangent
 
 変数:							*var-functions*
+=======
+	sin()			sine (サイン)
+	cos()			cosine (コサイン)
+	atan()			arc tangent (アークタンジェント)
+
+変数:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	type()			変数の型
 	islocked()		変数がロックされているか判定する
 	function()		関数名からFuncrefを取得する
 	getbufvar()		指定バッファの変数値を得る
 	setbufvar()		指定バッファに変数を設定する
 	getwinvar()		指定ウィンドウの変数値を得る
+<<<<<<< HEAD
 	gettabvar()		指定タブページから変数値を得る
 	gettabwinvar()		指定ウィンドウ・タブページから変数値を取得する
 	setwinvar()		指定ウィンドウに変数を設定する
@@ -663,6 +696,14 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	garbagecollect()	開放可能なメモリを解放する
 
 カーソルとマークの位置:			*cursor-functions* *mark-functions*
+=======
+	gettabwinvar()		指定ウィンドウ・タブページから変数値を取得する
+	setwinvar()		指定ウィンドウに変数を設定する
+	settabwinvar()		指定ウィンドウ・タブページに変数を設定する
+	garbagecollect()	開放可能なメモリを解放する
+
+カーソルとマークの位置:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	col()			カーソルやマークの列番号を得る
 	virtcol()		カーソルやマークの画面上の列番号を得る
 	line()			カーソルやマークの行番号を得る
@@ -675,7 +716,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	line2byte()		指定の行のバイト位置を得る
 	diff_filler()		ある行より上の詰め行の数を取得する
 
+<<<<<<< HEAD
 カレントバッファで動作するもの:				*text-functions*
+=======
+カレントバッファで動作するもの:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	getline()		バッファから行を得る
 	setline()		バッファの行を置き換える
 	append()		行または行のリストをバッファに追加する
@@ -690,7 +735,10 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	searchpairpos()		start/skip/end の対を探す
 	searchdecl()		名前が宣言されている場所を探す
 
+<<<<<<< HEAD
 					*system-functions* *file-functions*
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 システム関数とファイル繰作:
 	glob()			ワイルドカードを展開する
 	globpath()		複数のディレクトリを対象にワイルドカードを展開
@@ -717,14 +765,21 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	readfile()		ファイルを読み込み、行のリストを得る
 	writefile()		行のリストをファイルに書き込む
 
+<<<<<<< HEAD
 日付と時刻:				*date-functions* *time-functions*
+=======
+日付と時刻:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	getftime()		ファイルの最終更新日時を得る
 	localtime()		現在時刻を秒単位で得る
 	strftime()		時刻を文字列に変換する
 	reltime()		現在時刻または経過時間を正確に取得する
 	reltimestr()		reltime()の結果を文字列に変換する
 
+<<<<<<< HEAD
 			*buffer-functions* *window-functions* *arg-functions*
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 バッファ、ウィンドウ、引数リスト:
 	argc()			引数リストの大きさ
 	argidx()		引数リスト中の現在の位置
@@ -742,32 +797,52 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	winbufnr()		ウィンドウのバッファ番号を得る
 	getbufline()		バッファの行のリストを得る
 
+<<<<<<< HEAD
 コマンドライン:					*command-line-functions*
+=======
+コマンドライン:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	getcmdline()		現在のコマンドラインを取得
 	getcmdpos()		コマンドラインにおけるカーソル位置を取得
 	setcmdpos()		コマンドラインにおけるカーソル位置を設定
 	getcmdtype()		現在のコマンドラインの種類を返す
 
+<<<<<<< HEAD
 Quickfixとロケーションリスト:			*quickfix-functions*
+=======
+Quickfixとロケーションリスト:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	getqflist()		quickfixエラーのリスト
 	setqflist()		quickfixを変更する
 	getloclist()		ロケーションリストの項目のリスト
 	setloclist()		ロケーションリストを変更する
 
+<<<<<<< HEAD
 インサートモード補完:					*completion-functions*
+=======
+インサートモード補完:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	complete()		補完候補を設定する
 	complete_add()		補完候補を追加する
 	complete_check()	補完処理を終えるべきかどうかをチェックする
 	pumvisible()		ポップアップメニューが表示されているかチェック
 
+<<<<<<< HEAD
 折り畳み:					*folding-functions*
+=======
+折り畳み:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	foldclosed()		行が折り畳まれているかどうかをチェックする
 	foldclosedend()		foldclosed()と同様。折り畳み末尾の行番号を返す
 	foldlevel()		行の折り畳みレベルを得る
 	foldtext()		閉じた折り畳みを代替表示するテキストを生成
 	foldtextresult()	閉じた折り畳みを代替表示するテキストを得る
 
+<<<<<<< HEAD
 シンタックスハイライト:		  *syntax-functions* *highlighting-functions*
+=======
+シンタックスハイライト:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	clearmatches()		|matchadd()|と|:match|コマンドで定義されたマッ
 				チをクリアする
 	getmatches()		|matchadd()|と|:match|コマンドで定義されたすべ
@@ -777,8 +852,11 @@ Quickfixとロケーションリスト:			*quickfix-functions*
 	synID()			指定位置のシンタックスIDを得る
 	synIDattr()		シンタックスIDから指定の属性を得る
 	synIDtrans()		変換したシンタックスIDを得る
+<<<<<<< HEAD
 	synstack()		指定位置のシンタックスIDのリストを得る
 	synconcealed()		conceal の情報を得る
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	diff_hlID()		diffモードの指定位置のシンタックスIDを得る
 	matchadd()		強調表示するパターンを定義する
 	matcharg()		|:match|の引数の情報を得る
@@ -786,18 +864,30 @@ Quickfixとロケーションリスト:			*quickfix-functions*
 				チを削除する
 	setmatches()		|getmatches()|で得たマッチを使って復元する
 
+<<<<<<< HEAD
 スペリング:					*spell-functions*
+=======
+スペリング:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	spellbadword()		カーソル位置以降のスペルミスを探す
 	spellsuggest()		スペル訂正の候補を返す
 	soundfold()		単語の同音等値(sound-a-like equivalent)を返す
 
+<<<<<<< HEAD
 履歴:						*history-functions*
+=======
+履歴:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	histadd()		履歴に項目を追加
 	histdel()		履歴から項目を削除
 	histget()		履歴の項目を得る
 	histnr()		履歴リストの最大インデックスを得る
 
+<<<<<<< HEAD
 対話インターフェース:				*interactive-functions*
+=======
+対話インターフェース:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	browse()		ファイル選択ダイアログを開く
 	browsedir()		ディレクトリ選択ダイアログを開く
 	confirm()		ユーザーに選択をさせる
@@ -811,12 +901,20 @@ Quickfixとロケーションリスト:			*quickfix-functions*
 	inputsave()		先行入力キューを保存して空にする
 	inputrestore()		inputsave()で保存した状態に戻す
 
+<<<<<<< HEAD
 GUI:						*gui-functions*
+=======
+GUI:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	getfontname()		現在使われているフォントの名前を取得
 	getwinposx()		GUIのVimウィンドウのX座標
 	getwinposy()		GUIのVimウィンドウのY座標
 
+<<<<<<< HEAD
 Vimサーバ:					*server-functions*
+=======
+Vimサーバ:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	serverlist()		サーバ名のリストを返す
 	remote_send()		Vimサーバにコマンド文字を送る
 	remote_expr()		Vimサーバで式を評価する
@@ -826,14 +924,22 @@ Vimサーバ:					*server-functions*
 	foreground()		Vimのウィンドウを前面に持ってくる
 	remote_foreground()	Vimサーバのウィンドウを前面に持ってくる
 
+<<<<<<< HEAD
 ウィンドウサイズと位置:				*window-size-functions*
+=======
+ウィンドウサイズと位置:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	winheight()		ウィンドウの高さを取得
 	winwidth()		ウィンドウの幅を取得
 	winrestcmd()		ウィンドウサイズを復元するコマンドを返す
 	winsaveview()		カレントウィンドウのビューを取得
 	winrestview()		カレントウィンドウのビューを復元
 
+<<<<<<< HEAD
 その他:						*various-functions*
+=======
+その他:
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	mode()			現在の編集モードを得る
 	visualmode()		最後に使われたビジュアルモードの種類
 	hasmapto()		マップの存在をチェック
@@ -857,8 +963,11 @@ Vimサーバ:					*server-functions*
 	taglist()		マッチするタグのリストを取得
 	tagfiles()		タグファイルのリストを取得
 
+<<<<<<< HEAD
 	mzeval()		|MzScheme| の式を評価する
 
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 ==============================================================================
 *41.7*	関数を定義する
 
@@ -994,7 +1103,11 @@ Vimサーバ:					*server-functions*
 
 	:function Show(start, ...)
 	:  echohl Title
+<<<<<<< HEAD
 	:  echo "start is " . a:start
+=======
+	:  echo "Show is " . a:start
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	:  echohl None
 	:  let index = 1
 	:  while index <= a:0
@@ -1685,15 +1798,23 @@ Vim スクリプトを書いて、それを多くの人に使ってもらうこ�
 れたプラグインを使いたいということもあります。したがって、指定したプラグインだ
 けを無効にできる必要があります。次のようにします: >
 
+<<<<<<< HEAD
   6	if exists("g:loaded_typecorr")
   7	  finish
   8	endif
   9	let g:loaded_typecorr = 1
+=======
+  6	if exists("loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let loaded_typecorr = 1
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 これはスクリプトの二重ロードを避ける効果もあります。スクリプトを二重にロードす
 ると、関数の再定義エラーが発生したり、自動コマンドが二重に追加されることでトラ
 ブルが起きたりします。
 
+<<<<<<< HEAD
 変数の名前は "loaded_" で始めてプラグインのファイル名をそのまま付けるようにし
 てください。"g:" を付けることで関数の中で変数を使用したときに発生するミスを防
 いでいます (関数の中では "g:" を付けない変数はローカル変数になります)。
@@ -1701,6 +1822,8 @@ Vim スクリプトを書いて、それを多くの人に使ってもらうこ�
 "finish" を使ってファイルの残りの部分の読み込みを停止しています。この方法は
 ファイル全体を if-endif で囲むよりも速いです。
 
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 マップ
 ------
@@ -1878,10 +2001,17 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
   3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
   4	" License:	This file is placed in the public domain.
   5
+<<<<<<< HEAD
   6	if exists("g:loaded_typecorr")
   7	  finish
   8	endif
   9	let g:loaded_typecorr = 1
+=======
+  6	if exists("loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let loaded_typecorr = 1
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
  10
  11	let s:save_cpo = &cpo
  12	set cpo&vim

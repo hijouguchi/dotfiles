@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 *if_cscop.txt*  For Vim バージョン 7.3.  Last change: 2011 Jun 12
+=======
+*if_cscop.txt*  For Vim バージョン 7.0.  Last change: 2005 Mar 29
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		  VIM リファレンスマニュアル    by Andy Kahn
 
 
 							*cscope* *Cscope*
+<<<<<<< HEAD
 この文章はVimにおけるcscopeインターフェースの使い方について述べている。
+=======
+この文章はVimにおけるcscopeインターフェースを使い方について述べている。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 cscopeはctagsのようなツールであるが、ctagsよりも多くの機能が提供されるので
 ctagsの代わりとみなせる。Vimではタグにジャンプするように、cscopeクエリの結果へ
@@ -32,7 +40,11 @@ ctagsの代わりとみなせる。Vimではタグにジャンプするように
 
   cscopeは貴方を助けるインタラクティブなスクリーン指向のツールです:
 
+<<<<<<< HEAD
        いつ終わるかわからない厚いソースリストのぺージをめくることなく、Cプログ
+=======
+       いつ終わるかわからない厚いソースリストのぺジーをめくることなく、Cプログ
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
        ラムがどのように働くかを知る。
 
        プログラム全体を知らなくても、バグを修正するために変更すべきコードの位
@@ -63,8 +75,13 @@ ctagsの代わりとみなせる。Vimではタグにジャンプするように
   し、このデータベースを用いてこれらの質問に答える。2度目以降の起動では、ソー
   スファイルが変更されたかソースファイルのリストが異なる時にだけデータベースが
   再構築される。データベースが再構築される時でも変更されていないファイルについ
+<<<<<<< HEAD
   ては過去のデータベースよりコピーされるので、初めから構築し直すよりも高速に
   構築できる。
+=======
+  ては過去のデータベースよりコピーされるので、初めからビルドし直すよりも高速に
+  ビルドできる。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 				    -----
 
@@ -104,11 +121,20 @@ tagsのようになるので、普通のタグのようなジャンプ操作(Ctr
 	    [flags] cscopeに引き渡す追加フラグ
 
 	例 >
+<<<<<<< HEAD
 	    :cscope add /usr/local/cdb/cscope.out
 	    :cscope add /projects/vim/cscope.out /usr/local/vim
 	    :cscope add cscope.out /usr/local/vim -C
 <
 				      *cscope-find* *cs-find* *E567*
+=======
+	    :cs add /usr/local/cdb/cscope.out
+	    :cs add /projects/vim/cscope.out /usr/local/vim
+	    :cs add cscope.out /usr/local/vim -C
+<
+				      *cscope-find* *cs-find*
+						*E565* *E567*
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
     find  : cscopeに問い合わせる。#5オプション(grepパターンを変更する)以外の全
 	    cscopeクエリオプションが使用可能。
 
@@ -119,6 +145,7 @@ tagsのようになるので、普通のタグのようなジャンプ操作(Ctr
 
 		0 or s: Cのシンボルを検索
 		1 or g: 定義を検索
+<<<<<<< HEAD
 		2 or d: この関数から呼ばれる関数を検索
 		3 or c: この関数を呼んでいる関数を検索
 		4 or t: 文字列を検索
@@ -146,6 +173,24 @@ tagsのようになるので、普通のタグのようなジャンプ操作(Ctr
 	    :cscope find 0 DEFAULT_TERM
 <
 	    この例を Vim 5.1 のソースコードに対して行なうと、以下の出力を生成
+=======
+		2 or d: 関数から呼ばれる関数を検索
+		3 or c: 関数を読んでいる関数を検索
+		4 or t: 文字列を検索
+		6 or e: egrepパターンを検索
+		7 or f: ファイルを検索
+		8 or i: ファイルを参照(#include)しているファイルを検索
+
+	EXAMPLES >
+	    :cs find c vim_free
+	    :cs find 3 vim_free
+<
+	    この2つの例は、同じクエリを実行する。 >
+
+	    :cs find 0 DEFAULT_TERM
+<
+	    3番目の例をソースコードに対して行なうと、Vim 5.1は以下の出力を生成
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	    する。
 
 
@@ -194,7 +239,11 @@ tagsのようになるので、普通のタグのようなジャンプ操作(Ctr
 
 	    使用法  :cs help
 
+<<<<<<< HEAD
 							*E261*
+=======
+						*E260* *E261*
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
     kill  : cscopeとの接続を切断する(もしくは全ての接続を切断する)。
 
 	    使用法  :cs kill {num|partial_name}
@@ -217,7 +266,11 @@ tagsのようになるので、普通のタグのようなジャンプ操作(Ctr
 							*:lcscope* *:lcs*
 このコマンドは ":cscope" とほぼ同じだが、オプション 'cscopequickfix' がオンに
 なっている場合、QuickFix リストでなくカレントウィンドウのロケーションリストで
+<<<<<<< HEAD
 cscope の結果を表示する。
+=======
+cscope の結果を表示する点が異なる。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 						*:cstag* *E257* *E562*
 ctagsとcscopeを同じように使うのならば、両方を順に検索してジャンプを行なうのに
@@ -265,6 +318,7 @@ ctagsとcscopeを同じように使うのならば、両方を順に検索して
 	:set cst
 	:set nocst
 <
+<<<<<<< HEAD
 							*cscoperelative* *csre*
 'cscoperelative' が設定されていて、cscope にプレフィックスが与えられていない場
 合 (プレフィックスは cscope の -P オプションの引数です)、絶対パスを得るため
@@ -274,6 +328,8 @@ ctagsとcscopeを同じように使うのならば、両方を順に検索して
 	:set csre
 	:set nocsre
 <
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 							*cscopetagorder* *csto*
 'csto'の値は|:cstag|が検索を実行する順序を決定する。'csto'が0に設定されている
 ならば、先にcscopeデータベースが検索され、cscopeでは見つからなかった時にだけ
@@ -351,9 +407,18 @@ Vimのcscope機能は4つのシステムコール:fork(), pipe(), execl(), waitp
 http://cscope.sourceforge.net でダウンロードできる、 DJGPP でビルドしたバージョ
 ンは、Vim では動かないことがわかっている。
 
+<<<<<<< HEAD
 ハードコードされた限界:
 |:cstag| がタグファイルを検索するときの |:tjump| の動作はカスタマイズできな
 い(例: tjump でなく tselect を使うことができない)。
+=======
+これにはコードに埋め込まれた2つの限界がある:
+
+    1. 最大cscope接続数は8。本当にこれ以上必要ですか?
+
+    2. |:cstag|がタグファイルを検索している時の|:tjump|は実装されていない。
+    (例: 代わりとしてtselectも利用できない)
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 ==============================================================================
 6. 使い方の提案	    					*cscope-suggestions*
@@ -475,7 +540,11 @@ SGIの開発者もまた入手可能である。このページからCscopeを�
 (訳注:もちろん日本語では送らないで下さい)
 							*cscope-win32*
 Win32バージョンのcscopeについてはこのサイトをご覧ください
+<<<<<<< HEAD
 	http://code.google.com/p/cscope-win32/
+=======
+	http://iamphet.nm.ru/cscope/index.html
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 Win32への対応は Sergey Khorev <khorev@softlab.ru> してくれました。Win32に固有
 の問題については彼に問い合わせてください。

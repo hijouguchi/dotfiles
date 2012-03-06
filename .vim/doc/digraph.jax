@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 *digraph.txt*   For Vim バージョン 7.3.  Last change: 2011 Jan 15
+=======
+*digraph.txt*   For Vim バージョン 7.1.  Last change: 2006 Jul 18
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -6,11 +10,20 @@
 		  
 *注意: DIGRAPHS、DIGRAPHを日本語に置き換えること(北条)*
 
+<<<<<<< HEAD
 Digraphs					*digraph* *digraphs* *Digraphs*
 
 DIGRAPHSは、通常のキーボードから普通に入力できないキャラクタを入力するために
 使われる。これらは多くの場合、印字可能な非 ASCII キャラクタである。DIGRAPHSは、
 CTRL-Vと共に入力される10進表記よりも覚えやすい(|i_CTRL-V|を参照せよ)。
+=======
+DIGRAPHS						*digraphs* *Digraphs*
+
+DIGRAPHSは、通常のキーボードから普通に入力できないキャラクタを入力するために
+使われる。これらは多くの場合、8ビットセットを持つアクセントされたキャラクタで
+ある。DIGRAPHSは、CTRL-Vと共に入力される10進表記よりも覚えやすい(|i_CTRL-V|を
+参照せよ)。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 ユーザーマニュアルの|24.9|に簡単な説明があります。
 代わりに'keymap'オプションを使えます。
@@ -46,9 +59,15 @@ Vimは普通|+digraphs|特性を持ってコンパイルされる。この特性
 各欄の最初の2つのキャラクタは、そのDIGRAPHを入力するために打たねばならない
 キャラクタである。
 
+<<<<<<< HEAD
 各欄の中央は、結果として表示されるキャラクタである。この表は、DIGRAPHSをサポー
 トしていないシステム上で閲覧した場合、また、このファイルをプリントアウトしたと
 きには乱れる可能性がある。
+=======
+各欄の中央は、結果として表示されるキャラクタである。この表は、DIGRAPHSをサポ
+ートしていないシステム上で閲覧した場合、また、このファイルをプリントアウトし
+たときには乱れる可能性がある。
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 
 10進数はそのキャラクタのASCIIコードである。
 
@@ -56,11 +75,17 @@ Vimは普通|+digraphs|特性を持ってコンパイルされる。この特性
 10進数の数字は通常、その文字のユニコード番号である。Note その数字の意味は
 'encoding' が変わっても変わらない。必要ならば、その文字がユニコードから
 'encoding' へと変換される。そのためには変換が有効になっていなければならない。
+<<<<<<< HEAD
 そうでないと処理が失敗する。NUL 文字は "10" と表示される。これは、内部的に NUL
 文字は NL で表現されているからである。ファイルに書き込むときに NUL 文字に変換
 される。
 
 Vim が |+multi_byte| 機能なしでコンパイルされている場合は、その文字を
+=======
+そうでないと処理が失敗する。
+
+Vim が +multi_byte 機能なしでコンパイルされている場合は、その文字を
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 'encoding' と同じエンコーディングで指定しなければならない。次のようにするとよ
 いだろう: >
 
@@ -131,10 +156,17 @@ Vimには標準のDIGRAPHキャラクタがある。":digraphs"の出力と見�
 	Exclamation mark	!	Grave
 	Apostrophe		'	Acute accent
 	Greater-Than sign	>	Circumflex accent
+<<<<<<< HEAD
 	Question mark		?	Tilde
 	Hyphen-Minus		-	Macron
 	Left parenthesis	(	Breve
 	Full stop		.	Dot above
+=======
+	Question Mark		?	tilde
+	Hyphen-Minus		-	Macron
+	Left parenthesis	(	Breve
+	Full Stop		.	Dot Above
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
 	Colon			:	Diaeresis
 	Comma			,	Cedilla
 	Underline		_	Underline
@@ -345,6 +377,7 @@ $	DO	0x24	 36	DOLLAR SIGN
 þ	th	0xfe	254	LATIN SMALL LETTER THORN (Icelandic)
 ÿ	y:	0xff	255	LATIN SMALL LETTER Y WITH DIAERESIS
 
+<<<<<<< HEAD
 Vim がマルチバイト (|multibyte|) サポート付きでコンパイルされていて、あなたが
 マルチバイトの 'encoding' を使っているなら、さらに以下の DIGRAPH を使用できま
 す:
@@ -1479,4 +1512,6 @@ char  digraph	hex	dec	official name ~
 ﬅ	ft	FB05	64261	LATIN SMALL LIGATURE LONG S T
 ﬆ	st	FB06	64262	LATIN SMALL LIGATURE ST
 
+=======
+>>>>>>> 50b41d891645a56b5416ec410afe5d19a9fc925e
  vim:tw=78:ts=8:ft=help:norl:
