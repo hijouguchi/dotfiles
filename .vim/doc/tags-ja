@@ -6939,6 +6939,17 @@ last-pattern	pattern.jax	/*last-pattern*
 last-position-jump	eval.jax	/*last-position-jump*
 last_buffer_nr()	eval.jax	/*last_buffer_nr()*
 lc_time-variable	eval.jax	/*lc_time-variable*
+learn-vimscript-basic	learn-vimscript.jax	/*learn-vimscript-basic*
+learn-vimscript-command	learn-vimscript.jax	/*learn-vimscript-command*
+learn-vimscript-dictionary	learn-vimscript.jax	/*learn-vimscript-dictionary*
+learn-vimscript-fileio	learn-vimscript.jax	/*learn-vimscript-fileio*
+learn-vimscript-function	learn-vimscript.jax	/*learn-vimscript-function*
+learn-vimscript-grammar	learn-vimscript.jax	/*learn-vimscript-grammar*
+learn-vimscript-list	learn-vimscript.jax	/*learn-vimscript-list*
+learn-vimscript-number	learn-vimscript.jax	/*learn-vimscript-number*
+learn-vimscript-operator	learn-vimscript.jax	/*learn-vimscript-operator*
+learn-vimscript-string	learn-vimscript.jax	/*learn-vimscript-string*
+learn-vimscript.txt	learn-vimscript.jax	/*learn-vimscript.txt*
 left-right-motions	motion.jax	/*left-right-motions*
 len()	eval.jax	/*len()*
 less	various.jax	/*less*

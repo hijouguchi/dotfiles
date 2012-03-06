@@ -185,7 +185,7 @@ inoremap          <expr> <C-E>         neocomplcache#cancel_popup()
 inoremap          <expr> <CR>          pumvisible() ? "<C-Y><CR>" : "<CR>"
 
 " for Neocomplcache
-inoremap                 <C-k>         <Plug>(neocomplcache_snippets_expand)
+inoremap          <expr> <C-k>         <Plug>(neocomplcache_snippets_expand)
 
 
 "Vmap {{{2
@@ -203,6 +203,7 @@ cnoremap <C-N> <Down>
 " respected from kana
 " Search slashes easily (too lazy to prefix backslashes to slashes)
 cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
 
 " window move {{{2
 nmap      [Space]w    <C-W>
