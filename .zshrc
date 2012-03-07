@@ -133,11 +133,11 @@ bindkey               '^b'   backward-char
 bindkey               '^f'   forward-char
 bindkey               '^a'   beginning-of-line
 bindkey               '^e'   end-of-line
-bindkey               "^I"   menu-complete
-bindkey -v            '^h'   vi-backward-char
-bindkey -v            '^l'   vi-forward-char
-bindkey               "\e[Z" reverse-menu-complete
-bindkey               '^d'   push-line
+
+bindkey               "^i"   menu-complete
+bindkey               "^[[Z" reverse-menu-complete
+
+bindkey               '^]'   push-line
 
 bindkey -M vicmd      'u'    undo
 bindkey -M vicmd      '^r'   redo

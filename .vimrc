@@ -185,7 +185,8 @@ inoremap          <expr> <C-E>         neocomplcache#cancel_popup()
 inoremap          <expr> <CR>          pumvisible() ? "<C-Y><CR>" : "<CR>"
 
 " for Neocomplcache
-inoremap          <expr> <C-k>         <Plug>(neocomplcache_snippets_expand)
+imap                     <C-k>         <Plug>(neocomplcache_snippets_expand)
+smap                     <C-k>         <Plug>(neocomplcache_snippets_expand)
 
 
 "Vmap {{{2
@@ -447,6 +448,12 @@ autocmd FiletypeAutoCmd FileType tex call <SID>FileType_tex()
 autocmd FiletypeAutoCmd BufWritePost *.tex silent! execute "silent !rake >/dev/null 2>&1"
 function! s:FileType_tex()
   setlocal complete+=k~/.vim/dict/tex.dict
+endfunction
+
+
+" verilog {{{3
+autocmd FiletypeAutoCmd FileType verilog call <SID>FileType_verilog()
+function! s:FileType_verilog()
 endfunction
 
 
