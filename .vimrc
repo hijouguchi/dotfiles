@@ -194,8 +194,8 @@ vnoremap :     ;
 
 
 "Cmap {{{2
-cnoremap <C-H> <Left>
-cnoremap <C-L> <Right>
+cnoremap <C-B> <Left>
+cnoremap <C-F> <Right>
 
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>

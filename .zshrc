@@ -127,9 +127,13 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31
 # Keymappings {{{1
 bindkey -v
 
-bindkey               "^I"   menu-complete
 bindkey               '^p'   history-beginning-search-backward
 bindkey               '^n'   history-beginning-search-forward
+bindkey               '^b'   backward-char
+bindkey               '^f'   forward-char
+bindkey               '^a'   beginning-of-line
+bindkey               '^e'   end-of-line
+bindkey               "^I"   menu-complete
 bindkey -v            '^h'   vi-backward-char
 bindkey -v            '^l'   vi-forward-char
 bindkey               "\e[Z" reverse-menu-complete
@@ -146,9 +150,9 @@ bindkey -M menuselect '^k'    up-line-or-history
 bindkey -M menuselect '^l'    forward-char
 
 
-autoload -U  edit-command-line
-zle -N edit-command-line
-bindkey               '^e'   edit-command-line
+# autoload -U  edit-command-line
+# zle -N edit-command-line
+# bindkey               '^e'   edit-command-line
 
 
 # Alias {{{1
