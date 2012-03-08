@@ -12,9 +12,9 @@ Wirble.colorize
 
 class Object
   class Fixnum
-    def to_b; format("0b%b", self); end
-    def to_o; format("0o%o", self); end
-    def to_x; format("0x%x", self); end
+    def to_b; format("%#b", self); end
+    def to_o; format("%#o", self); end
+    def to_x; format("%#x", self); end
   end
 
   class String

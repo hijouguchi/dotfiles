@@ -176,6 +176,7 @@ nnoremap [Space]e         :<C-u>!time ./%<CR>
 
 
 "Imap {{{2
+inoremap                 <C-]>         <C-O>:
 inoremap                 <Tab>         <C-R>=InsertTabWrapper()<CR>
 inoremap          <expr> <Esc>[Z       pumvisible() ? "<C-P>" : "<S-Tab>"
 inoremap                 <C-U>         <C-G>u<C-U>
@@ -389,10 +390,6 @@ autocmd FiletypeAutoCmd FileType help setlocal nolist | setlocal number
 autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 
 
-" vhdl {{{3
-autocmd FiletypeAutoCmd BufNewFile *.vhd 0r ~/.vim/template/vhdl.vhd
-
-
 " C {{{3
 autocmd! FiletypeAutoCmd FileType c call <SID>FileType_c()
 function! s:FileType_c()
@@ -454,6 +451,45 @@ endfunction
 " verilog {{{3
 autocmd FiletypeAutoCmd FileType verilog call <SID>FileType_verilog()
 function! s:FileType_verilog()
+  command! -buffer -nargs=+ VerilogInsertCaseList call <SID>VerilogInsertCaseList(<f-args>)
+endfunction
+
+function! s:VerilogInsertCaseList(l_num, r_num, name) " {{{4
+  let l:pat = '^\(\d\+\)$'
+  if(a:l_num =~? l:pat && a:r_num =~? l:pat)
+    let l:l_bit = float2nr(ceil(str2nr(a:l_num)/4.0))
+    let l:r_bit = float2nr(ceil(str2nr(a:r_num)/4.0))
+
+    let l:lab_len = strlen(a:l_num) + 2 + l:l_bit
+    let l:def_len = strlen('default')
+    let l:lab_rep = (l:def_len > l:lab_len) ? l:def_len - l:lab_len : 0
+    let l:def_rep = (l:def_len > l:lab_len) ? 0 : l:lab_len - l:def_len
+
+    if(&l:expandtab)
+      let l:indent = repeat(' ', indent('.')) " expandtab
+    else
+      let l:indent = repeat("\t", indent('.') / &l:tabstop) " noexpandtab
+    endif
+
+    let l:format = a:l_num . "'h%0" . l:l_bit . 'x:'
+
+    let l:size = float2nr(pow(2, str2nr(a:l_num)))
+    let l:i    = 0
+    let l:list = []
+
+    while(l:i < l:size)
+      let l:str = l:indent . printf(l:format, l:i) .
+            \ repeat(' ', l:lab_rep) . ' ' . a:name . ' = ' . a:r_num . "'h"
+      call add(l:list, l:str)
+      let l:i += 1
+    endwhile
+
+    let l:str = l:indent . 'default:' . repeat(' ', l:def_rep) .
+          \ ' ' . a:name . ' = ' . a:r_num . "'h" . repeat('x', l:r_bit) . ';'
+    call add(l:list, l:str)
+
+    call append(line('.'), l:list)
+  endif
 endfunction
 
 
@@ -464,6 +500,10 @@ function! s:FileType_vim()
   nnoremap <buffer> [Space]e :<c-u>source %<CR>
   nnoremap <buffer> [Space]s :<c-u>source $MYVIMRC<CR>
 endfunction
+
+
+" vhdl {{{3
+autocmd FiletypeAutoCmd BufNewFile *.vhd 0r ~/.vim/template/vhdl.vhd
 
 
 " screen {{{3
