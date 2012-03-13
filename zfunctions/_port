@@ -28,23 +28,28 @@ _arguments : \
   '1:commend:(($command_list))' \
   '*::packages:->package_list'
 
-local installed_list current_type_char last_package
+local installed_list current_type_char last_package variants_list
 
-if [[ "$state" == 'package_list' ]]; then
-  if (( CURRENT != 1 )); then
-    case $words[1] in
-      uninstall|*activate)
-       : ${(A)installed_list::=${${${(f)"$(port -q installed 2>/dev/null)"}#  }%% *}}
-       _describe -t installed_list 'installed list' installed_list
-        ;;
-      *)
-        (( $+cache_package_list )) ||
-         : ${(A)cache_package_list::=${${(f)"$(port -q list 2>/dev/null)"}%% *}}
-       _describe -t package_list 'package list' cache_package_list
-        ;;
-    esac
-  fi
+if [[ "$state" == 'package_list' ]] && (( CURRENT != 1 )); then
+  case $words[1] in
+    uninstall|*activate)
+      : ${(A)installed_list::=${${${(f)"$(port -q installed 2>/dev/null)"}##[[:blank:]]##}%%[[:blank:]]*}}
+      _describe -t installed_list 'installed list' installed_list
+      ;;
+    *)
+
+      if [[ "$words[1]" == 'install' ]]; then
+        last_package=${${${"${words[*]}"//[+-][[:alnum:]_]#/}%%[[:blank:]]}##*[[:blank:]]}
+        : ${(A)variants_list::='+'${${(M)${(f)"$(port -q variants $last_package 2>/dev/null)"}##([[:blank:]]##|\[+\])[[:alnum:]_]##}##([[:blank:]]##|\[+\])}}
+        _describe -t variants_list "$last_package variants list" variants_list
+      fi
+
+      (( $+cache_package_list )) ||
+        : ${(A)cache_package_list::=${${(f)"$(port -q list 2>/dev/null)"}%%[[:blank:]]*}}
+      _describe -t package_list 'package list' cache_package_list
+      ;;
+  esac
 fi
 
 
-  # vim: ft=zsh
+# vim: ft=zsh
