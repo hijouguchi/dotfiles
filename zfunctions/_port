@@ -1,6 +1,7 @@
 #compdef port
 
-local state package_list
+local context state line
+typeset -A opt_args
 
 _arguments : \
   '(-d -q)-v[verbose mode]' \
@@ -21,12 +22,24 @@ _arguments : \
                version:version
                selfupdate:selfupdate
                help:help))' \
-  "2:packages:->package_list"
+  '*:packages:->package_list'
 
-case "$state" in
-  package_list)
+
+case ${line[1]} in
+uninstall*)
+  if [[ "$state" == 'package_list' ]]; then
+      local installed_list
+      : ${(A)installed_list::=${${${(f)"$(port -q installed 2>/dev/null)"}#  }%% *}}
+      _describe -t installed_list 'installed list' installed_list
+  fi
+  ;;
+*)
+  echo -n "${(qqq)line}"
+  if [[ "$state" == 'package_list' ]]; then
+    local package_list
     : ${(A)package_list::=${${(f)"$(port -q list 2>/dev/null)"}%% *}}
     _describe -t package_list 'package list' package_list
+  fi
   ;;
 esac
 
