@@ -39,6 +39,7 @@ setopt no_beep
 setopt equals
 setopt case_glob
 setopt csh_junkie_loops
+setopt transient_rprompt
 
 REPORTTIME=30
 TIMEFMT="\
@@ -154,6 +155,7 @@ bindkey -M menuselect '^l'    forward-char
 # zle -N edit-command-line
 # bindkey               '^e'   edit-command-line
 
+bindkey               '^x'    _complete_help
 
 # Alias {{{1
 alias ls='ls -hF   --color=auto'
@@ -246,10 +248,22 @@ _update_git_commit_screen_name() {
   fi
 }
 
+_append_screen_date() {
+  local title="`screen -Q title`"
+  local date=`date +"%H:%M:%S"`
+  screen -X title "${title} [${date}]"
+}
+
+
+_remove_screen_date() {
+  local title="`screen -Q title`"
+  screen -X title ${title%% \[*}
+}
+
 
 # here add pre***_functions
-preexec_functions=(_type_ls)
-precmd_functions=(_update_vcs_info_msg)
+preexec_functions=(_type_ls _append_screen_date)
+precmd_functions=(_update_vcs_info_msg _remove_screen_date)
 chpwd_functions=(_echo_pwd)
 
 
