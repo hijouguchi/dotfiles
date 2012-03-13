@@ -456,9 +456,22 @@ endfunction
 
 function! s:VerilogInsertCaseList(l_num, r_num, name) " {{{4
   let l:pat = '^\(\d\+\)$'
-  if(a:l_num =~? l:pat && a:r_num =~? l:pat)
+  let l:pat_with_type = '^\(\d\+\)\([bodh]\)$'
+  if(a:l_num =~? l:pat && a:r_num =~? l:pat_with_type)
     let l:l_bit = float2nr(ceil(str2nr(a:l_num)/4.0))
-    let l:r_bit = float2nr(ceil(str2nr(a:r_num)/4.0))
+
+    let l:r_num_type = matchlist(a:r_num, l:pat_with_type)
+    let l:r_type = l:r_num_type[2]
+    let l:r_num = l:r_num_type[1]
+    if(l:r_type ==? 'b')
+      let l:r_bit = str2nr(l:r_num_type[1])
+    elseif(l:r_type ==? 'o')
+      let l:r_bit = float2nr(ceil(str2nr(l:r_num_type[1])/3.0))
+    elseif(l:r_type ==? 'd')
+      let l:r_bit = 0
+    else " h
+      let l:r_bit = float2nr(ceil(str2nr(l:r_num_type[1])/4.0))
+    endif
 
     let l:lab_len = strlen(a:l_num) + 2 + l:l_bit
     let l:def_len = strlen('default')
@@ -479,13 +492,13 @@ function! s:VerilogInsertCaseList(l_num, r_num, name) " {{{4
 
     while(l:i < l:size)
       let l:str = l:indent . printf(l:format, l:i) .
-            \ repeat(' ', l:lab_rep) . ' ' . a:name . ' = ' . a:r_num . "'h"
+            \ repeat(' ', l:lab_rep) . ' ' . a:name . ' = ' . l:r_num . "'" . l:r_type
       call add(l:list, l:str)
       let l:i += 1
     endwhile
 
     let l:str = l:indent . 'default:' . repeat(' ', l:def_rep) .
-          \ ' ' . a:name . ' = ' . a:r_num . "'h" . repeat('x', l:r_bit) . ';'
+          \ ' ' . a:name . ' = ' . l:r_num . "'" . l:r_type . repeat('x', l:r_bit) . ';'
     call add(l:list, l:str)
 
     call append(line('.'), l:list)
