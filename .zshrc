@@ -115,8 +115,10 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-# zstyle ':completion:*:(vim|cp|mv|rm):*' ignore-line true
-zstyle ':completion:*:(vim|cp|rm):*' ignore-line true
+
+zstyle ':completion:*:*:*' ignore-line true
+zstyle ':completion:*:(cp|mv):*' ignore-line false
+
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*' ignore-parents parent pwd
 
