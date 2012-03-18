@@ -125,6 +125,8 @@ zstyle ':completion:*:*:*:*:processec' force-list always
 zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
 
+zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
+
 # Keymappings {{{1
 bindkey -v
 
