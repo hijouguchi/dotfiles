@@ -257,7 +257,7 @@ _append_screen_date() {
 
 _remove_screen_date() {
   local title="`screen -Q title`"
-  screen -X title ${title%% \[*}
+  screen -X title ${title%%[[:blank:]]\[*}
 }
 
 
@@ -270,9 +270,9 @@ chpwd_functions=(_echo_pwd)
 # for screen hock functions {{{2
 
 
-_ssh_new_screen() screen -U -t "$@[-1]" ssh $*
+_ssh_new_screen() screen -U -t "${@[-1]}" ssh $*
 
-_ssh_screen() screen -U -t "$@[-1]" ssh $* -t screen -U -D -RR
+_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -U -D -RR
 
 
 _screen_new_window_split() {
