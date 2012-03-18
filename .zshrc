@@ -4,13 +4,13 @@
 # exec screen {{{1
 _screen_exec() {
   screen -wipe
- if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-   # screen escape sequence is "^G"
-   # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
-   exec screen -U -D -RR -e"^Gt"
- else
-   exec screen -U -x
- fi
+  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+    # screen escape sequence is "^G"
+    # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
+    exec screen -U -D -RR -e"^Gt"
+  else
+    exec screen -U -x
+  fi
 }
 
 case "${TERM}" in
@@ -21,7 +21,6 @@ esac
 
 
 # Basic Settings {{{1
-
 
 # minimum function
 if [[ $OSTYPE == darwin* ]]; then
@@ -35,6 +34,7 @@ export EDITOR=vim
 
 eval `dircolors -b`
 
+setopt prompt_subst
 setopt no_beep
 setopt equals
 setopt case_glob
@@ -43,7 +43,7 @@ setopt transient_rprompt
 
 REPORTTIME=30
 TIMEFMT="\
-The name of this job.             :%J
+  The name of this job.             :%J
 CPU seconds spent in user mode.   :%U
 CPU seconds spent in kernel mode. :%S
 Elapsed time in seconds.          :%E
@@ -70,9 +70,9 @@ autoload -Uz colors; colors
 
 
 # prompt
-PROMPT="%B%(?||[error] )%n@%m%#%b "
+PROMPT='%B%(?||[error] )%1v%3v%n@%m%#%b '
 PROMPT2="%_ > "
-RPROMPT="%1(v|%1v|:%(3~,%-1~/.../%1~,%~))"
+RPROMPT='%2(v|%2v|:%4(~|%-1~/.../%2~|%~))'
 
 # zmv
 autoload -Uz zmv
@@ -84,10 +84,8 @@ autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*'     formats       "%c%u[%r:%b]:%S"
-zstyle ':vcs_info:*'     actionformats "%c%u[%r:%b|%a]:%S"
-zstyle ':vcs_info:*' stagedstr     "[I]"
-zstyle ':vcs_info:*' unstagedstr   "[W]"
+zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' ' %c%u'
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' ' %c%u'
 
 
 
@@ -128,6 +126,7 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
 
 zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
+
 
 # Keymappings {{{1
 bindkey -v
@@ -184,90 +183,34 @@ alias -g L2='2>&1 |less'
 
 # Tiny function {{{1
 # for preexec, precmd, and chpwd {{{2
-_update_vcs_info_msg() {
-  psvar=()
+
+# for vcs_info
+_make_psvar() {
   LANG=en_US.UTF-8 vcs_info
-  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+  psvar=(
+  $vcs_info_msg_0_
+  $vcs_info_msg_1_
+  $vcs_info_msg_2_
+  )
 }
 
-# returns number of files if last command is type of ls
+# for insert date into screen title
+_append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M:%S")]"
+_remove_screen_date() screen -X title "${"$(screen -Q title)"%%[[:blank:]]\[*}"
+
+
+# echo number of files if last command is type of ls
+_echo_pwd() echo "$fg[green]`pwd`$reset_color"
+
 _type_ls() {
-  for cmd in $=2; do
-    [[ "$cmd" == "ls" ]] && _echo_number_of_files && break
-  done
-}
-
-
-# returns number of files
-_echo_number_of_files() {
-  echo "$fg[red]`ls -A1 | wc -l | sed -e 's/ //g'` files$reset_color in $fg[green]`pwd`$reset_color"
-}
-
-
-_set_pwd_screen() screen -X title `pwd`
-
-
-_update_screen_name_for_preexec() {
-  local cmd
-  : ${cmd::=${1##([[:digit:]])# (sudo )#}} # remove number and sudo
-  : ${cmd::=${cmd##screen }} # remove screen
-  COMMAND_NAME=$cmd # save cmd for _update_screen_name_for_precmd
-
-  case ${cmd%% *} in
-    ls|ll|la) _echo_number_of_files;;
-    vim) screen -X title "${cmd%% *}";;
-    ssh*) ;;
-    *) screen -X title "!$cmd[1,10]";;
-  esac
-}
-
-
-_update_screen_name_for_precmd() {
-  #TODO: if not active window in screen, notification
-  local cmd=$COMMAND_NAME # load cmd from _update_screen_name_for_preexec
-  unset COMMAND_NAME # remove cmd
-
-  case $cmd in
-    quit|exit|ssh*|) ;;
-    ls|ll|la|cd) ;;
-    *) screen -X title "${cmd%% *}";;
-  esac
-}
-
-
-_update_git_commit_screen_name() {
-  local git_branch=`git branch 2>&1 | grep '^*' | sed -e 's/^* //'`
-  if [[ -n "$git_branch" ]] then
-    local dir_orig=`pwd`
-    local dir=$dir_orig
-    while [[ -n "$dir" ]] ; do
-      if [[ -n "`ls -1aF $dir | grep .git/`" ]] then
-        local relative_git_path="${${dir_orig#${dir}}#/}"
-        #screen -X title "${dir##*/}[$git_branch]:$relative_git_path"
-        screen -X title "[${dir##*/}:$git_branch]"
-        break
-      fi
-      local dir=${dir%/*}
-    done
-  fi
-}
-
-_append_screen_date() {
-  local title="`screen -Q title`"
-  local date=`date +"%H:%M:%S"`
-  screen -X title "${title} [${date}]"
-}
-
-
-_remove_screen_date() {
-  local title="`screen -Q title`"
-  screen -X title ${title%%[[:blank:]]\[*}
+  [[ "${@[2]%%[[:blank:]]*}" == 'ls' ]] &&
+    echo "$fg[red]${#${(@f)"$(ls -A1)"}[*]} files$reset_color in $fg[green]`pwd`$reset_color"
 }
 
 
 # here add pre***_functions
 preexec_functions=(_type_ls _append_screen_date)
-precmd_functions=(_update_vcs_info_msg _remove_screen_date)
+precmd_functions=(_make_psvar _remove_screen_date)
 chpwd_functions=(_echo_pwd)
 
 
