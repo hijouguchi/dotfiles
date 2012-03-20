@@ -310,6 +310,12 @@ _all_window_cd() {
   done
 }
 
+calc() {
+  zmodload zsh/mathfunc
+  echo $(( $* ))
+}
+alias e='noglob calc'
+
 
 # others {{{1
 
