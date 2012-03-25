@@ -1,86 +1,55 @@
 #compdef port
 
-local cmds
+local context state line
+typeset -A opt_args
 
-_arguments -C \
-  "1:command:->cmds"
-
-case $state in
-  cmds)
-  cmds=(
-    'activate:activate'
-    #'archive:archive'
-    #'archivefetch:archivefetch'
-    #'build:build'
-    #'cat:cat'
-    #'cd:cd'
-    #'checksum:checksum'
-    'clean:clean'
-    #'configure:configure'
-    #'contents:contents'
-    'deactivate:deactivate'
-    #'dependents:dependents'
-    #'deps:deps'
-    #'destroot:destroot'
-    #'dir:dir'
-    #'distcheck:distcheck'
-    #'distfiles:distfiles'
-    #'dmg:dmg'
-    #'dpkg:dpkg'
-    #'echo:echo'
-    #'ed:ed'
-    #'edit:edit'
-    #'exit:exit'
-    #'extract:extract'
-    #'fetch:fetch'
-    #'file:file'
-    #'gohome:gohome'
-    'help:help'
-    #'info:info'
-    'install:install'
-    'installed:installed'
-    #'lint:lint'
-    'list:list'
-    #'livecheck:livecheck'
-    #'load:load'
-    #'location:location'
-    #'log:log'
-    #'mdmg:mdmg'
-    #'mirror:mirror'
-    #'mpkg:mpkg'
-    #'notes:notes'
-    #'outdated:outdated'
-    #'patch:patch'
-    #'pkg:pkg'
-    #'platform:platform'
-    #'portpkg:portpkg'
-    #'provides:provides'
-    #'quit:quit'
-    #'rdependents:rdependents'
-    #'rdeps:rdeps'
-    #'rpm:rpm'
-    #'search:search'
-    #'select:select'
-    'selfupdate:selfupdate'
-    #'setrequested:setrequested'
-    #'srpm:srpm'
-    #'submit:submit'
-    'sync:sync'
-    #'test:test'
-    #'trace:trace'
-    #'unarchive:unarchive'
-    'uninstall:uninstall'
-    #'unload:unload'
-    #'unsetrequested:unsetrequested'
-    'upgrade:upgrade'
-    #'url:url'
-    #'usage:usage'
-    'variants:variants'
-    'version:version'
-    #'work:work'
+command_list=(
+'search:search'
+'variants:variants'
+'install:install'
+'uninstall:uninstall'
+'activate:activate'
+'deactivate:deactivate'
+'installed:installed'
+'sync:sync'
+'outdated:outdated'
+'upgrade:upgrade'
+'clean:clean'
+'list:list'
+'version:version'
+'selfupdate:selfupdate'
+'help:help'
 )
-  _describe -t commands 'port command' cmds
-  ;;
-esac
+
+_arguments : \
+  '(-d -q)-v[verbose mode]' \
+  '(-v -q)-d[debug   mode]' \
+  '(-v -d)-q[quiet   mode]' \
+  '1:commend:(($command_list))' \
+  '*::packages:->package_list'
+
+local installed_list current_type_char last_package variants_list
+
+if [[ "$state" == 'package_list' ]] && (( CURRENT != 1 )); then
+  case $words[1] in
+    uninstall|*activate)
+      : ${(A)installed_list::=${${${(f)"$(port -q installed 2>/dev/null)"}##[[:blank:]]##}%%[[:blank:]]*}}
+      _describe -t installed_list 'installed list' installed_list
+      ;;
+    *)
+
+      if [[ "$words[1]" == 'install' ]]; then
+        last_package=${${${"${words[*]}"//[+-][[:alnum:]_]#/}%%[[:blank:]]}##*[[:blank:]]}
+        : ${(A)variants_list::='+'${${(M)${(f)"$(port -q variants $last_package 2>/dev/null)"}##([[:blank:]]##|\[+\])[[:alnum:]_]##}##([[:blank:]]##|\[+\])}}
+        _describe -t variants_list "$last_package variants list" variants_list
+      fi
+
+      (( $+cache_package_list )) ||
+        : ${(A)cache_package_list::=${${(f)"$(port -q list 2>/dev/null)"}%%[[:blank:]]*}}
+      _describe -t package_list 'package list' cache_package_list
+      ;;
+  esac
+fi
+
 
 # vim: ft=zsh

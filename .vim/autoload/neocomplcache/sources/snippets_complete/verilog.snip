@@ -16,6 +16,22 @@ prev_word   '^'
     endfunction
     ${0}
 
+snippet     begin
+abbr        begin ... end
+prev_word   '^'
+    begin
+        ${1}
+    end
+    ${0}
+
+snippet     fork
+abbr        fork ... join
+prev_word   '^'
+    fork
+        ${1}
+    join
+    ${0}
+
 snippet     case
 abbr        case
 prev_word   '^'
@@ -25,7 +41,7 @@ prev_word   '^'
     ${0}
 
 snippet     always
-abbr        always
+abbr        always begin
 prev_word   '^'
     always @(${1:posedge ck or posedge rs}) begin
         ${2}
