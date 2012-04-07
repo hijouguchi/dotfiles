@@ -211,9 +211,14 @@ _type_ls() {
 
 
 # here add pre***_functions
-preexec_functions=(_type_ls _append_screen_date)
-precmd_functions=(_make_psvar _remove_screen_date)
+preexec_functions=(_type_ls)
+precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
+
+if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+  preexec_functions=($preexec_functions _append_screen_date)
+  precmd_functions=($precmd_functions _remove_screen_date)
+fi
 
 
 # for screen hock functions {{{2
@@ -221,7 +226,7 @@ chpwd_functions=(_echo_pwd)
 
 _ssh_new_screen() screen -U -t "${@[-1]}" ssh $*
 
-_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -U -D -RR
+_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -D -RR
 
 
 _screen_new_window_split() {
