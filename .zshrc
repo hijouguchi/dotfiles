@@ -14,7 +14,7 @@ _screen_exec() {
 }
 
 case "${TERM}" in
-  *xterm*|rxvt|(dt|k|E)term)
+  *xterm*|rxvt|(dt|k|E)term|linux)
     _screen_exec
     ;;
 esac

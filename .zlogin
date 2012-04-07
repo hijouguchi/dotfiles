@@ -1,6 +1,9 @@
 #export LANG=ja_JP.UTF-8
-export EDITOR=vim
-export PATH=$HOME/local/giga/bin:$PATH
+#export EDITOR=vim
+
+if [ -x $HOME/local/$HOST/bin/zsh ]; then
+	exec $HOME/local/$HOST/bin/zsh
+fi
 
 
 # __END__ {{{1
