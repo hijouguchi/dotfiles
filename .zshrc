@@ -1,13 +1,19 @@
 # NOTE {{{1
 
 
+# for ssh-agent {{{1
+if [ ! -n "$SSH_AUTH_SOCK" ]; then
+  unset SSH_AUTH_SOCK SSH_AGENT_PID
+  eval `ssh-agent`
+  ssh-add < /dev/null
+fi
+
+
 # exec screen {{{1
 _screen_exec() {
   screen -wipe
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-    # screen escape sequence is "^G"
-    # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
-    exec ssh-agent screen -D -RR -e"^Gt"
+    exec screen -D -RR -e"^Gt"
   else
     exec screen -x
   fi
@@ -221,7 +227,7 @@ _set_screen_title() {
   case "$command_name" in
   ls|cd|*sh|vim|emacs|git) ;;
   less|tail|man) title_name="$1" ;;
-  *) title_name=command_name
+  *) title_name="$command_name"
   esac
   [[ -n "$title_name" ]] && screen -X title "$title_name"
 }
