@@ -7,16 +7,14 @@ _screen_exec() {
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
     # screen escape sequence is "^G"
     # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
-    exec screen -D -RR -e"^Gt"
+    exec ssh-agent screen -D -RR -e"^Gt"
   else
     exec screen -x
   fi
 }
 
 case "${TERM}" in
-  *xterm*|rxvt|(dt|k|E)term|linux)
-    _screen_exec
-    ;;
+  *xterm*|rxvt|(dt|k|E)term|linux) _screen_exec ;;
 esac
 
 
@@ -192,25 +190,12 @@ alias -g L2='2>&1 |less'
 # for vcs_info
 _make_psvar() {
   LANG=en_US.UTF-8 vcs_info
-  psvar=(
-    $vcs_info_msg_0_
-    $vcs_info_msg_1_
-    $vcs_info_msg_2_
-  )
+  psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $vcs_info_msg_2_)
 }
-
-# for insert date into screen title
-_append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M:%S")]"
-_remove_screen_date() screen -X title "${"$(screen -Q title)"%%[[:blank:]]\[*}"
-
 
 # echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[green]`pwd`$reset_color"
-
-_type_ls() {
-  [[ "${@[2]%%[[:blank:]]*}" == 'ls' ]] &&
-    echo "$fg[red]${#${(@f)"$(ls -A1)"}[*]} files$reset_color in $fg[green]`pwd`$reset_color"
-}
+_echo_pwd() echo "$fg[red]${#${(@f)"$(ls -A1)"}[*]} files$reset_color in $fg[green]`pwd`$reset_color"
+_type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
 # here add pre***_functions
@@ -218,10 +203,34 @@ preexec_functions=(_type_ls)
 precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
+
+# for screen title {{{2
+# see also: http://d.hatena.ne.jp/tarao/20100223/1266958660
+
+# titleを自動で設定，あるいは自動で設定するためのコマンド
+export SCREEN_TITLE_NAME=
+title() SCREEN_TITLE_NAME="$1"
+
+# titleを設定するコマンド
+_set_screen_title() {
+  [ -n "$SCREEN_TITLE_NAME" ] && return
+  # 実際に設定する
+  local command_name title_name
+  command_name=${${1##sudo[[:blank:]]}%%[[:blank:]]*}
+
+  case "$command_name" in
+  ls|cd|*sh|vim|emacs|git) ;;
+  less|tail|man) title_name="$1" ;;
+  *) title_name=command_name
+  esac
+  [[ -n "$title_name" ]] && screen -X title "$title_name"
+}
+
+
 if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-  preexec_functions=($preexec_functions _append_screen_date)
-  precmd_functions=($precmd_functions _remove_screen_date)
+  preexec_functions+=_set_screen_title
 fi
+
 
 
 # for screen hock functions {{{2

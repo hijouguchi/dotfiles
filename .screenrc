@@ -13,9 +13,6 @@ vbell           off
 defscrollback   10000
 altscreen       on
 defmonitor      on
-#shell           "$HOME/local/giga/bin/zsh"
-#shell           "$HOME/local/$HOST/bin/zsh"
-
 hardcopydir     "%HOME/screen"
 
 termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color
