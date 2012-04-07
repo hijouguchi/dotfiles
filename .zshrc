@@ -85,8 +85,10 @@ autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' ' %c%u '
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' ' %c%u '
+zstyle ':vcs_info:*' stagedstr   '[index]' # インデックスに追加された場合に表示される文字列
+zstyle ':vcs_info:*' unstagedstr '[work]'  # 作業コピーに変更があった場合に表示される文字列
+zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' '%u%c '
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' '%u%c '
 
 
 
