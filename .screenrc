@@ -2,9 +2,9 @@
 
 
 # OPTION {{{1
-defkanji        utf-8
-defencoding     utf-8
-encoding        utf-8 utf-8
+#defkanji        utf-8
+#defencoding     utf-8
+#encoding        utf-8 utf-8
 
 autodetach      on
 bell_msg        "^G"
@@ -13,6 +13,8 @@ vbell           off
 defscrollback   10000
 altscreen       on
 defmonitor      on
+#shell           "$HOME/local/giga/bin/zsh"
+#shell           "$HOME/local/$HOST/bin/zsh"
 
 hardcopydir     "%HOME/screen"
 

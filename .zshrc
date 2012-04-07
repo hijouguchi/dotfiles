@@ -7,9 +7,9 @@ _screen_exec() {
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
     # screen escape sequence is "^G"
     # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
-    exec screen -U -D -RR -e"^Gt"
+    exec screen -D -RR -e"^Gt"
   else
-    exec screen -U -x
+    exec screen -x
   fi
 }
 
@@ -28,7 +28,7 @@ if [[ $OSTYPE == darwin* ]]; then
   function ls() { gls $* }
 fi
 
-export LANG=ja_JP.UTF-8
+#export LANG=ja_JP.UTF-8
 export EDITOR=vim
 
 
