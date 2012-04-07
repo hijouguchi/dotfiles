@@ -43,7 +43,7 @@ setopt transient_rprompt
 
 REPORTTIME=30
 TIMEFMT="\
-  The name of this job.             :%J
+The name of this job.             :%J
 CPU seconds spent in user mode.   :%U
 CPU seconds spent in kernel mode. :%S
 Elapsed time in seconds.          :%E
@@ -84,8 +84,9 @@ autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' ' %c%u'
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' ' %c%u'
+zstyle ':vcs_info:*' max-exports 3
+zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' ' %c%u '
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' ' %c%u '
 
 
 
@@ -190,9 +191,9 @@ alias -g L2='2>&1 |less'
 _make_psvar() {
   LANG=en_US.UTF-8 vcs_info
   psvar=(
-  $vcs_info_msg_0_
-  $vcs_info_msg_1_
-  $vcs_info_msg_2_
+    $vcs_info_msg_0_
+    $vcs_info_msg_1_
+    $vcs_info_msg_2_
   )
 }
 
