@@ -14,7 +14,7 @@ _screen_exec() {
 }
 
 case "${TERM}" in
-  *xterm*|rxvt|(dt|k|E)term)
+  *xterm*|rxvt|(dt|k|E)term|linux)
     _screen_exec
     ;;
 esac
@@ -171,6 +171,7 @@ alias quit=exit
 
 alias vim='screen vim'
 alias s='screen'
+alias emacs='screen emacs -nw'
 
 
 alias -g G='|grep'
