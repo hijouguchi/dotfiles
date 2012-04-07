@@ -170,6 +170,7 @@ alias grep='grep --color'
 alias quit=exit
 
 alias vim='screen vim'
+alias s='screen'
 
 
 alias -g G='|grep'
