@@ -75,8 +75,8 @@ set softtabstop=2
 
 "Encoding "{{{2
 
-set encoding=utf-8
-set termencoding=utf-8
+"set encoding=utf-8
+"set termencoding=utf-8
 
 
 "make fileencodings (test) {{{3
