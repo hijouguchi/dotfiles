@@ -5,7 +5,7 @@
 if [ ! -n "$SSH_AUTH_SOCK" ]; then
   unset SSH_AUTH_SOCK SSH_AGENT_PID
   eval `ssh-agent`
-  ssh-add < /dev/null
+  ssh-add #< /dev/null
 fi
 
 
