@@ -155,10 +155,10 @@ bindkey -M vicmd      '^r'   redo
 
 # for use hjkl in menuselect
 zmodload -i zsh/complist
-bindkey -M menuselect '^h'    backward-char
-bindkey -M menuselect '^j'    down-line-or-history
-bindkey -M menuselect '^k'    up-line-or-history
-bindkey -M menuselect '^l'    forward-char
+bindkey -M menuselect '^b'    backward-char
+bindkey -M menuselect '^n'    down-line-or-history
+bindkey -M menuselect '^p'    up-line-or-history
+bindkey -M menuselect '^f'    forward-char
 
 
 # autoload -U  edit-command-line
@@ -178,7 +178,7 @@ alias quit=exit
 
 alias vim='screen vim'
 alias s='screen'
-alias emacs='screen emacs -nw'
+#alias emacs='screen emacs -nw'
 
 
 alias -g G='|grep'
