@@ -200,7 +200,7 @@ _make_psvar() {
 }
 
 # echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[red]$(ls -A1 | wc -l) files$reset_color in $fg[green]`pwd`$reset_color"
+_echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
 _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
