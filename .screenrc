@@ -2,9 +2,9 @@
 
 
 # OPTION {{{1
-defkanji        utf-8
-defencoding     utf-8
-encoding        utf-8 utf-8
+#defkanji        utf-8
+#defencoding     utf-8
+#encoding        utf-8 utf-8
 
 autodetach      on
 bell_msg        "^G"
@@ -13,7 +13,6 @@ vbell           off
 defscrollback   10000
 altscreen       on
 defmonitor      on
-
 hardcopydir     "%HOME/screen"
 
 termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color

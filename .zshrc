@@ -1,22 +1,27 @@
 # NOTE {{{1
 
 
+# for ssh-agent {{{1
+if [ ! -n "$SSH_AUTH_SOCK" ]; then
+  unset SSH_AUTH_SOCK SSH_AGENT_PID
+  eval `ssh-agent`
+  ssh-add #< /dev/null
+fi
+
+
 # exec screen {{{1
 _screen_exec() {
   screen -wipe
+  #if [[ "${"$(screen -ls 2>/dev/null)"%%[[:blank:]]in*}" == 'No Sockets found in' ]]; then
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-    # screen escape sequence is "^G"
-    # exec screen -U -D -RR -e"^Gt" -c $HOME/dotfiles/layout.screenrc
-    exec screen -U -D -RR -e"^Gt"
+    exec screen -D -RR -e"^Gt"
   else
-    exec screen -U -x
+    exec screen -x
   fi
 }
 
 case "${TERM}" in
-  *xterm*|rxvt|(dt|k|E)term)
-    _screen_exec
-    ;;
+  #*xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
 esac
 
 
@@ -33,7 +38,7 @@ if [[ $OSTYPE == darwin* ]]; then
   function ls() { gls $* }
 fi
 
-export LANG=ja_JP.UTF-8
+#export LANG=ja_JP.UTF-8
 export EDITOR=vim
 
 
@@ -48,7 +53,7 @@ setopt transient_rprompt
 
 REPORTTIME=30
 TIMEFMT="\
-  The name of this job.             :%J
+The name of this job.             :%J
 CPU seconds spent in user mode.   :%U
 CPU seconds spent in kernel mode. :%S
 Elapsed time in seconds.          :%E
@@ -89,8 +94,11 @@ autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' ' %c%u'
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' ' %c%u'
+zstyle ':vcs_info:*' max-exports 3
+zstyle ':vcs_info:*' stagedstr   '[index]' # インデックスに追加された場合に表示される文字列
+zstyle ':vcs_info:*' unstagedstr '[work]'  # 作業コピーに変更があった場合に表示される文字列
+zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' '%u%c '
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' '%u%c '
 
 
 
@@ -153,10 +161,10 @@ bindkey -M vicmd      '^r'   redo
 
 # for use hjkl in menuselect
 zmodload -i zsh/complist
-bindkey -M menuselect '^h'    backward-char
-bindkey -M menuselect '^j'    down-line-or-history
-bindkey -M menuselect '^k'    up-line-or-history
-bindkey -M menuselect '^l'    forward-char
+bindkey -M menuselect '^b'    backward-char
+bindkey -M menuselect '^n'    down-line-or-history
+bindkey -M menuselect '^p'    up-line-or-history
+bindkey -M menuselect '^f'    forward-char
 
 
 # autoload -U  edit-command-line
@@ -176,6 +184,8 @@ alias grep='grep --color'
 alias quit=exit
 
 alias vim='screen vim'
+alias s='screen'
+#alias emacs='screen emacs -nw'
 
 
 alias -g G='| grep'
@@ -193,33 +203,105 @@ alias -g L2='2>&1 | less'
 # for vcs_info
 _make_psvar() {
   LANG=en_US.UTF-8 vcs_info
-  psvar=(
-  $vcs_info_msg_0_
-  $vcs_info_msg_1_
-  $vcs_info_msg_2_
-  )
+  psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $vcs_info_msg_2_)
 }
 
+<<<<<<< HEAD
 # for insert date into screen title
 _append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M")]"
 _remove_screen_date() screen -X title "${"$(screen -Q title)"%%[[:blank:]]\[*}"
-
-
+=======
 # echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[green]`pwd`$reset_color"
-
-_type_ls() {
-  [[ "${@[2]%%[[:blank:]]*}" == 'ls' ]] &&
-    echo "$fg[red]${#${(@f)"$(ls -A1)"}[*]} files$reset_color in $fg[green]`pwd`$reset_color"
-}
+_echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
+_type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
+>>>>>>> 679cf989be5f493c48dae89576ffb9ede7c9901b
 
 
 # here add pre***_functions
-preexec_functions=(_type_ls _append_screen_date)
-precmd_functions=(_make_psvar _remove_screen_date)
+preexec_functions=(_type_ls)
+precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
 
+# for screen title {{{2
+# see also: http://d.hatena.ne.jp/tarao/20100223/1266958660
+
+# titleを自動で設定，あるいは自動で設定するためのコマンド
+export SCREEN_TITLE_NAME=
+title() SCREEN_TITLE_NAME="$1"
+
+# titleを設定するコマンド
+_set_screen_title() {
+  [ -n "$SCREEN_TITLE_NAME" ] && return
+  # 実際に設定する
+  local command_name title_name
+  command_name=${${1##sudo[[:blank:]]}%%[[:blank:]]*}
+
+  case "$command_name" in
+  ls|cd|*sh|vim|emacs|git) ;;
+  less|tail|man) title_name="$1" ;;
+  *) title_name="$command_name"
+  esac
+  [[ -n "$title_name" ]] && screen -X title "$title_name"
+}
+
+
+#if [[ ! "${"$(screen -ls 2>&1)"%%[[:blank:]]in*}" == 'No Sockets found in' ]]; then
+if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+  preexec_functions+=_set_screen_title
+fi
+
+
+
+<<<<<<< HEAD
+=======
+# for screen hock functions {{{2
+
+
+_ssh_new_screen() screen -U -t "${@[-1]}" ssh $*
+
+_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -D -RR
+
+
+_screen_new_window_split() {
+  screen -X split
+  screen -X focus
+  screen $*
+}
+
+
+_screen_new_window_split_v() {
+  screen -X split -v
+  screen -X focus
+  screen $*
+}
+
+
+_screen_name_manual_update() {
+  screen -X title "$*"
+  echo "screen title is changed to '$*'"
+}
+
+
+# all_window_cd {{{2
+# MEMO: windowがshellじゃなかったらどうする？
+_all_window_cd() {
+  for list in $(screen -Q windows); do
+    num=$(echo $list | sed -e 's/[^0-9].*$//g')
+    if [ -n "$num" ]; then
+      screen -X "at $num stuff cd $0"
+    fi
+  done
+}
+
+calc() {
+  zmodload zsh/mathfunc
+  echo $(( $* ))
+}
+alias e='noglob calc'
+
+
+>>>>>>> 679cf989be5f493c48dae89576ffb9ede7c9901b
 # others {{{1
 
 
