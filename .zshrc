@@ -20,7 +20,7 @@ _screen_exec() {
 }
 
 case "${TERM}" in
-#  *xterm*|rxvt|(dt|k|E)term|linux) _screen_exec ;;
+  #*xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
 esac
 
 
@@ -155,10 +155,10 @@ bindkey -M vicmd      '^r'   redo
 
 # for use hjkl in menuselect
 zmodload -i zsh/complist
-bindkey -M menuselect '^h'    backward-char
-bindkey -M menuselect '^j'    down-line-or-history
-bindkey -M menuselect '^k'    up-line-or-history
-bindkey -M menuselect '^l'    forward-char
+bindkey -M menuselect '^b'    backward-char
+bindkey -M menuselect '^n'    down-line-or-history
+bindkey -M menuselect '^p'    up-line-or-history
+bindkey -M menuselect '^f'    forward-char
 
 
 # autoload -U  edit-command-line
@@ -178,7 +178,7 @@ alias quit=exit
 
 alias vim='screen vim'
 alias s='screen'
-alias emacs='screen emacs -nw'
+#alias emacs='screen emacs -nw'
 
 
 alias -g G='|grep'
@@ -200,7 +200,7 @@ _make_psvar() {
 }
 
 # echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[red]${#${(@f)"$(ls -A1)"}[*]} files$reset_color in $fg[green]`pwd`$reset_color"
+_echo_pwd() echo "$fg[red]$(ls -A1 | wc -l) files$reset_color in $fg[green]`pwd`$reset_color"
 _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
