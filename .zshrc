@@ -20,6 +20,11 @@ case "${TERM}" in
 esac
 
 
+# Program settings {{{1
+export GREP_OPTIONS='--extended-regexp --ignore-case --color'
+export LESS='--ignore-case'
+
+
 # Basic Settings {{{1
 
 # minimum function
@@ -166,19 +171,20 @@ alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
 alias l1='ls -h1AF --color=auto'
 alias du='du -h'
+
 alias grep='grep --color'
 alias quit=exit
 
 alias vim='screen vim'
 
 
-alias -g G='|grep --color'
-alias -g T='|tee'
-alias -g L='|less'
-alias -g X='|xargs'
-alias -g G2='2>&1 |grep'
-alias -g T2='2>&1 |tee'
-alias -g L2='2>&1 |less'
+alias -g G='| grep'
+alias -g T='| tee'
+alias -g L='| less'
+alias -g X='| xargs'
+alias -g G2='2>&1 | grep'
+alias -g T2='2>&1 | tee'
+alias -g L2='2>&1 | less'
 
 
 # Tiny function {{{1
@@ -195,7 +201,7 @@ _make_psvar() {
 }
 
 # for insert date into screen title
-_append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M:%S")]"
+_append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M")]"
 _remove_screen_date() screen -X title "${"$(screen -Q title)"%%[[:blank:]]\[*}"
 
 
@@ -212,46 +218,6 @@ _type_ls() {
 preexec_functions=(_type_ls _append_screen_date)
 precmd_functions=(_make_psvar _remove_screen_date)
 chpwd_functions=(_echo_pwd)
-
-
-# for screen hock functions {{{2
-
-
-_ssh_new_screen() screen -U -t "${@[-1]}" ssh $*
-
-_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -U -D -RR
-
-
-_screen_new_window_split() {
-  screen -X split
-  screen -X focus
-  screen $*
-}
-
-
-_screen_new_window_split_v() {
-  screen -X split -v
-  screen -X focus
-  screen $*
-}
-
-
-_screen_name_manual_update() {
-  screen -X title "$*"
-  echo "screen title is changed to '$*'"
-}
-
-
-# all_window_cd {{{2
-# MEMO: windowがshellじゃなかったらどうする？
-_all_window_cd() {
-  for list in $(screen -Q windows); do
-    num=$(echo $list | sed -e 's/[^0-9].*$//g')
-    if [ -n "$num" ]; then
-      screen -X "at $num stuff cd $0"
-    fi
-  done
-}
 
 
 # others {{{1
