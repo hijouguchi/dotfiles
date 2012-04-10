@@ -289,7 +289,6 @@ calc() {
 alias e='noglob calc'
 
 
->>>>>>> 679cf989be5f493c48dae89576ffb9ede7c9901b
 # others {{{1
 
 
