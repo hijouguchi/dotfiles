@@ -94,11 +94,11 @@ autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:*' stagedstr   '[index]' # インデックスに追加された場合に表示される文字列
-zstyle ':vcs_info:*' unstagedstr '[work]'  # 作業コピーに変更があった場合に表示される文字列
-zstyle ':vcs_info:*' formats       '[%b] '    '[%s|%r]:%S' '%u%c '
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s|%r]:%S' '%u%c '
+zstyle ':vcs_info:*' max-exports 4
+zstyle ':vcs_info:*' stagedstr   'index' # インデックスに追加された場合に表示される文字列
+zstyle ':vcs_info:*' unstagedstr 'work'  # 作業コピーに変更があった場合に表示される文字列
+zstyle ':vcs_info:*' formats       '[%b] '    '[%s:%r]:%S' '%u' '%c'
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
 
 
 
@@ -203,7 +203,10 @@ alias -g L2='2>&1 | less'
 # for vcs_info
 _make_psvar() {
   LANG=en_US.UTF-8 vcs_info
-  psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $vcs_info_msg_2_)
+  local state
+  [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]] && state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
+  [[ -n "$vcs_info_msg_2_" || -n "$vcs_info_msg_3_" ]] && state="[$vcs_info_msg_2_$vcs_info_msg_3_] "
+  psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $state)
 }
 
 
