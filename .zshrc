@@ -206,16 +206,6 @@ _make_psvar() {
   psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $vcs_info_msg_2_)
 }
 
-<<<<<<< HEAD
-# for insert date into screen title
-_append_screen_date() screen -X title "$(screen -Q title) [$(date +"%H:%M")]"
-_remove_screen_date() screen -X title "${"$(screen -Q title)"%%[[:blank:]]\[*}"
-=======
-# echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
-_type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
->>>>>>> 679cf989be5f493c48dae89576ffb9ede7c9901b
-
 
 # here add pre***_functions
 preexec_functions=(_type_ls)
@@ -253,8 +243,6 @@ fi
 
 
 
-<<<<<<< HEAD
-=======
 # for screen hock functions {{{2
 
 
