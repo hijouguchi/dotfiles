@@ -12,7 +12,7 @@ fi
 # exec screen {{{1
 _screen_exec() {
   screen -wipe
-  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+  if [[ "${"$(screen -ls 2>/dev/null)"%%[[:blank:]]in*}" == 'No Sockets found in' ]]; then
     exec screen -D -RR -e"^Gt"
   else
     exec screen -x
@@ -20,7 +20,7 @@ _screen_exec() {
 }
 
 case "${TERM}" in
-  *xterm*|rxvt|(dt|k|E)term|linux) _screen_exec ;;
+#  *xterm*|rxvt|(dt|k|E)term|linux) _screen_exec ;;
 esac
 
 
@@ -233,7 +233,7 @@ _set_screen_title() {
 }
 
 
-if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+if [[ ! "${"$(screen -ls 2>&1)"%%[[:blank:]]in*}" == 'No Sockets found in' ]]; then
   preexec_functions+=_set_screen_title
 fi
 
