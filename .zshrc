@@ -22,6 +22,7 @@ _screen_exec() {
 
 case "${TERM}" in
   *xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
+  linux) exec startx ;;
 esac
 
 
@@ -208,6 +209,10 @@ _make_psvar() {
   [[ -n "$vcs_info_msg_2_" || -n "$vcs_info_msg_3_" ]] && state="[$vcs_info_msg_2_$vcs_info_msg_3_] "
   psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $state)
 }
+
+# echo number of files if last command is type of ls
+_echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
+ _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
 # here add pre***_functions
