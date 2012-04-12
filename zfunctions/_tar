@@ -171,6 +171,10 @@ elif (( CURRENT == 2 )); then
   case $state in
     cmds)
       cmds=(
+        'cvzf:create a new tar.gz file'
+        'xvzf:extract a tar.gz file'
+        'cvjf:create a new tar.bz2 file'
+        'xvjf:extract a tar.bz2 file'
         'czf:create a new tar.gz file'
         'xzf:extract a tar.gz file'
         'cjf:create a new tar.bz2 file'
