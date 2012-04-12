@@ -205,8 +205,11 @@ alias -g L2='2>&1 | less'
 _make_psvar() {
   LANG=en_US.UTF-8 vcs_info
   local state
-  [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]] && state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
-  [[ -n "$vcs_info_msg_2_" || -n "$vcs_info_msg_3_" ]] && state="[$vcs_info_msg_2_$vcs_info_msg_3_] "
+  if [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]]; then
+    state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
+  elif [[ -n "$vcs_info_msg_2_" || -n "$vcs_info_msg_3_" ]]; then
+    state="[$vcs_info_msg_2_$vcs_info_msg_3_] "
+  fi
   psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $state)
 }
 
