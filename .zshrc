@@ -28,7 +28,7 @@ esac
 
 # Program settings {{{1
 export GREP_OPTIONS='--extended-regexp --ignore-case --color'
-export LESS='--ignore-case'
+export LESS='--ignore-case -R'
 
 
 # Basic Settings {{{1
