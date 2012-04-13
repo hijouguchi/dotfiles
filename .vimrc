@@ -99,7 +99,7 @@ set softtabstop=2
 if &encoding ==# 'utf-8'
   set fileencodings=euc-jp,utf-8,cp932
 elseif &encoding ==# 'euc-jp'
-  set fileencodings=utf-8,euc-jp,cp932
+  set fileencodings=utf-8,cp932,euc-jp
 endif
 
 set fileformats=unix,dos,mac
