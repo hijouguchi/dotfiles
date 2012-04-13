@@ -124,7 +124,9 @@ highlight PmenuSbar ctermbg=0
 highlight Folded cterm=bold ctermbg=7 ctermfg=4
 " }}}
 
-set listchars=eol:.,tab:._,trail:_
+" tabはtrailじゃないので，タブで終わる行が表示されない
+"set listchars=tab:\ \ ,eol:.,trail:_
+set listchars=tab:._,eol:.,trail:_
 set list
 set showcmd
 set showmode
