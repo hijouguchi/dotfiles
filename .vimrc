@@ -1,5 +1,6 @@
 " NOTE {{{1
-" FIXME:英語のミス
+
+
 "Basic "{{{1
 "initialize "{{{2
 set nocompatible
@@ -73,14 +74,9 @@ set softtabstop=2
 "set smarttab
 
 
-"Encoding "{{{2
-
-"set encoding=utf-8
-"set termencoding=utf-8
+"fileencodings {{{2
 
 
-"make fileencodings (test) {{{3
-" Does iconv support JIS X 0213 ?
 if iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
   let s:enc_euc = 'euc-jisx0213,euc-jp'
   let s:enc_jis = 'iso-2022-jp-3'
@@ -311,6 +307,7 @@ command! InsertEnv call <SID>Insert_env()
 command! InsertCoding call <SID>Insert_coding()
 
 " change a character code {{{2
+command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
 command! -bang Utf8   e<bang> ++enc=utf-8
 command! -bang Euc    e<bang> ++enc=euc-jp
 command! -bang Cp932  e<bang> ++enc=cp932
@@ -333,11 +330,11 @@ augroup MyAutoCmd
 
   autocmd QuickfixCmdPost make,grep,vimgrep copen 3
 
-  " if the file doesn't have used Japanese, set fileencoding to encoding
+  " if the file doesn't have used Japanese, set fileencoding to utf-8
   " from kana's vimrc http://github.com/kana/config/
   autocmd BufReadPost *
         \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
-        \ |   setlocal fileencoding=
+        \ |   setlocal fileencoding=utf-8
         \ | endif
 
   " if the file doesn't have used tab by space, set expandtab
