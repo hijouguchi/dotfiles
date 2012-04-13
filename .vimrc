@@ -77,7 +77,6 @@ set softtabstop=2
 "fileencodings {{{2
 
 
-" euc,jisの取得
 if iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
   let s:enc_euc = 'euc-jisx0213,euc-jp'
   let s:enc_jis = 'iso-2022-jp-3'
@@ -85,32 +84,26 @@ else
   let s:enc_euc = 'euc-jp'
   let s:enc_jis = 'iso-2022-jp'
 endif
-"
-"
-"let &fileencodings .= ',' . s:enc_jis
-"let &fileencodings .= ',' . s:enc_euc
-"let &fileencodings .= ',' . 'cp932'
-"let &fileencodings .= ',' . &encoding
+
 
 let &fileencodings = 'ucs-bom'
 let &fileencodings .= ',' . s:enc_jis
 
 
 if &encoding ==# 'utf-8'
-  "let &fileencodings .= 'euc-jp,utf-8,cp932'
+  "append euc-jp, utf-8(from endoding) and cp932
   let &fileencodings .= ',' . s:enc_euc
   let &fileencodings .= ',' . &encoding
   let &fileencodings .= ',' . 'cp932'
 elseif &encoding ==# 'euc-jp'
-  "let &fileencodings .= 'utf-8,cp932,euc-jp'
+  "append utf-8, cp932 and euc-jp
   let &fileencodings .= ',' . 'utf-8'
   let &fileencodings .= ',' . 'cp932'
-  let &fileencodings .= ',' . s:enc_jis
   let &fileencodings .= ',' . s:enc_euc
 endif
 
 
-" 変数の破棄
+
 unlet s:enc_euc
 unlet s:enc_jis
 
