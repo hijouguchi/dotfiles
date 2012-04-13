@@ -96,7 +96,11 @@ set softtabstop=2
 "unlet s:enc_euc
 "unlet s:enc_jis
 
-set fileencodings=euc-jp,utf-8,cp932
+if &encoding ==# 'utf-8'
+  set fileencodings=euc-jp,utf-8,cp932
+elseif &encoding ==# 'euc-jp'
+  set fileencodings=utf-8,euc-jp,cp932
+endif
 
 set fileformats=unix,dos,mac
 set ambiwidth=double
