@@ -36,6 +36,8 @@ bind  n screen
 bind  p paste .
 bind  q remove
 bind  ; colon
+bind  \ eval 'screen //group' 'title '
+bind ^k eval '@kill'
 
 bind  s split
 bind  v split -v
@@ -97,8 +99,8 @@ bind -c window_resize w eval 'command -c window_region' 'echo "region window"'
 
 
 # layout {{{2
-bind                  ^l eval 'command -c layout_region' 'layout show'
-bind -c layout_region  n eval  'layout new'  'echo "create new layout"'
+bind                  ^l eval  'command -c layout_region' 'layout show'
+bind -c layout_region  n eval  'layout new'  'layout show'
 bind -c layout_region ^n eval  'layout next' 'command -c layout_region' 'layout show'
 bind -c layout_region ^p eval  'layout prev' 'command -c layout_region' 'layout show'
 bind -c layout_region  A colon 'layout title '
@@ -114,6 +116,12 @@ bind -c layout_region  6 eval  'layout select 6' 'layout show'
 bind -c layout_region  7 eval  'layout select 7' 'layout show'
 bind -c layout_region  8 eval  'layout select 8' 'layout show'
 bind -c layout_region  9 eval  'layout select 9' 'layout show'
+
+
+# group
+bind                 ^g eval 'command -c group_region' 'echo "group mode"'
+bind -c group_region  n eval 'screen //group' 'title '
+bind -c group_region  t eval 'group '
 
 
 # other source {{{1
