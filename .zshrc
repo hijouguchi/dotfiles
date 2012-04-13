@@ -1,6 +1,5 @@
 # NOTE {{{1
 
-
 # for ssh-agent {{{1
 if [ ! -n "$SSH_AUTH_SOCK" ]; then
   unset SSH_AUTH_SOCK SSH_AGENT_PID
@@ -19,7 +18,7 @@ _screen_exec() {
   fi
 }
 
-case "${TERM}" in
+case "$TERM" in
   *xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
   linux) exec startx ;;
 esac
@@ -283,7 +282,7 @@ _screen_name_manual_update() {
 # all_window_cd {{{2
 # MEMO: windowがshellじゃなかったらどうする？
 _all_window_cd() {
-  for list in $(screen -Q windows); do
+  for list in $(screen -Q eval '@windows'); do
     num=$(echo $list | sed -e 's/[^0-9].*$//g')
     if [ -n "$num" ]; then
       screen -X "at $num stuff cd $0"
