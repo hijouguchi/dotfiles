@@ -126,7 +126,17 @@ highlight Folded cterm=bold ctermbg=7 ctermfg=4
 
 " tabはtrailじゃないので，タブで終わる行が表示されない
 "set listchars=tab:\ \ ,eol:.,trail:_
-set listchars=tab:._,eol:.,trail:_
+"set listchars=tab:>-,eol:.,trail:_
+set listchars=tab:\ \ ,eol:.
+
+highlight LazySpace ctermbg=red guibg=red
+match     LazySpace /\t\+ \s*\| \+\t\s*\|\s\+$/
+autocmd WinEnter,BufNewFile,BufReadPre *
+      \   if matcharg(1)[0] != 'LazySpace' && &filetype != 'help'
+      \ |   match LazySpace /\t\+ \s*\| \+\t\s*\|\s\+$/
+      \ | fi
+
+
 set list
 set showcmd
 set showmode
@@ -356,7 +366,7 @@ augroup MyAutoCmd
         \ |   setlocal expandtab
         \ | endif
 
-  autocmd FileType  *
+  autocmd FileType *
         \   if &l:omnifunc == ''
         \ | setlocal omnifunc=syntaxcomplete#Complete
         \ | endif
@@ -370,6 +380,7 @@ augroup MyAutoCmd
   "" ruby syntax check
   "" http://vim-users.jp/2009/05/hack13/
   "autocmd BufWrite *.rb !ruby -c %
+
 augroup END
 
 
@@ -393,7 +404,10 @@ augroup FiletypeAutoCmd
 augroup END
 
 " help {{{3
-autocmd FiletypeAutoCmd FileType help setlocal nolist | setlocal number
+autocmd FiletypeAutoCmd FileType help setlocal nolist | setlocal number |
+      \   if matcharg(1)[0] == 'LazySpace'
+      \ |   match none
+      \ | endif
 
 
 " html {{{3
@@ -694,5 +708,4 @@ endfunction
 
 " __END__ {{{1
 " vim: expandtab
-
 
