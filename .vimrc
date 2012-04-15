@@ -415,10 +415,9 @@ autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 
 
 " C {{{3
-autocmd! FiletypeAutoCmd FileType c call <SID>FileType_c()
-function! s:FileType_c()
-  inoremap <expr> = smartchr#one_of(' = ', ' == ', '=')
-endfunction
+"autocmd! FiletypeAutoCmd FileType c call <SID>FileType_c()
+"function! s:FileType_c()
+"endfunction
 
 " Quickfix {{{3
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
