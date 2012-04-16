@@ -182,9 +182,11 @@ alias du='du -h'
 alias grep='grep --color'
 alias quit=exit
 
-alias vim='screen vim'
-alias s='screen'
-#alias emacs='screen emacs -nw'
+if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+  alias vim='screen vim'
+  alias s='screen'
+  #alias emacs='screen emacs -nw'
+fi
 
 
 alias -g G='| grep'
