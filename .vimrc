@@ -60,8 +60,10 @@ set backup
 set backupext=.bak
 if has("mac")
   set backupdir=~/.Trash
+  set directory=~/.Trash
 else
   set backupdir=/tmp
+  set directory=/tmp
 endif
 
 set formatoptions=nlM1
@@ -98,8 +100,8 @@ if &encoding ==# 'utf-8'
 elseif &encoding ==# 'euc-jp'
   "append utf-8, cp932 and euc-jp
   let &fileencodings .= ',' . 'utf-8'
-  let &fileencodings .= ',' . 'cp932'
   let &fileencodings .= ',' . s:enc_euc
+  let &fileencodings .= ',' . 'cp932'
 endif
 
 
