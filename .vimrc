@@ -195,6 +195,8 @@ nnoremap <C-H>            :<C-u>help<Space>
 
 nnoremap [Space]e         :<C-u>!time ./%<CR>
 
+nnoremap <C-K>            :<C-u>Ku source<CR>
+
 
 "Imap {{{2
 inoremap                 <C-]>         <C-O>:
@@ -243,6 +245,12 @@ nnoremap [Buffer]n :bn<Cr>
 nnoremap [Buffer]k :bp<Cr>
 nnoremap [Buffer]p :bp<Cr>
 
+nnoremap [Buffer]d :bdelete<CR>
+" for buffer number
+for i in range(0,9)
+  execute 'nnoremap [Buffer]' . i . ' :buffer'. i . '<CR>'
+endfor
+
 
 " they are the same behavior
 nnoremap [Buffer]b :buffers<CR>
@@ -255,7 +263,7 @@ nnoremap [Tab]j :tabn<CR>
 nnoremap [Tab]k :tabp<CR>
 nnoremap [Tab]n :tabnew<CR>
 
-"for tab number
+" for tab number
 for i in range(0,9)
   execute 'nnoremap [Tab]' . i . ' :tabnext '. (i+1) . '<CR>'
 endfor
@@ -566,7 +574,8 @@ function! Ku_options()
   call ku#default_key_mappings(1)
   inoremap <buffer> <expr> <Tab>         InsertTabWrapper()
   "It dosen't work if inoremap
-  imap     <buffer>        <C-U>         <Plug>(ku-choose-an-action)
+  imap     <buffer>        <C-U>         <Plug>(ku-do-the-default-action)
+  imap     <buffer>        <Return>      <Plug>(ku-choose-an-action)
 endfunction
 
 
