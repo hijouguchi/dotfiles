@@ -12,7 +12,7 @@ startup_message off
 vbell           off
 defscrollback   10000
 altscreen       on
-defmonitor      on
+#defmonitor      on
 hardcopydir     "%HOME/screen"
 
 termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color
@@ -38,6 +38,7 @@ bind  q remove
 bind  ; colon
 bind  \ eval 'screen //group' 'title '
 bind ^k eval '@kill'
+bind ^m monitor
 
 bind  s split
 bind  v split -v

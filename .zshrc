@@ -1,18 +1,13 @@
 # NOTE {{{1
 
-# for ssh-agent {{{1
-if [ ! -n "$SSH_AUTH_SOCK" ]; then
-  unset SSH_AUTH_SOCK SSH_AGENT_PID
-  eval `ssh-agent`
-  ssh-add #< /dev/null
-fi
 
 
 # exec screen {{{1
+# FIXME: ssh-agentが二重に起動されないように設定する
 _screen_exec() {
   screen -wipe
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-    exec screen -D -RR -e"^Gt"
+    exec screen -D -RR -e"^Gg"
   else
     exec screen -x
   fi
@@ -20,8 +15,10 @@ _screen_exec() {
 
 case "$TERM" in
   *xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
-  linux) exec startx ;;
-  *) ;;
+  linux)
+    ssh-agent startx
+    [[ $? == 0 ]] && exit
+    ;;
 esac
 
 
@@ -129,6 +126,10 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:*:*' ignore-line true
 zstyle ':completion:*:(cp|mv):*' ignore-line false
+zstyle ':completion:*:*:vim:*' ignored-patterns \
+  '*.eps' '*.jpg' '*.png' '*.gif' \
+  '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
+  '*~'
 
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*' ignore-parents parent pwd
@@ -230,11 +231,16 @@ chpwd_functions=(_echo_pwd)
 
 # titleを自動で設定，あるいは自動で設定するためのコマンド
 export SCREEN_TITLE_NAME=
-title() SCREEN_TITLE_NAME="$1"
+title() {
+  SCREEN_TITLE_NAME="$1"
+  if [[ -n "$SCREEN_TITLE_NAME" ]]; then
+    screen -X title "$SCREEN_TITLE_NAME"
+  fi
+}
 
 # titleを設定するコマンド
 _set_screen_title() {
-  [ -n "$SCREEN_TITLE_NAME" ] && return
+  [[ -n "$SCREEN_TITLE_NAME" ]] && return
   # 実際に設定する
   local command_name title_name
   command_name=${${1##sudo[[:blank:]]}%%[[:blank:]]*}
