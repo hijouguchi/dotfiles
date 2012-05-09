@@ -182,6 +182,7 @@ alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
 alias l1='ls -h1AF --color=auto'
 alias du='du -h'
+alias scp='scp -c arcfour256'
 
 alias grep='grep --color'
 alias quit=exit
