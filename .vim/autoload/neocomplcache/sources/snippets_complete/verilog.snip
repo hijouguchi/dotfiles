@@ -1,49 +1,17 @@
 snippet     module
-abbr        module mod(...)
+abbr        module with reg
 prev_word   '^'
-    module ${1:module name}(${2:ports});
-        input $2;
-        ${3}
-    endmodule
-    ${0}
+    module ${1:module_name}(clk, xrst${2:, and_others});
+    input clk, xrst${3};${4}
+    always @(posedge clk or negedge xrst) begin
+        if(!xrst)
+            ${5}
+    end${6}
+    endmodule${0}
 
 snippet     function
-abbr        function func;
+abbr        function
 prev_word   '^'
-    function ${1:function name};
-        input ${2:argument};
-        ${3}
-    endfunction
-    ${0}
-
-snippet     begin
-abbr        begin ... end
-prev_word   '^'
-    begin
-        ${1}
-    end
-    ${0}
-
-snippet     fork
-abbr        fork ... join
-prev_word   '^'
-    fork
-        ${1}
-    join
-    ${0}
-
-snippet     case
-abbr        case
-prev_word   '^'
-    case(${1:condition})
-        ${2}
-    endcase
-    ${0}
-
-snippet     always
-abbr        always begin
-prev_word   '^'
-    always @(${1:posedge ck or posedge rs}) begin
-        ${2}
-    end
-    ${0}
+    function ${1:[n:0] func_name}(${2:input_ports});
+        input $2;${3}
+    endfunction${0}
