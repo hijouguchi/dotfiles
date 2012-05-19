@@ -574,8 +574,9 @@ function! Ku_options()
   call ku#default_key_mappings(1)
   inoremap <buffer> <expr> <Tab>         InsertTabWrapper()
   "It dosen't work if inoremap
-  imap     <buffer>        <C-U>         <Plug>(ku-do-the-default-action)
-  imap     <buffer>        <Return>      <Plug>(ku-choose-an-action)
+  "imap     <buffer>        <C-U>         <Plug>(ku-do-the-default-action)
+  imap     <buffer>        <C-U>      <Plug>(ku-choose-an-action)
+  nnoremap <buffer>        <Esc>      <C-C>
 endfunction
 
 
