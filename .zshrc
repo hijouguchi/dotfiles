@@ -208,7 +208,7 @@ alias -g L2='2>&1 | less'
 
 # for vcs_info
 _make_psvar() {
-  LANG=en_US.UTF-8 vcs_info
+  vcs_info
   local state
   if [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]]; then
     state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
