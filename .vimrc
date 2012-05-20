@@ -429,6 +429,12 @@ autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 "function! s:FileType_c()
 "endfunction
 
+
+" crontab {{{3
+autocmd! FiletypeAutoCmd FileType crontab call <SID>FileType_crontab()
+function! s:FileType_crontab()
+  setlocal nobackup
+endfunction
 " Quickfix {{{3
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
 function! s:FileType_qf()
