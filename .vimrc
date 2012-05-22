@@ -429,6 +429,12 @@ autocmd FiletypeAutoCmd BufNewFile *.htm,*.html 0r ~/.vim/template/html.html
 "function! s:FileType_c()
 "endfunction
 
+
+" crontab {{{3
+autocmd! FiletypeAutoCmd FileType crontab call <SID>FileType_crontab()
+function! s:FileType_crontab()
+  setlocal nobackup
+endfunction
 " Quickfix {{{3
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
 function! s:FileType_qf()
@@ -574,8 +580,9 @@ function! Ku_options()
   call ku#default_key_mappings(1)
   inoremap <buffer> <expr> <Tab>         InsertTabWrapper()
   "It dosen't work if inoremap
-  imap     <buffer>        <C-U>         <Plug>(ku-do-the-default-action)
-  imap     <buffer>        <Return>      <Plug>(ku-choose-an-action)
+  "imap     <buffer>        <C-U>         <Plug>(ku-do-the-default-action)
+  imap     <buffer>        <C-U>      <Plug>(ku-choose-an-action)
+  nnoremap <buffer>        <Esc>      <C-C>
 endfunction
 
 

@@ -302,11 +302,20 @@ _all_window_cd() {
   done
 }
 
+# other functions {{{2
+
+r_help() {
+  R --vanilla --slave <<EOF
+  help($1)
+EOF
+}
+
 calc() {
   zmodload zsh/mathfunc
   echo $(( $* ))
 }
 alias e='noglob calc'
+
 
 
 # others {{{1
