@@ -208,7 +208,7 @@ alias -g L2='2>&1 | less'
 
 # for vcs_info
 _make_psvar() {
-  LANG=en_US.UTF-8 vcs_info
+  vcs_info
   local state
   if [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]]; then
     state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
@@ -225,7 +225,7 @@ _echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color i
 
 # here add pre***_functions
 preexec_functions=(_type_ls)
-precmd_functions=(_make_psvar)
+[[ "$ZSH_VERSION[1,6]" == "4.3.17" ]] && precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
 
