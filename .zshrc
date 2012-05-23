@@ -231,7 +231,7 @@ _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 # here add pre***_functions
 preexec_functions=(_type_ls)
-precmd_functions=(_make_psvar)
+[[ "$ZSH_VERSION[1,6]" == "4.3.17" ]] && precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
 
