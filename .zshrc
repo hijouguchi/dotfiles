@@ -14,7 +14,9 @@ _screen_exec() {
 }
 
 case "$TERM" in
-  *xterm*|rxvt|(dt|k|E)term) _screen_exec ;;
+  *xterm*|rxvt|(dt|k|E)term)
+    exec screen -D -RR -e"^Gg"
+    ;;
   linux)
     ssh-agent startx
     [[ $? == 0 ]] && exit
@@ -192,6 +194,10 @@ if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
   alias s='screen'
   #alias emacs='screen emacs -nw'
 fi
+#case "$TERM" in
+#  screen*) ;;
+#  *) ;;
+#esac
 
 
 alias -g G='| grep'
@@ -220,7 +226,7 @@ _make_psvar() {
 
 # echo number of files if last command is type of ls
 _echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
- _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
+_type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
 # here add pre***_functions
@@ -251,7 +257,7 @@ _set_screen_title() {
   case "$command_name" in
   ls|cd|*sh|vim|emacs|git) ;;
   less|tail|man) title_name="$1" ;;
-  *) title_name="$command_name"
+  *) title_name="$command_name" ;;
   esac
   [[ -n "$title_name" ]] && screen -X title "$title_name"
 }
