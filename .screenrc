@@ -32,11 +32,12 @@ hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%
 # KEY MAP {{{1
 
 
+bind ^[
 bind  n screen
 bind  p paste .
 bind  q remove
 bind  ; colon
-bind  \ eval 'screen //group' 'title '
+bind \' eval 'screen //group' 'title '
 bind ^k eval '@kill'
 bind ^m monitor
 
