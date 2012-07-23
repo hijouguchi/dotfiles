@@ -225,7 +225,7 @@ _echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color i
 
 # here add pre***_functions
 preexec_functions=(_type_ls)
-[[ "$ZSH_VERSION[1,6]" == "4.3.17" ]] && precmd_functions=(_make_psvar)
+[[ "$ZSH_VERSION[1,5]" == "5.0.0" ]] && precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
 
