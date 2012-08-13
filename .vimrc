@@ -145,7 +145,13 @@ nnoremap n  nzvzz
 nnoremap N  Nzvzz
 
 " set paste をトグルする
-nnoremap <C-P> :set paste! \| :set paste?<CR>
+nnoremap [Space]p :set paste! \| :set paste?<CR>
+
+" tag ジャンプ
+" next
+nnoremap <C-N> <C-]>
+" previous
+nnoremap <C-P> <C-T>
 
 " for window mode (in normal) {{{3
 nnoremap [Space]w <C-W>
@@ -157,9 +163,20 @@ inoremap <expr> <CR>    pumvisible() ? "<C-Y><CR>" : "<CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>" : "<S-Tab>"
 inoremap        <C-]>   <C-O>:
 
+imap		<C-K> <Plug>(neocomplcache_snippets_expand)
+smap    <C-k> <Plug>(neocomplcache_snippets_expand)
+
+
+" visual mode {{{2
+vnoremap ; :
+vnoremap : ;
+
+
 " command line mode {{{2
+" コマンドラインは emacs キーバインドで良い気がする
 cnoremap <C-B> <left>
 cnoremap <C-F> <right>
+cnoremap <C-A> <Home>
 
 " 補完方向が逆の方がしっくりくるので
 cnoremap <C-P> <up>
@@ -191,7 +208,7 @@ augroup MyAutoCmd
 	autocmd!
   autocmd BufWritePost * if getline(1) =~ "^#!" |
         \ silent! exe "silent! !chmod +x %" | endif
-	
+
   " if the file doesn't have used Japanese, set fileencoding to utf-8
   " from kana's vimrc http://github.com/kana/config/
   autocmd BufReadPost *
@@ -209,7 +226,27 @@ augroup MyAutoCmd
         \   if &l:omnifunc == ''
         \ | setlocal omnifunc=syntaxcomplete#Complete
         \ | endif
+
+
+
+	"set filetype R for .r (not set to rexx)
+	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
 augroup END
+
+
+" display trailing spaces {{{2
+augroup HighlightTrailingSpaces
+  autocmd!
+
+	autocmd VimEnter,BufNew,BufReadPost,ColorScheme *
+				\ highlight TrailingSpacess guibg=Red ctermbg=Red
+  " FIXME: help 以外を適応ってどうやるの？
+  autocmd VimEnter,BufNew,BufReadPost *
+				\   if &l:filetype != 'help'
+				\ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
+				\ | endif
+augroup END
+
 
 
 " set binary format {{{2
@@ -225,7 +262,7 @@ augroup END
 
 
 " plugin {{{1
-" buncle settings {{{2
+" bundle settings {{{2
 " see also http://vim-users.jp/2011/04/hack215/
 filetype off
 
@@ -233,24 +270,26 @@ set rtp+=~/.vim/vundle.git/
 call vundle#rc()
 
 
-" file exploler
-Bundle 'git://github.com/kana/vim-ku.git'
-" complete
-Bundle 'git://github.com/Shougo/neocomplcache.git'
-" submode
-Bundle 'git://github.com/kana/vim-submode.git'
 " help (japanese)
 Bundle 'git://github.com/vim-jp/vimdoc-ja.git'
-" surround.vim
+
+Bundle 'git://github.com/kana/vim-ku.git'
 Bundle "surround.vim"
-" vimproc
+Bundle 'git://github.com/kana/vim-submode.git'
+Bundle 'Align'
+
 Bundle 'git://github.com/Shougo/vimproc.git'
+Bundle 'git://github.com/Shougo/neocomplcache.git'
+Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 
 
 filetype plugin indent on
 " neocomplcache {{{2
 " enable use vimproc
 let g:neocomplcache_use_vimproc			  = 1
+" set temporary directory
+let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
+let g:neocomplcache_snippets_dir      = '$HOME/.vim/snippet'
 " enable neocomplcache
 let g:neocomplcache_enable_at_startup = 1
 
@@ -293,4 +332,4 @@ endfunction
 
 
 " END {{{1
-" vim:fdm=marker
+" vim:fdm=marker:et

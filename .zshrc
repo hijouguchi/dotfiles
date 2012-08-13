@@ -82,7 +82,7 @@ autoload -Uz colors; colors
 # prompt
 PROMPT='%B%(?||[error] )%1v%3v%n@%m%#%b '
 PROMPT2="%_ > "
-RPROMPT='%2(v|%2v|:%4(~|%-1~/.../%2~|%~))'
+RPROMPT='$(vi_mode_prompt_info)%2(v|%2v|:%4(~|%-1~/.../%2~|%~))'
 
 # zmv
 autoload -Uz zmv
@@ -310,6 +310,20 @@ _all_window_cd() {
 }
 
 # other functions {{{2
+
+# for display nomal mode
+# see also:
+# https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/vi-mode/vi-mode.plugin.zsh
+function zle-line-init zle-keymap-select {
+  zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+function vi_mode_prompt_info() {
+  echo "${${KEYMAP/vicmd/NORMAL MODE}/(main|viins)/}"
+}
 
 r_help() {
   R --vanilla --slave <<EOF
