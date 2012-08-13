@@ -1,0 +1,4 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/Users/hijouguchi/src/pla_02'
+let g:netrw_dirhist_2='/Users/hijouguchi/Documents/report/ochi_08_08/tex'

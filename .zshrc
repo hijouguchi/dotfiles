@@ -15,6 +15,7 @@ _screen_exec() {
 
 case "$TERM" in
   *xterm*|rxvt|(dt|k|E)term)
+    #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
     exec screen -D -RR -e"^Gg"
     ;;
   linux)

@@ -435,6 +435,13 @@ autocmd! FiletypeAutoCmd FileType crontab call <SID>FileType_crontab()
 function! s:FileType_crontab()
   setlocal nobackup
 endfunction
+" gnuplot {{{3
+autocmd FiletypeAutoCmd FileType gnuplot call <SID>FileType_gnuplot()
+function! s:FileType_gnuplot()
+  nnoremap <buffer> [Space]e :!gnuplot %<CR>
+endfunction
+
+
 " Quickfix {{{3
 autocmd FiletypeAutoCmd FileType qf call <SID>FileType_qf()
 function! s:FileType_qf()
