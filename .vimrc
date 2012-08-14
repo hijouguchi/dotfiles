@@ -238,10 +238,11 @@ augroup END
 augroup HighlightTrailingSpaces
   autocmd!
 
-	autocmd VimEnter,BufNew,BufReadPost,ColorScheme *
+	autocmd VimEnter,WinEnter,BufNew,BufReadPost,ColorScheme *
 				\ highlight TrailingSpacess guibg=Red ctermbg=Red
-  " FIXME: help 以外を適応ってどうやるの？
-  autocmd VimEnter,BufNew,BufReadPost *
+  " NOTE:  help 以外を適応ってどうやるの？
+  " FIXME: help でも反応しちゃってるみたい
+  autocmd VimEnter,WinEnter,BufNew,BufReadPost *
 				\   if &l:filetype != 'help'
 				\ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
 				\ | endif
