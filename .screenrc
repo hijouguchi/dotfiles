@@ -28,6 +28,9 @@ rendition so      "=b"  "wk"
 caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P -- COPY MODE --%?%=%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%s]"
 
+windowlist title  '%{u .g}Num Flags Title%='
+windowlist string '%{.g}%3n %{.y}%f%09=%{-} %t %='
+
 
 # KEY MAP {{{1
 
@@ -36,7 +39,6 @@ bind ^[
 bind  n screen
 bind  p paste .
 bind  q remove
-bind  ; colon
 bind \' eval 'screen //group' 'title '
 bind ^k eval '@kill'
 bind ^m monitor
@@ -44,14 +46,14 @@ bind ^m monitor
 bind  s split
 bind  v split -v
 
+# edit mode で副作用があるバインドを無効化する
+bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v'
 
 # copy mode {{{2
-bind ^v eval 'bindkey -m y' copy
-bindkey -m -t  y stuff Y
-bindkey -m -t  Y stuff " $ "
-bindkey -m -t  v stuff " "
-bindkey -m -t  V eval 'bindkey -m y stuff "$ "' 'stuff "0 $"'
-bindkey -m -t ^v eval 'bindkey -m y stuff "C "' 'stuff "c "'
+# y, ^v, V の keybind を登録してから copy mode に移行
+# MEMO: 1行じゃ無いと書けないの？
+bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" copy
+
 
 
 # window focus {{{2
@@ -79,6 +81,7 @@ bind -c window_region  q remove
 bind -c window_region  Q only
 bind -c window_region  K kill
 bind -c window_region  n screen //group
+bind -c window_region  = fit
 bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
 
 
