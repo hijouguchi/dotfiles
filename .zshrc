@@ -33,10 +33,10 @@ export LESS='--ignore-case -R'
 # Basic Settings {{{1
 
 # minimum function
-if [[ $OSTYPE == darwin* ]]; then
+[[ $OSTYPE == darwin* && -n $(which gdircolors) ]] &&
   function dircolors() { gdircolors $* }
+[[ $OSTYPE == darwin* && -n $(which gls) ]] &&
   function ls() { gls $* }
-fi
 
 #export LANG=ja_JP.UTF-8
 export EDITOR=vim
@@ -80,7 +80,7 @@ autoload -Uz colors; colors
 
 
 # prompt
-PROMPT='%B%(?||[error] )%1v%3v%n@%m%#%b '
+PROMPT='%{[0;1m%}%(?||[%{[31;1m%}error%{[0;1m%}] )%1v%3v%n@%m%# %{[0m%}'
 PROMPT2="%_ > "
 RPROMPT='$(vi_mode_prompt_info)%2(v|%2v|:%4(~|%-1~/.../%2~|%~))'
 
@@ -98,7 +98,7 @@ zstyle ':vcs_info:*' max-exports 4
 zstyle ':vcs_info:*' stagedstr   'index' # インデックスに追加された場合に表示される文字列
 zstyle ':vcs_info:*' unstagedstr 'work'  # 作業コピーに変更があった場合に表示される文字列
 zstyle ':vcs_info:*' formats       '[%b] '    '[%s:%r]:%S' '%u' '%c'
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
+zstyle ':vcs_info:*' actionformats '[%b|%{[31;1m%}%a%{[0m%}] ' '[%s:%r]:%S' '%u' '%c'
 
 
 
@@ -309,9 +309,7 @@ _all_window_cd() {
   done
 }
 
-# other functions {{{2
-
-# for display nomal mode
+# display nomal mode {{{2
 # see also:
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/vi-mode/vi-mode.plugin.zsh
 function zle-line-init zle-keymap-select {
@@ -322,9 +320,11 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 
 function vi_mode_prompt_info() {
-  echo "${${KEYMAP/vicmd/NORMAL MODE}/(main|viins)/}"
+  [[ $KEYMAP == 'vicmd' ]] && echo "%{[33;1m%}NORMAL%{[0m%} "
 }
 
+
+# other functions {{{2
 r_help() {
   R --vanilla --slave <<EOF
   help($1)
@@ -345,5 +345,3 @@ alias e='noglob calc'
 # __END__ {{{1
 # vim:smarttab expandtab
 # vim:foldmethod=marker
-
-
