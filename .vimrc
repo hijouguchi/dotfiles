@@ -137,7 +137,7 @@ nnoremap ,w :up<CR>
 
 " search highlight
 nnoremap / :set hlsearch<CR>/
-nnoremap [Space]/ :set hlsearch!<CR>
+nnoremap [Space]/ :set hlsearch! \| :set hlsearch?<CR>
 
 " fold を展開して，画面の中央にする
 nnoremap gg ggzvzz

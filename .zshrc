@@ -66,6 +66,9 @@ setopt pushd_ignore_dups
 setopt auto_remove_slash
 setopt auto_name_dirs
 
+cdpath=($HOME $HOME/work)
+
+
 # for history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -120,7 +123,7 @@ zstyle ':completion:*:descriptions' format "$fg_bold[blue]completing %d$reset_co
 zstyle ':completion:*:corrections'  format "$fg_bold[blue]%d $fg_bold[red](erros: %e)$reset_color"
 
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path $HOME/.zsh/cache
+zstyle ':completion:*' cache-path /tmp
 
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
@@ -132,6 +135,7 @@ zstyle ':completion:*:(cp|mv):*' ignore-line false
 zstyle ':completion:*:*:vim:*' ignored-patterns \
   '*.eps' '*.jpg' '*.png' '*.gif' \
   '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
+  '*.o' \
   '*~'
 
 zstyle ':completion:*:match:*' original only
@@ -142,7 +146,9 @@ zstyle ':completion:*:*:*:*:processec' force-list always
 zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
 
-zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
+#zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
+# 補完候補で，ディレクトリを後ろに
+zstyle ':completion:*' file-patterns '*(^-/):normal\ files:normal\ files *(-/):directories:directories '
 
 
 # Keymappings {{{1
