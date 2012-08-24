@@ -279,15 +279,12 @@ Bundle "surround.vim"
 Bundle 'git://github.com/kana/vim-submode.git'
 Bundle 'Align'
 
-Bundle 'git://github.com/Shougo/vimproc.git'
 Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 
 
 filetype plugin indent on
 " neocomplcache {{{2
-" enable use vimproc
-let g:neocomplcache_use_vimproc			  = 1
 " set temporary directory
 let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
 let g:neocomplcache_snippets_dir      = '$HOME/.vim/snippet'
