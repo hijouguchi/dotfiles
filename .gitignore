@@ -3,4 +3,3 @@ keymap.screenrc
 *.swp
 .vim/info/ku/history
 .vim/.netrwhist
-.vim/bundle
