@@ -128,6 +128,8 @@ nmap <Space> [Space]
 nnoremap ; :
 nnoremap : ;
 
+nnoremap Y y$
+
 "help
 noremap <C-H> :help<Space>
 
