@@ -8,5 +8,7 @@ if [[ ! -f $HOME/.vimrc ]]     ; then ln -sf $HOME/dotfiles/.vimrc     $HOME/.vi
 if [[ ! -f $HOME/.vim ]]       ; then ln -sf $HOME/dotfiles/.vim       $HOME/.vim                           ; fi
 if [[ ! -f $HOME/.screenrc ]]  ; then ln -sf $HOME/dotfiles/.screenrc  $HOME/.screenrc                      ; fi
 if [[ ! -f $HOME/.zshrc ]]     ; then ln -sf $HOME/dotfiles/.zshrc     $HOME/.zshrc                         ; fi
-if [[ ! -f $HOME/.inputrc ]]   ; then ln -sf $HOME/dotfiles/.inputrc   $HOME/.inputrc                       ; fi
 if [[ ! -f $HOME/.zshenv ]]    ; then echo 'export FPATH=$HOME/dotfiles/zfunctions:$FPATH' >> $HOME/.zshenv ; fi
+
+cd dotfiles
+git submodule --init update
