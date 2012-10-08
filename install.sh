@@ -10,3 +10,6 @@ if [[ ! -f $HOME/.screenrc ]]  ; then ln -sf $HOME/dotfiles/.screenrc  $HOME/.sc
 if [[ ! -f $HOME/.zshrc ]]     ; then ln -sf $HOME/dotfiles/.zshrc     $HOME/.zshrc                         ; fi
 if [[ ! -f $HOME/.inputrc ]]   ; then ln -sf $HOME/dotfiles/.inputrc   $HOME/.inputrc                       ; fi
 if [[ ! -f $HOME/.zshenv ]]    ; then echo 'export FPATH=$HOME/dotfiles/zfunctions:$FPATH' >> $HOME/.zshenv ; fi
+
+cd dotfiles
+git submodule update --init
