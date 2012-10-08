@@ -130,6 +130,12 @@ nnoremap : ;
 
 nnoremap Y y$
 
+nnoremap j gj
+nnoremap k gk
+
+nnoremap <F1> <NOP>
+nnoremap qq   <NOP>
+
 "help
 noremap <C-H> :help<Space>
 
@@ -155,14 +161,19 @@ nnoremap <C-N> <C-]>
 " previous
 nnoremap <C-P> <C-T>
 
+
+" スクリプトを実行してみる
+nnoremap [Space]e :!./%<CR>
+
 " for window mode (in normal) {{{3
 nnoremap [Space]w <C-W>
 
 
 " insert mode {{{2
 inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
-inoremap <expr> <CR>    pumvisible() ? "<C-Y><CR>" : "<CR>"
-inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>" : "<S-Tab>"
+inoremap <expr> <CR>    pumvisible() ? "<C-Y>"     : "<CR>"
+inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
+inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
 inoremap        <C-]>   <C-O>:
 
 imap		<C-K> <Plug>(neocomplcache_snippets_expand)

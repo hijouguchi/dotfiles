@@ -46,12 +46,13 @@ bind ^m monitor
 bind  s split
 bind  v split -v
 
-# edit mode で副作用があるバインドを無効化する
+bind y eval copy "stuff Y"
+
+# make invalid keybind side effects for edit mode
 bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v'
 
 # copy mode {{{2
-# y, ^v, V の keybind を登録してから copy mode に移行
-# MEMO: 1行じゃ無いと書けないの？
+# migrated to copy mode after resister the keybind, y, ^v, of V
 bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" copy
 
 
