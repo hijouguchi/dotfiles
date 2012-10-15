@@ -7,6 +7,8 @@ set background=dark
 
 filetype plugin indent on
 
+set viminfo='100,<50,s10,h,n~/.vim/viminfo
+
 " C の再インデントに影響を与える
 set cinoptions=:0,t0,(0,W1s
 
