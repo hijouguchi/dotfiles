@@ -72,7 +72,7 @@ cdpath=($HOME $HOME/work)
 # for history
 HISTSIZE=10000
 SAVEHIST=10000
-HISTFILE=~/.zhistory
+HISTFILE=$HOME/.zsh/zhistory
 setopt hist_ignore_all_dups
 setopt inc_append_history
 setopt share_history
@@ -106,7 +106,7 @@ zstyle ':vcs_info:*' actionformats '[%b|%{[31;1m%}%a%{[0m%}] ' '[%s:%r]:%S' '%
 
 
 # completion {{{1
-autoload -U  compinit && compinit
+autoload -U  compinit && compinit -d $HOME/.zsh/zcompdump
 
 setopt complete_in_word
 setopt list_packed
