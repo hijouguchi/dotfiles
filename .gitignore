@@ -4,3 +4,4 @@ keymap.screenrc
 .vim/info/ku/history
 .vim/.netrwhist
 .vim/bundle
+.vim/viminfo
