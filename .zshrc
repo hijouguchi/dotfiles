@@ -18,10 +18,10 @@ case "$TERM" in
     #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
     exec screen -D -RR -e"^Gg"
     ;;
-  linux)
-    ssh-agent startx
-    [[ $? == 0 ]] && exit
-    ;;
+  #linux)
+  #  ssh-agent startx
+  #  [[ $? == 0 ]] && exit
+  #  ;;
 esac
 
 
