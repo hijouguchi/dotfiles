@@ -206,6 +206,14 @@ cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
 
 
 " command {{{1
+" default commands {{{2
+command! InsertEnvAndCoding
+      \ call append(0, [
+      \ '#!/usr/bin/env ' . &l:filetype,
+      \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
+      \ ''
+      \ ])
+
 " change a character code {{{2
 command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
 command! -bang Utf8   e<bang> ++enc=utf-8
