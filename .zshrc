@@ -19,7 +19,7 @@ case "$TERM" in
     exec screen -D -RR -e"^Gg"
     ;;
   linux)
-    [[ $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
+    [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
     ;;
 esac
 
