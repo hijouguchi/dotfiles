@@ -125,9 +125,14 @@ set statusline+=\ %3cC,%3l/%LL\ %P
 
 
 " keymap settings {{{1
+" default map {{{2
+" do not show help when press F1
+noremap <F1> <NOP>
+
+
 " normal node {{{2
 " normal settings {{{3
-nmap <Space> [Space]
+nmap <Space> [SPACE]
 nnoremap ; :
 nnoremap : ;
 
@@ -136,8 +141,8 @@ nnoremap Y y$
 nnoremap j gj
 nnoremap k gk
 
-nnoremap <F1> <NOP>
-nnoremap qq   <NOP>
+nnoremap q    <NOP>
+nnoremap Q    <NOP>
 
 "help
 noremap <C-H> :help<Space>
@@ -148,7 +153,7 @@ nnoremap ,w :up<CR>
 
 " search highlight
 nnoremap / :set hlsearch<CR>/
-nnoremap [Space]/ :set hlsearch! \| :set hlsearch?<CR>
+nnoremap [SPACE]/ :set hlsearch! \| :set hlsearch?<CR>
 
 " fold を展開して，画面の中央にする
 nnoremap gg ggzvzz
@@ -156,7 +161,7 @@ nnoremap n  nzvzz
 nnoremap N  Nzvzz
 
 " set paste をトグルする
-nnoremap [Space]p :set paste! \| :set paste?<CR>
+nnoremap [SPACE]p :set paste! \| :set paste?<CR>
 
 " tag ジャンプ
 " next
@@ -166,15 +171,15 @@ nnoremap <C-P> <C-T>
 
 
 " スクリプトを実行してみる
-nnoremap [Space]e :!./%<CR>
+nnoremap [SPACE]e :!./%<CR>
 
 " for window mode (in normal) {{{3
-nnoremap [Space]w <C-W>
+nmap [SPACE]w <C-W>
 
 
 " insert mode {{{2
 inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
-inoremap <expr> <CR>    pumvisible() ? "<C-Y>"     : "<CR>"
+inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
 inoremap        <C-]>   <C-O>:
@@ -255,6 +260,8 @@ augroup MyAutoCmd
 
 	"set filetype R for .r (not set to rexx)
 	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
+	"set filetype gnuplot for .plt
+	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
 augroup END
 
 
@@ -262,13 +269,13 @@ augroup END
 augroup HighlightTrailingSpaces
   autocmd!
 
-	autocmd VimEnter,WinEnter,BufNew,BufReadPost,ColorScheme *
-				\ highlight TrailingSpacess guibg=Red ctermbg=Red
-  " NOTE:  help 以外を適応ってどうやるの？
-  " FIXME: help でも反応しちゃってるみたい
-  autocmd VimEnter,WinEnter,BufNew,BufReadPost *
+	autocmd BufEnter,ColorScheme *
+				\  highlight TrailingSpacess guibg=Red ctermbg=Red
+  autocmd BufEnter *
 				\   if &l:filetype != 'help'
 				\ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
+        \ | else
+        \ |  match none
 				\ | endif
 augroup END
 
@@ -277,12 +284,20 @@ augroup END
 " set binary format {{{2
 augroup BinaryXXD
   autocmd!
-  autocmd BufReadPre   *.bin let &binary = 1
-  autocmd BufReadPost  * if &binary | silent %!xxd -g 1
-  autocmd BufReadPost  * set ft=xxd | endif
-  autocmd BufWritePre  * if &binary | %!xxd -r | endif
-  autocmd BufWritePost * if &binary | silent %!xxd -g 1
-  autocmd BufWritePost * set nomod | endif
+  autocmd BufReadPre   *.bin let &l:binary = 1
+
+  autocmd BufReadPost  * if &l:binary
+  autocmd BufReadPost  *   set ft=xxd
+  autocmd BufReadPost  *   silent %!xxd -g 1
+  autocmd BufReadPost  * endif
+
+  autocmd BufWritePre  * if &l:binary
+  autocmd BufWritePre  *   %!xxd -r
+  autocmd BufWritePre  * endif
+
+  autocmd BufWritePost * if &l:binary
+  autocmd BufWritePost *   silent %!xxd -g 1
+  autocmd BufWritePost * endif
 augroup END
 
 
@@ -316,7 +331,7 @@ let g:neocomplcache_snippets_dir      = '$HOME/.vim/snippet'
 let g:neocomplcache_enable_at_startup = 1
 
 " submode {{{2
-" sovle ^W < - + > ...
+" solve ^W < - + > ...
 call submode#enter_with('Window', 'n', '', '<C-W>+')
 call submode#enter_with('Window', 'n', '', '<C-W>-')
 call submode#enter_with('Window', 'n', '', '<C-W>>')
