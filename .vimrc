@@ -136,7 +136,10 @@ nmap <Space> [SPACE]
 nnoremap ; :
 nnoremap : ;
 
-nnoremap Y y$
+nnoremap Y  y$
+nnoremap dl 0d$
+
+nnoremap -- mzgg=G`z
 
 nnoremap j gj
 nnoremap k gk
@@ -153,6 +156,7 @@ nnoremap ,w :up<CR>
 
 " search highlight
 nnoremap / :set hlsearch<CR>/
+nnoremap * :set hlsearch<CR>*
 nnoremap [SPACE]/ :set hlsearch! \| :set hlsearch?<CR>
 
 " fold を展開して，画面の中央にする
