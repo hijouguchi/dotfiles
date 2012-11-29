@@ -50,13 +50,8 @@ set complete=.,w,b,u,t,k
 
 set backup
 set backupext=.bak
-if has("mac")
-  set backupdir=~/.Trash
-  set directory=~/.Trash
-else
-  set backupdir=/tmp
-  set directory=/tmp
-endif
+set backupdir=/tmp
+set directory=/tmp
 
 set formatoptions=nlM1
 
