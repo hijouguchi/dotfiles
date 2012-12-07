@@ -130,9 +130,12 @@ zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-zstyle ':completion:*:*:*' ignore-line true
-zstyle ':completion:*:(cp|mv):*' ignore-line false
-zstyle ':completion:*:*:vim:*' ignored-patterns \
+zstyle ':completion:*:*:*'         ignore-line true
+zstyle ':completion:*:(cp|mv):*'   ignore-line false
+zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gpi'
+zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
+zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
+zstyle ':completion:*:*:vim:*'     ignored-patterns \
   '*.eps' '*.jpg' '*.png' '*.gif' \
   '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
   '*.o' \
