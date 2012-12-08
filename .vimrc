@@ -319,6 +319,7 @@ Bundle 'Align'
 
 Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
+Bundle 'git://github.com/thinca/vim-ref.git'
 
 
 filetype plugin indent on

@@ -43,6 +43,7 @@ export EDITOR=vim
 
 eval `dircolors -b`
 
+disable r # r で R が起動できるように
 setopt prompt_subst
 setopt no_beep
 setopt equals
@@ -142,7 +143,7 @@ zstyle ':completion:*:*:vim:*'     ignored-patterns \
   '*~'
 
 zstyle ':completion:*:match:*' original only
-zstyle ':completion:*' ignore-parents parent pwd
+zstyle ':completion:*' ignore-parents parent pwd ..
 
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:*:*:processec' force-list always
@@ -182,9 +183,9 @@ bindkey -M menuselect '^n'    down-line-or-history
 bindkey -M menuselect '^p'    up-line-or-history
 
 
-# autoload -U  edit-command-line
-# zle -N edit-command-line
-# bindkey               '^e'   edit-command-line
+autoload -U  edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd e edit-command-line
 
 bindkey               '^x'    _complete_help
 

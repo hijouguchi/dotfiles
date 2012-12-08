@@ -49,11 +49,11 @@ bind  v split -v
 bind y eval copy "stuff Y"
 
 # make invalid keybind side effects for edit mode
-bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v'
+bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g'
 
 # copy mode {{{2
 # migrated to copy mode after resister the keybind, y, ^v, of V
-bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" copy
+bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" 'bindkey -m -t g stuff gw^f^b' copy
 
 
 
@@ -105,13 +105,16 @@ bind -c window_resize w eval 'command -c window_region' 'echo "region window"'
 
 
 # layout {{{2
-bind                  ^l eval  'command -c layout_region' 'layout show'
-bind -c layout_region  n eval  'layout new'  'layout show'
-bind -c layout_region ^n eval  'layout next' 'command -c layout_region' 'layout show'
-bind -c layout_region ^p eval  'layout prev' 'command -c layout_region' 'layout show'
+bind                  ^l eval  'command -c layout_region' 'echo "layout mode [\^l:list n:new \^n:next \^p:prev \^k:kill s:select]"'
+bind -c layout_region ^l eval  'command -c layout_region' 'layout show'
+bind -c layout_region  n eval  'layout new'    'layout show'
+bind -c layout_region ^n eval  'layout next'   'command -c layout_region' 'layout show'
+bind -c layout_region ^p eval  'layout prev'   'command -c layout_region' 'layout show'
+bind -c layout_region ^k eval  'layout remove' 'command -c layout_region' 'layout show'
 bind -c layout_region  A colon 'layout title '
 bind -c layout_region  q eval  'layout remove'   'layout show'
-bind -c layout_region  s eval  'layout select'   'layout show'
+bind -c layout_region  k eval  'layout remove'   'layout show'
+bind -c layout_region  s eval  'layout show'     'layout select'
 bind -c layout_region  0 eval  'layout select 0' 'layout show'
 bind -c layout_region  1 eval  'layout select 1' 'layout show'
 bind -c layout_region  2 eval  'layout select 2' 'layout show'
@@ -124,10 +127,10 @@ bind -c layout_region  8 eval  'layout select 8' 'layout show'
 bind -c layout_region  9 eval  'layout select 9' 'layout show'
 
 
-# group
-bind                 ^g eval 'command -c group_region' 'echo "group mode"'
-bind -c group_region  n eval 'screen //group' 'title '
-bind -c group_region  t eval 'group '
+# # group
+# bind                 ^g eval 'command -c group_region' 'echo "group mode"'
+# bind -c group_region  n eval 'screen //group' 'title '
+# bind -c group_region  t eval 'group '
 
 
 # other source {{{1
@@ -139,6 +142,10 @@ bind -c group_region  t eval 'group '
 # source $HOME/dotfiles/keymap.screenrc
 # TEST OPTIONS {{{1
 
+# make default layout
+layout new 0:orig
+# screen -t orig //group
+# screen
 
 # END {{{1
 # vim:smarttab expandtab :
