@@ -261,6 +261,8 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
 	"set filetype gnuplot for .plt
 	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
+  " set filetype spice for .mdl
+	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
 augroup END
 
 
