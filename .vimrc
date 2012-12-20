@@ -370,5 +370,20 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
+function! SubLoop(...) "{{{2
+  let l:line = getline(".")
+  let l:array = []
+
+  for i in range(a:2, a:3)
+    let l:tmp = substitute(l:line, a:1, i, "g")
+    call add(l:array, l:tmp)
+
+    unlet i
+  endfor
+  call append(line("."), l:array)
+
+endfunction
+command! -nargs=* SubLoop call SubLoop(<f-args>)
+
 " END {{{1
 " vim:fdm=marker:et
