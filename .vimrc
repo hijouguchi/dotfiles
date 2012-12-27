@@ -370,17 +370,7 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
-command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>) "{{{2
-" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
-" for each lines in [range] replace a match of {pattern} with
-" {start_num}...{end_num}
-"
-" foo Z bar " befour
-"
-" Foo 0 bar " after
-" Foo 1 bar
-" ...
-function! SubstituteLines(...)
+function! SubstituteInsertLinesLines(...) "{{{2
   if(a:0 != 5)
     return 1
   endif
@@ -404,6 +394,16 @@ function! SubstituteLines(...)
   call append(l:line2, l:array)
   execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
 endfunction
+command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>)
+" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
+" for each lines in [range] replace a match of {pattern} with
+" {start_num}...{end_num}
+"
+" foo Z bar " befour
+"
+" Foo 0 bar " after
+" Foo 1 bar
+" ...
 
 
 " END {{{1
