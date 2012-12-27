@@ -370,26 +370,40 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
-function! SubLoop(...) "{{{2
-  let l:num = line(".")
-  let l:col = col(".")
-  let l:line = getline(".")
+command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>) "{{{2
+" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
+" for each lines in [range] replace a match of {pattern} with
+" {start_num}...{end_num}
+"
+" foo Z bar " befour
+"
+" Foo 0 bar " after
+" Foo 1 bar
+" ...
+function! SubstituteLines(...)
+  if(a:0 != 5)
+    return 1
+  endif
+
+  let l:line1   = a:1
+  let l:line2   = a:2
+  let l:pattern = a:3
+  let l:s_num   = a:4
+  let l:e_num   = a:5
+
+  let l:lines = getline(l:line1, l:line2)
   let l:array = []
 
-  for i in range(a:2, a:3)
-    let l:tmp = substitute(l:line, a:1, i, "g")
-    call add(l:array, l:tmp)
-
-    unlet i
+  for l:i in range(l:s_num + 1, l:e_num)
+    for l:line in l:lines
+      let l:tmp = substitute(l:line, l:pattern, l:i, "g")
+      call add(l:array, l:tmp)
+    endfor
   endfor
-  call append(line("."), l:array)
-  call cursor(l:num, 0)
-  normal "_dd
-  call cursor(l:num + len(l:array), l:col)
 
-
+  call append(l:line2, l:array)
+  execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
 endfunction
-command! -nargs=* SubLoop call SubLoop(<f-args>)
 
 
 " END {{{1
