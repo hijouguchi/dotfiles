@@ -218,6 +218,9 @@ command! InsertEnvAndCoding
       \ ''
       \ ])
 
+command! InsertDate
+      \ call append(".", strftime("%Y/%m/%d"))
+
 " change a character code {{{2
 command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
 command! -bang Utf8   e<bang> ++enc=utf-8
@@ -322,6 +325,7 @@ Bundle 'Align'
 Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 Bundle 'git://github.com/thinca/vim-ref.git'
+" Bundle 'vimwiki'
 
 
 filetype plugin indent on
@@ -370,7 +374,7 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
-function! SubstituteInsertLinesLines(...) "{{{2
+function! SubstituteInsertLines(...) "{{{2
   if(a:0 != 5)
     return 1
   endif
