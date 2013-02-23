@@ -48,6 +48,8 @@ bind  v split -v
 
 bind y eval copy "stuff Y"
 
+bind A eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
+
 # make invalid keybind side effects for edit mode
 bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g'
 

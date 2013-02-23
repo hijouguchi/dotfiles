@@ -102,7 +102,7 @@ zstyle ':vcs_info:*' max-exports 4
 zstyle ':vcs_info:*' stagedstr   'index' # インデックスに追加された場合に表示される文字列
 zstyle ':vcs_info:*' unstagedstr 'work'  # 作業コピーに変更があった場合に表示される文字列
 zstyle ':vcs_info:*' formats       '[%b] '    '[%s:%r]:%S' '%u' '%c'
-zstyle ':vcs_info:*' actionformats '[%b|%{[31;1m%}%a%{[0m%}] ' '[%s:%r]:%S' '%u' '%c'
+zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
 
 
 
@@ -190,6 +190,7 @@ bindkey -M vicmd e edit-command-line
 bindkey               '^x'    _complete_help
 
 # Alias {{{1
+alias l='ls -hF   --color=auto'
 alias ls='ls -hF   --color=auto'
 alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'

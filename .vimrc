@@ -218,6 +218,9 @@ command! InsertEnvAndCoding
       \ ''
       \ ])
 
+command! InsertDate
+      \ call append(".", strftime("%Y/%m/%d"))
+
 " change a character code {{{2
 command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
 command! -bang Utf8   e<bang> ++enc=utf-8
@@ -261,6 +264,8 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
 	"set filetype gnuplot for .plt
 	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
+  " set filetype spice for .mdl
+	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
 augroup END
 
 
@@ -320,6 +325,7 @@ Bundle 'Align'
 Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 Bundle 'git://github.com/thinca/vim-ref.git'
+" Bundle 'vimwiki'
 
 filetype plugin indent on
 " neocomplcache {{{2
@@ -377,5 +383,42 @@ function! Man(...) "{{{2
   setlocal readonly
 endfunction
 command! -nargs=+ Man call Man(<f-args>)
+
+
+function! SubstituteInsertLines(...) "{{{2
+  if(a:0 != 5)
+    return 1
+  endif
+
+  let l:line1   = a:1
+  let l:line2   = a:2
+  let l:pattern = a:3
+  let l:s_num   = a:4
+  let l:e_num   = a:5
+
+  let l:lines = getline(l:line1, l:line2)
+  let l:array = []
+
+  for l:i in range(l:s_num + 1, l:e_num)
+    for l:line in l:lines
+      let l:tmp = substitute(l:line, l:pattern, l:i, "g")
+      call add(l:array, l:tmp)
+    endfor
+  endfor
+
+  call append(l:line2, l:array)
+  execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
+endfunction
+command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>)
+" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
+" for each lines in [range] replace a match of {pattern} with
+" {start_num}...{end_num}
+"
+" foo Z bar " befour
+"
+" Foo 0 bar " after
+" Foo 1 bar
+" ...
+
 " END {{{1
 " vim:fdm=marker:et
