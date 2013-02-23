@@ -321,7 +321,6 @@ Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 Bundle 'git://github.com/thinca/vim-ref.git'
 
-
 filetype plugin indent on
 " neocomplcache {{{2
 " set temporary directory
@@ -368,5 +367,15 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
+function! Man(...) "{{{2
+  execute "topleft new " . a:1
+  silent! execute "0r!man " . a:1
+  setlocal nolist
+  setlocal nonumber
+  call cursor(1, 1)
+  setlocal nomodified
+  setlocal readonly
+endfunction
+command! -nargs=+ Man call Man(<f-args>)
 " END {{{1
 " vim:fdm=marker:et
