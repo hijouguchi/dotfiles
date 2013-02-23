@@ -190,6 +190,7 @@ bindkey -M vicmd e edit-command-line
 bindkey               '^x'    _complete_help
 
 # Alias {{{1
+alias l='ls -hF   --color=auto'
 alias ls='ls -hF   --color=auto'
 alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
