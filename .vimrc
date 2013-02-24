@@ -218,6 +218,9 @@ command! InsertEnvAndCoding
       \ ''
       \ ])
 
+command! InsertDate
+      \ call append(".", strftime("%Y/%m/%d"))
+
 " change a character code {{{2
 command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
 command! -bang Utf8   e<bang> ++enc=utf-8
@@ -322,7 +325,7 @@ Bundle 'Align'
 Bundle 'git://github.com/Shougo/neocomplcache.git'
 Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 Bundle 'git://github.com/thinca/vim-ref.git'
-
+" Bundle 'vimwiki'
 
 filetype plugin indent on
 " neocomplcache {{{2
@@ -370,17 +373,19 @@ function! InsertTabWrapper() "{{{2
 endfunction
 
 
-command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>) "{{{2
-" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
-" for each lines in [range] replace a match of {pattern} with
-" {start_num}...{end_num}
-"
-" foo Z bar " befour
-"
-" Foo 0 bar " after
-" Foo 1 bar
-" ...
-function! SubstituteInsertLines(...)
+function! Man(...) "{{{2
+  execute "topleft new " . a:1
+  silent! execute "0r!man " . a:1
+  setlocal nolist
+  setlocal nonumber
+  call cursor(1, 1)
+  setlocal nomodified
+  setlocal readonly
+endfunction
+command! -nargs=+ Man call Man(<f-args>)
+
+
+function! SubstituteInsertLines(...) "{{{2
   if(a:0 != 5)
     return 1
   endif
@@ -404,7 +409,16 @@ function! SubstituteInsertLines(...)
   call append(l:line2, l:array)
   execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
 endfunction
-
+command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>)
+" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
+" for each lines in [range] replace a match of {pattern} with
+" {start_num}...{end_num}
+"
+" foo Z bar " befour
+"
+" Foo 0 bar " after
+" Foo 1 bar
+" ...
 
 " END {{{1
 " vim:fdm=marker:et

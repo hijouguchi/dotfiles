@@ -7,3 +7,5 @@ function! s:InsertIncludeGuard()
 endfunction
 
 command! InsertIncludeGuard call <SID>InsertIncludeGuard()
+
+nnoremap <buffer> [Space]m make
