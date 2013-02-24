@@ -380,7 +380,7 @@ command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1
 " Foo 0 bar " after
 " Foo 1 bar
 " ...
-function! SubstituteLines(...)
+function! SubstituteInsertLines(...)
   if(a:0 != 5)
     return 1
   endif
