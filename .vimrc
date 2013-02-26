@@ -312,6 +312,18 @@ augroup BinaryXXD
   autocmd BufWritePost * endif
 augroup END
 
+" foldmethod が重い時の対処 {{{2
+" see also: http://d.hatena.ne.jp/thinca/20110523/1306080318
+augroup foldmethod-expr
+  autocmd!
+  autocmd InsertEnter * if &l:foldmethod ==# 'expr'
+  \                   |   let b:foldinfo = [&l:foldmethod, &l:foldexpr]
+  \                   |   setlocal foldmethod=manual foldexpr=0
+  \                   | endif
+  autocmd InsertLeave * if exists('b:foldinfo')
+  \                   |   let [&l:foldmethod, &l:foldexpr] = b:foldinfo
+  \                   | endif
+augroup END
 
 " plugin {{{1
 " bundle settings {{{2
