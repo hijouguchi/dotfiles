@@ -122,7 +122,8 @@ set statusline+=\ %3cC,%3l/%LL\ %P
 " keymap settings {{{1
 " default map {{{2
 " do not show help when press F1
-noremap <F1> <NOP>
+noremap  <F1> <NOP>
+inoremap <F1> <NOP>
 
 
 " normal node {{{2
@@ -266,6 +267,14 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
+
+
+  " verilog indent (see also :help verilog)
+  autocmd BufReadPost * if exists("b:current_syntax")
+  autocmd BufReadPost *   if b:current_syntax == "verilog"
+  autocmd BufReadPost *     let b:verilog_indent_modules = 1
+  autocmd BufReadPost *   endif
+  autocmd BufReadPost * endif
 augroup END
 
 
@@ -304,6 +313,18 @@ augroup BinaryXXD
   autocmd BufWritePost * endif
 augroup END
 
+" foldmethod が重い時の対処 {{{2
+" see also: http://d.hatena.ne.jp/thinca/20110523/1306080318
+augroup foldmethod-expr
+  autocmd!
+  autocmd InsertEnter * if &l:foldmethod ==# 'expr'
+  \                   |   let b:foldinfo = [&l:foldmethod, &l:foldexpr]
+  \                   |   setlocal foldmethod=manual foldexpr=0
+  \                   | endif
+  autocmd InsertLeave * if exists('b:foldinfo')
+  \                   |   let [&l:foldmethod, &l:foldexpr] = b:foldinfo
+  \                   | endif
+augroup END
 
 " plugin {{{1
 " bundle settings {{{2
