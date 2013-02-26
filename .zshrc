@@ -16,7 +16,7 @@ _screen_exec() {
 case "$TERM" in
   *xterm*|rxvt|(dt|k|E)term)
     #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-    exec screen -D -RR -e"^Gg"
+    [[ -x `which screen` ]] && exec screen -D -RR -e"^Gg"
     ;;
   linux)
     [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
@@ -271,7 +271,7 @@ _set_screen_title() {
   less|tail|man) title_name="$1" ;;
   *) title_name="$command_name" ;;
   esac
-  [[ -n "$title_name" ]] && screen -X title "$title_name"
+  [[ -n "$title_name" ]] && [[ -x `which screen` ]] && screen -X title "$title_name"
 }
 
 
