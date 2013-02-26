@@ -266,6 +266,14 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
+
+
+  " verilog indent (see also :help verilog)
+  autocmd BufReadPost * if exists("b:current_syntax")
+  autocmd BufReadPost *   if b:current_syntax == "verilog"
+  autocmd BufReadPost *     let b:verilog_indent_modules = 1
+  autocmd BufReadPost *   endif
+  autocmd BufReadPost * endif
 augroup END
 
 
