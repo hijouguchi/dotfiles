@@ -122,7 +122,8 @@ set statusline+=\ %3cC,%3l/%LL\ %P
 " keymap settings {{{1
 " default map {{{2
 " do not show help when press F1
-noremap <F1> <NOP>
+noremap  <F1> <NOP>
+inoremap <F1> <NOP>
 
 
 " normal node {{{2
