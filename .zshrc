@@ -137,7 +137,7 @@ zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gpi'
 zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
 zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
 zstyle ':completion:*:*:vim:*'     ignored-patterns \
-  '*.eps' '*.jpg' '*.png' '*.gif' \
+  '*.jpg' '*.png' '*.gif' \
   '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
   '*.o' \
   '*~'
