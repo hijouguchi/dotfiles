@@ -14,9 +14,9 @@ _screen_exec() {
 }
 
 case "$TERM" in
-  *xterm*|rxvt|(dt|k|E)term)
+  *xterm*|rxvt|(dt|k|E|ml)term)
     #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-    exec screen -D -RR -e"^Gg"
+    [[ -x `which screen` ]] && exec screen -D -RR -e"^Gg"
     ;;
   linux)
     [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
@@ -50,6 +50,7 @@ setopt equals
 setopt case_glob
 setopt csh_junkie_loops
 setopt transient_rprompt
+setopt multios
 
 REPORTTIME=30
 TIMEFMT="\
@@ -137,7 +138,7 @@ zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gpi'
 zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
 zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
 zstyle ':completion:*:*:vim:*'     ignored-patterns \
-  '*.eps' '*.jpg' '*.png' '*.gif' \
+  '*.jpg' '*.png' '*.gif' \
   '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
   '*.o' \
   '*~'
@@ -272,7 +273,7 @@ _set_screen_title() {
   less|tail|man) title_name="$1" ;;
   *) title_name="$command_name" ;;
   esac
-  [[ -n "$title_name" ]] && screen -X title "$title_name"
+  [[ -n "$title_name" ]] && [[ -x `which screen` ]] && screen -X title "$title_name"
 }
 
 
