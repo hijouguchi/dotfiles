@@ -50,6 +50,7 @@ setopt equals
 setopt case_glob
 setopt csh_junkie_loops
 setopt transient_rprompt
+setopt multios
 
 REPORTTIME=30
 TIMEFMT="\
@@ -137,7 +138,7 @@ zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gpi'
 zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
 zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
 zstyle ':completion:*:*:vim:*'     ignored-patterns \
-  '*.eps' '*.jpg' '*.png' '*.gif' \
+  '*.jpg' '*.png' '*.gif' \
   '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
   '*.o' \
   '*~'
