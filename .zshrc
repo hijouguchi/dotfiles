@@ -50,6 +50,7 @@ setopt equals
 setopt case_glob
 setopt csh_junkie_loops
 setopt transient_rprompt
+setopt multios
 
 REPORTTIME=30
 TIMEFMT="\
