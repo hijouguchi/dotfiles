@@ -10,7 +10,7 @@
 	email = taka13.mac@gmail.com
 [core]
 	editor = vim
-	pager  = nkf | less
+	pager  = lv -c
 [alias]
 	l  = log --pretty=format:\"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset\" --graph
 	s  = status
