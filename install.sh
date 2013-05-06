@@ -2,7 +2,7 @@
 # vim: ft=sh: et
 
 
-if [[ ! -f $HOME/.irbrc ]]     ; then ln -sf $HOME/dotfiles/.irbrc     $HOME/.irbrc                         ; fi
+if [[ ! -f $HOME/.pryrc ]]     ; then ln -sf $HOME/dotfiles/.pryrc     $HOME/.pryrc                         ; fi
 if [[ ! -f $HOME/.gitconfig ]] ; then ln -sf $HOME/dotfiles/.gitconfig $HOME/.gitconfig                     ; fi
 if [[ ! -f $HOME/.vimrc ]]     ; then ln -sf $HOME/dotfiles/.vimrc     $HOME/.vimrc                         ; fi
 if [[ ! -f $HOME/.vim ]]       ; then ln -sf $HOME/dotfiles/.vim       $HOME/.vim                           ; fi
