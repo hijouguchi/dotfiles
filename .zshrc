@@ -223,6 +223,9 @@ alias -g T2='2>&1 | tee'
 alias -g L2='2>&1 | less'
 
 
+alias webrick="ruby -rwebrick -e 'WEBrick::HTTPServer.new({:DocumentRoot => \"./\", :Port => 10080}).start'"
+
+
 # Tiny function {{{1
 # for preexec, precmd, and chpwd {{{2
 
