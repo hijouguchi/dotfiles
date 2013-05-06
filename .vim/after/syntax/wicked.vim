@@ -29,7 +29,7 @@ syntax match wickedPre "^\s*>\s.*$"
 
 " table
 syntax match  wickedTableHeader    "\*[^|]*" contained
-syntax match  wickedTableElement   "\*\@![^|]*"   contained
+syntax match  wickedTableElement   "\(\s*\*\)\@![^|]*"   contained
 syntax region wickedTable          start="^|" end="$" oneline contains=wickedTableHeader,wickedTableElement
 
 " ソースコード
