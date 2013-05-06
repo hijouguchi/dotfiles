@@ -2,8 +2,8 @@
 " module hoge;
 "		input ...
 let b:verilog_indent_modules = 1
-setlocal foldmethod=expr
-setlocal foldexpr=MyVerilogFold(v:lnum)
+" setlocal foldmethod=expr
+" setlocal foldexpr=MyVerilogFold(v:lnum)
 
 
 function! MyVerilogFold(lnum)

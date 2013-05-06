@@ -259,6 +259,8 @@ augroup MyAutoCmd
         \ | setlocal omnifunc=syntaxcomplete#Complete
         \ | endif
 
+  autocmd BufNewFile * setlocal expandtab
+
 
 
 	"set filetype R for .r (not set to rexx)
