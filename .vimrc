@@ -397,8 +397,15 @@ endfunction
 
 
 function! Man(...) "{{{2
-  execute "topleft new " . a:1
-  silent! execute "0r!man " . a:1
+  if(a:0 == 2)
+    execute "topleft new " . a:2
+    silent! execute "0r!man " . a:1 . ' ' . a:2
+  else
+    execute "topleft new " . a:1
+    silent! execute "0r!man " . a:1
+  endif
+
+  silent! execute '%s/.//g'
   setlocal nolist
   setlocal nonumber
   call cursor(1, 1)
