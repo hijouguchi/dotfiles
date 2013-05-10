@@ -182,7 +182,7 @@ inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
 inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-inoremap        <C-]>   <C-O>:
+" inoremap        <C-]>   <C-O>:
 
 imap		<C-K> <Plug>(neocomplcache_snippets_expand)
 smap    <C-k> <Plug>(neocomplcache_snippets_expand)
@@ -212,15 +212,20 @@ cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
 
 " command {{{1
 " default commands {{{2
-command! InsertEnvAndCoding
-      \ call append(0, [
-      \ '#!/usr/bin/env ' . &l:filetype,
-      \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
-      \ ''
-      \ ])
+function! InsertEnvAndCoding()
+  if(! exists('b:current_env'))
+    let b:current_env = '#!/usr/bin/env ' . &l:filetype
+  endif
+    call append(0, [
+          \ b:current_env,
+          \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
+          \ ''
+          \ ])
+endfunction
+command! InsertEnvAndCoding call InsertEnvAndCoding()
 
-command! InsertDate
-      \ call append(".", strftime("%Y/%m/%d"))
+" command! InsertDate
+"       \ call append(".", strftime("%Y/%m/%d"))
 
 " change a character code {{{2
 command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
@@ -254,29 +259,22 @@ augroup MyAutoCmd
         \ |   setlocal expandtab
         \ | endif
 
+  autocmd BufNewFile * setlocal expandtab
+
   autocmd FileType *
         \   if &l:omnifunc == ''
         \ | setlocal omnifunc=syntaxcomplete#Complete
         \ | endif
 
-  autocmd BufNewFile * setlocal expandtab
-
 
 
 	"set filetype R for .r (not set to rexx)
 	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
-	"set filetype gnuplot for .plt
-	autocmd BufNewFile,BufEnter *.plt setlocal filetype=gnuplot
+	"set filetype octave for .m, .mat (not set to matlab)
+	autocmd BufNewFile,BufEnter *.m,*.mat setlocal filetype=matlab
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
 
-
-  " verilog indent (see also :help verilog)
-  autocmd BufReadPost * if exists("b:current_syntax")
-  autocmd BufReadPost *   if b:current_syntax == "verilog"
-  autocmd BufReadPost *     let b:verilog_indent_modules = 1
-  autocmd BufReadPost *   endif
-  autocmd BufReadPost * endif
 augroup END
 
 
