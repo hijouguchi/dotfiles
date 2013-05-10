@@ -134,7 +134,7 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:*:*'         ignore-line true
 zstyle ':completion:*:(cp|mv):*'   ignore-line false
-zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gpi'
+zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gp'
 zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
 zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
 zstyle ':completion:*:*:vim:*'     ignored-patterns \
