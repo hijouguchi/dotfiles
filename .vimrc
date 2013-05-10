@@ -271,7 +271,7 @@ augroup MyAutoCmd
 	"set filetype R for .r (not set to rexx)
 	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
 	"set filetype octave for .m, .mat (not set to matlab)
-	autocmd BufNewFile,BufEnter *.m,*.mat setlocal filetype=matlab
+	autocmd BufNewFile,BufEnter *.m,*.mat setlocal filetype=octave
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
 

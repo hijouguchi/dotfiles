@@ -1,1 +1,1 @@
-let b:current_env = "#!/usr/bin/env octave -qh"
+let b:current_env = "#!/usr/bin/env octave -qH"
