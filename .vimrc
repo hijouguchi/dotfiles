@@ -275,6 +275,9 @@ augroup MyAutoCmd
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
 
+  " enable QuickFix for grep
+  " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
+  autocmd QuickFixCmdPost *grep* cwindow
 augroup END
 
 
