@@ -6,12 +6,12 @@
 " Anon CVS:		See above site
 " Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
 
-if exists("b:current_syntax") && b:current_syntax == 'eruby'
-  unlet b:current_syntax
-  if exists('b:eruby_subtype')
-    unlet b:eruby_subtype
-  endif
-endif
+" if exists("b:current_syntax") && b:current_syntax == 'eruby'
+"   unlet b:current_syntax
+"   if exists('b:eruby_subtype')
+"     unlet b:eruby_subtype
+"   endif
+" endif
 
 if exists("b:current_syntax")
   finish
