@@ -274,6 +274,8 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.m,*.mat setlocal filetype=octave
   " set filetype spice for .mdl
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
+  " set filetype gnuplot for .gp
+	autocmd BufNewFile,BufEnter *.gp setlocal filetype=gnuplot
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
@@ -377,7 +379,7 @@ function! MyStatusSpec() "{{{2
   let l = []
   if &paste | call add(l, 'paste') | endif
   if &modified | call add(l, '+') | endif
-  if !&modifiable | call add(l, '-') | endif
+  if !&modifiable || &readonly | call add(l, '-') | endif
   if len(&filetype)>0 | call add(l, &filetype) | endif
   call add(l, len(&fenc)>0?&fenc:&enc)
   call add(l, &fileformat)
