@@ -6,6 +6,6 @@ function! s:InsertIncludeGuard()
 	call append(line('$'), ['', '#endif'])
 endfunction
 
-command! InsertIncludeGuard call <SID>InsertIncludeGuard()
+command! -buffer InsertIncludeGuard call <SID>InsertIncludeGuard()
 
 nnoremap <buffer> [Space]m make
