@@ -178,7 +178,7 @@ bindkey -M menuselect '^k'    up-line-or-history
 bindkey -M menuselect '^l'    forward-char
 bindkey -M menuselect '^n'    down-line-or-history
 bindkey -M menuselect '^p'    up-line-or-history
-bindkey -M menuselect '^m'    accept-line
+bindkey -M menuselect '^m'    self-insert
 
 
 autoload -U  edit-command-line
