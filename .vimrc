@@ -341,17 +341,17 @@ call vundle#rc()
 
 
 " help (japanese)
-Bundle 'git://github.com/vim-jp/vimdoc-ja.git'
+Bundle 'https://github.com/vim-jp/vimdoc-ja.git'
 
-Bundle 'git://github.com/kana/vim-ku.git'
+Bundle 'https://github.com/kana/vim-ku.git'
 Bundle "surround.vim"
-Bundle 'git://github.com/kana/vim-submode.git'
+Bundle 'https://github.com/kana/vim-submode.git'
 Bundle 'Align'
 
-Bundle 'git://github.com/Shougo/neocomplcache.git'
-Bundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
-Bundle 'git://github.com/thinca/vim-ref.git'
-Bundle 'git://github.com/kana/vim-smartinput.git'
+Bundle 'https://github.com/Shougo/neocomplcache.git'
+Bundle 'https://github.com/Shougo/neocomplcache-snippets-complete.git'
+Bundle 'https://github.com/thinca/vim-ref.git'
+Bundle 'https://github.com/kana/vim-smartinput.git'
 " Bundle 'vimwiki'
 
 filetype plugin indent on
