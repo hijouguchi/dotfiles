@@ -43,14 +43,9 @@ export EDITOR=vim
 
 eval `dircolors -b`
 
-disable r # r で R が起動できるように
-setopt prompt_subst
-setopt no_beep
-setopt equals
-setopt case_glob
-setopt csh_junkie_loops
-setopt transient_rprompt
-setopt multios
+disable r           # r で R が起動できるように
+setopt prompt_subst # $(...) によるの変数を prompt に表示
+setopt no_beep      # ビープをならさない
 
 REPORTTIME=30
 TIMEFMT="\
@@ -110,12 +105,13 @@ zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
 # completion {{{1
 autoload -U  compinit && compinit -d $HOME/.zsh/zcompdump
 
-setopt complete_in_word
-setopt list_packed
-setopt list_types
-setopt correct
-setopt magic_equal_subst
-setopt always_last_prompt
+#setopt complete_in_word   # 補完時のカーソル位置を保持
+#setopt list_packed        # 補完候補を多く表示させる
+#setopt list_types         # 補完一覧の type を表示
+#setopt correct            # typo してるかチェック
+#setopt magic_equal_subst  # --prefix=... の時に補完が効くように
+#setopt always_last_prompt # 補完時にプロンプトの位置を変えない
+#setopt hist_verify        # 履歴を補完時に，修正できるようにする．
 
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _oldlist _expand _complete _match _prefix _approximate  _list _history
@@ -182,6 +178,7 @@ bindkey -M menuselect '^k'    up-line-or-history
 bindkey -M menuselect '^l'    forward-char
 bindkey -M menuselect '^n'    down-line-or-history
 bindkey -M menuselect '^p'    up-line-or-history
+bindkey -M menuselect '^m'    accept-line
 
 
 autoload -U  edit-command-line
@@ -247,8 +244,9 @@ _type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
 
 
 # here add pre***_functions
+autoload -Uz is-at-least
 preexec_functions=(_type_ls)
-[[ "$ZSH_VERSION[1]" == "5" ]] && precmd_functions=(_make_psvar)
+is-at-least 5.0.0 && precmd_functions=(_make_psvar)
 chpwd_functions=(_echo_pwd)
 
 
