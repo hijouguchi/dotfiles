@@ -39,7 +39,7 @@ bind ^[
 bind  n screen
 bind  p paste .
 bind  q remove
-bind \' eval 'screen //group' 'title '
+bind \' eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
 bind ^k eval '@kill'
 bind ^m monitor
 
