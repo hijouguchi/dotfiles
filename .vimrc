@@ -354,6 +354,8 @@ Bundle 'https://github.com/thinca/vim-ref.git'
 Bundle 'https://github.com/kana/vim-smartinput.git'
 
 Bundle 'https://github.com/thinca/vim-quickrun.git'
+Bundle 'https://github.com/osyo-manga/quickrun-outputter-replace_region.git'
+Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
 " Bundle 'vimwiki'
 
 filetype plugin indent on
@@ -363,6 +365,29 @@ let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
 let g:neocomplcache_snippets_dir      = '$HOME/.vim/snippet'
 " enable neocomplcache
 let g:neocomplcache_enable_at_startup = 1
+
+
+" Quickrun {{{2
+
+let g:quickrun_config = {
+\   "_" : {
+\       "hook/close_buffer/enable_failure" : 1,
+\       "hook/close_buffer/enable_empty_data" : 1,
+\       "outputter" : "multi:buffer:quickfix",
+\       "outputter/buffer/split" : ":topleft",
+\   }
+\}
+
+command! -nargs=* -range=0 -complete=customlist,quickrun#complete
+\   ReplaceRegion
+\   silent! QuickRun
+\       -mode v
+\       -outputter error
+\       -outputter/success replace_region
+\       -outputter/error message
+\       -outputter/message/log 1
+\       <args>
+vnoremap <Space>rp :ReplaceRegion ruby<CR>
 
 " submode {{{2
 " solve ^W < - + > ...
