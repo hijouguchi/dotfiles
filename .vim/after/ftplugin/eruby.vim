@@ -10,6 +10,8 @@ elseif ext2 == 'gp'
   let g:neocomplcache_same_filetype_lists.eruby = 'ruby,gnuplot'
 elseif ext2 == 'sp'
   let g:neocomplcache_same_filetype_lists.eruby = 'ruby,spice'
+elseif ext2 == 'il'
+  let g:neocomplcache_same_filetype_lists.eruby = 'ruby,skill'
 endif
 
 if empty(g:neocomplcache_same_filetype_lists)

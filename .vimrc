@@ -269,13 +269,17 @@ augroup MyAutoCmd
 
 
 	"set filetype R for .r (not set to rexx)
-	autocmd BufNewFile,BufEnter *.r,*.R setlocal filetype=r
+	autocmd BufRead,BufNewFile *.r,*.R set filetype=r
 	"set filetype octave for .m, .mat (not set to matlab)
-	autocmd BufNewFile,BufEnter *.m,*.mat setlocal filetype=octave
+	autocmd BufRead,BufNewFile *.m,*.mat set filetype=octave
   " set filetype spice for .mdl
-	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
+	autocmd BufRead,BufNewFile *.mdl set filetype=spice
   " set filetype gnuplot for .gp
-	autocmd BufNewFile,BufEnter *.gp setlocal filetype=gnuplot
+	autocmd BufRead,BufNewFile *.gp set filetype=gnuplot
+
+  autocmd BufRead,BufNewfile *.v.erb set filetype=eruby.verilog
+  autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
+  autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
