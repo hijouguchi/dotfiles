@@ -55,4 +55,4 @@ endfunction
 
 "nnoremap <Space>e :!erb -T - % > %:t:r<CR>
 "nnoremap <Space>e :call <SID>ErubyPreview()<CR>
-execute 'nnoremap <buffer> <Space>e :QuickRun -outputter/buffer/filetype ' . b:eruby_subtype . '<CR>'
+execute 'nnoremap <buffer> <Space>e :QuickRun -type eruby -outputter/buffer/filetype ' . b:eruby_subtype . '<CR>'
