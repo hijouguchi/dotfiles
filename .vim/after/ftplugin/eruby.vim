@@ -10,6 +10,8 @@ elseif ext2 == 'gp'
   let g:neocomplcache_same_filetype_lists.eruby = 'ruby,gnuplot'
 elseif ext2 == 'sp'
   let g:neocomplcache_same_filetype_lists.eruby = 'ruby,spice'
+elseif ext2 == 'il'
+  let g:neocomplcache_same_filetype_lists.eruby = 'ruby,skill'
 endif
 
 if empty(g:neocomplcache_same_filetype_lists)
@@ -53,4 +55,4 @@ endfunction
 
 "nnoremap <Space>e :!erb -T - % > %:t:r<CR>
 "nnoremap <Space>e :call <SID>ErubyPreview()<CR>
-execute 'nnoremap <buffer> <Space>e :QuickRun -outputter/buffer/filetype ' . b:eruby_subtype . '<CR>'
+execute 'nnoremap <buffer> <Space>e :QuickRun -type eruby -outputter/buffer/filetype ' . b:eruby_subtype . '<CR>'
