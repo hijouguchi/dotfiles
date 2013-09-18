@@ -192,6 +192,9 @@ smap    <C-k> <Plug>(neocomplcache_snippets_expand)
 vnoremap ; :
 vnoremap : ;
 
+vnoremap i I
+vnoremap a A
+
 
 " command line mode {{{2
 " コマンドラインは emacs キーバインドで良い気がする
@@ -276,6 +279,13 @@ augroup MyAutoCmd
 	autocmd BufNewFile,BufEnter *.mdl setlocal filetype=spice
   " set filetype gnuplot for .gp
 	autocmd BufNewFile,BufEnter *.gp setlocal filetype=gnuplot
+
+  autocmd BufRead,BufNewfile *.v.erb set filetype=eruby.verilog
+  autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
+  autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
+
+  " おまじない(modelineで設定されてる時があるので)
+  autocmd BufWinEnter *.v.erb set filetype=eruby.verilog
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
