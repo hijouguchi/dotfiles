@@ -284,10 +284,6 @@ augroup MyAutoCmd
   autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
   autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
 
-  autocmd BufRead,BufNewfile *.v.erb set filetype=eruby.verilog
-  autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
-  autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
-
   " おまじない(modelineで設定されてる時があるので)
   autocmd BufWinEnter *.v.erb set filetype=eruby.verilog
 
