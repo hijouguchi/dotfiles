@@ -359,7 +359,7 @@ Bundle 'https://github.com/kana/vim-submode.git'
 Bundle 'Align'
 
 Bundle 'https://github.com/Shougo/neocomplcache.git'
-Bundle 'https://github.com/Shougo/neocomplcache-snippets-complete.git'
+Bundle 'https://github.com/Shougo/neosnippet'
 Bundle 'https://github.com/thinca/vim-ref.git'
 Bundle 'https://github.com/kana/vim-smartinput.git'
 
