@@ -1,0 +1,9 @@
+snippet    always@
+abbr       always @(posedge clk or negedge xrst)
+    always @(posedge clk or negedge xrst) begin // ${1:#:variable}
+        if(!xrst)
+          $1 <= ${2:1'b0};
+        else${3:TARGET}
+          $1 <= ${4:1'b0};
+    end
+    ${0}

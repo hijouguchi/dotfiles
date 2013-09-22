@@ -143,6 +143,9 @@ nnoremap k gk
 nnoremap q    <NOP>
 nnoremap Q    <NOP>
 
+nnoremap ) t)
+nnoremap ( t(
+
 "help
 noremap <C-H> :help<Space>
 
@@ -184,8 +187,8 @@ inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
 " inoremap        <C-]>   <C-O>:
 
-imap		<C-K> <Plug>(neocomplcache_snippets_expand)
-smap    <C-k> <Plug>(neocomplcache_snippets_expand)
+imap		<C-K> <Plug>(neosnippet_expand_or_jump)
+smap		<C-K> <Plug>(neosnippet_expand_or_jump)
 
 
 " visual mode {{{2
@@ -284,9 +287,6 @@ augroup MyAutoCmd
   autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
   autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
 
-  " おまじない(modelineで設定されてる時があるので)
-  autocmd BufWinEnter *.v.erb set filetype=eruby.verilog
-
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
   autocmd QuickFixCmdPost *grep* cwindow
@@ -372,9 +372,26 @@ filetype plugin indent on
 " neocomplcache {{{2
 " set temporary directory
 let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
-let g:neocomplcache_snippets_dir      = '$HOME/.vim/snippet'
 " enable neocomplcache
 let g:neocomplcache_enable_at_startup = 1
+
+
+
+" neosnippet {{{2
+let g:neosnippet#snippets_directory		= '$HOME/.vim/snippet'
+
+
+
+" vim-smartinput {{{2
+"call smartinput#map_to_trigger('i', '%', '%', '%')
+"call smartinput#define_rule({
+"      \   'at': '<\%#', 'char': '%', 'input': '%%',
+"      \   'filetype': ['eruby.verilog'],
+"      \ })
+"call smartinput#define_rule({
+"      \   'at': '%.*\%#%', 'char': '%', 'input': '',
+"      \   'filetype': ['eruby.verilog'],
+"      \ })
 
 
 " Quickrun {{{2
