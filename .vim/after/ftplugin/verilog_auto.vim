@@ -51,7 +51,13 @@ function! s:verilogAutoGetIO(file)
       let str = substitute(str, ';', '', 'g')     " ; を削除
 
       " FIXME: , で区切られたタイプを考慮していない
-      call add(ports, [type, str, bits])
+      if str =~ ','
+        for str_split in split(str, ',\s*')
+          call add(ports, [type, str_split, bits])
+        endfor
+      else
+        call add(ports, [type, str, bits])
+      endif
     endif
   endfor
 
