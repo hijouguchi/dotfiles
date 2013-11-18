@@ -16,7 +16,7 @@ _screen_exec() {
 case "$TERM" in
   *xterm*|rxvt|(dt|k|E|ml)term)
     #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-    [[ -x `which screen` ]] && exec screen -D -RR -e"^Gg"
+    [[ -x `which screen 2>/dev/null` ]] && exec screen -D -RR -e"^Gg"
     ;;
   linux)
     [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
@@ -32,10 +32,8 @@ export LESS='--ignore-case -R'
 # Basic Settings {{{1
 
 # minimum function
-[[ $OSTYPE == darwin* && -n $(which gdircolors) ]] &&
-  function dircolors() { gdircolors $* }
-[[ $OSTYPE == darwin* && -n $(which gls) ]] &&
-  function ls() { gls $* }
+[[ -x `which gdircolors 2>/dev/null` ]] && function dircolors() { gdircolors $* }
+[[ -x `which gls        2>/dev/null` ]] && function ls() { gls $* }
 
 #export LANG=ja_JP.UTF-8
 export EDITOR=vim
@@ -274,7 +272,7 @@ _set_screen_title() {
   less|tail|man) title_name="$1" ;;
   *) title_name="$command_name" ;;
   esac
-  [[ -n "$title_name" ]] && [[ -x `which screen` ]] && screen -X title "$title_name"
+  [[ -n "$title_name" ]] && [[ -x `which screen 2>/dev/null` ]] && screen -X title "$title_name"
 }
 
 
