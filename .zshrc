@@ -66,7 +66,7 @@ cdpath=($HOME $HOME/work)
 # for history
 HISTSIZE=10000
 SAVEHIST=10000
-HISTFILE=$HOME/.zsh/zhistory
+HISTFILE=$HOME/.history/zhistory
 setopt hist_ignore_all_dups
 setopt inc_append_history
 setopt share_history

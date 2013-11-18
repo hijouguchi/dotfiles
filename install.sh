@@ -1,14 +1,18 @@
-#!/usr/bin/env sh
-# vim: ft=sh: et
+#!/usr/bin/env zsh
+# vim: ft=zsh: et
 
+# ログを置くディレクトリを作る
+mkdir -p $HOME/.history
 
-if [[ ! -f $HOME/.pryrc ]]     ; then ln -sf $HOME/dotfiles/.pryrc     $HOME/.pryrc                         ; fi
-if [[ ! -f $HOME/.gitconfig ]] ; then ln -sf $HOME/dotfiles/.gitconfig $HOME/.gitconfig                     ; fi
-if [[ ! -f $HOME/.vimrc ]]     ; then ln -sf $HOME/dotfiles/.vimrc     $HOME/.vimrc                         ; fi
-if [[ ! -f $HOME/.vim ]]       ; then ln -sf $HOME/dotfiles/.vim       $HOME/.vim                           ; fi
-if [[ ! -f $HOME/.screenrc ]]  ; then ln -sf $HOME/dotfiles/.screenrc  $HOME/.screenrc                      ; fi
-if [[ ! -f $HOME/.zshrc ]]     ; then ln -sf $HOME/dotfiles/.zshrc     $HOME/.zshrc                         ; fi
-if [[ ! -f $HOME/.zshenv ]]    ; then echo 'export FPATH=$HOME/dotfiles/zfunctions:$FPATH' >> $HOME/.zshenv ; fi
+# dotfile を置く
+[[ ! -f $HOME/.pryrc ]]     && ln -sf $HOME/dotfiles/.pryrc     $HOME/.pryrc
+[[ ! -f $HOME/.gitconfig ]] && ln -sf $HOME/dotfiles/.gitconfig $HOME/.gitconfig
+[[ ! -f $HOME/.vimrc ]]     && ln -sf $HOME/dotfiles/.vimrc     $HOME/.vimrc
+[[ ! -f $HOME/.vim ]]       && ln -sf $HOME/dotfiles/.vim       $HOME/.vim
+[[ ! -f $HOME/.screenrc ]]  && ln -sf $HOME/dotfiles/.screenrc  $HOME/.screenrc
+[[ ! -f $HOME/.zshrc ]]     && ln -sf $HOME/dotfiles/.zshrc     $HOME/.zshrc
+[[ ! -f $HOME/.zshenv ]]    && cp     $HOME/dotfiles/zshenv     $HOME/.zshenv
 
-cd dotfiles
+# vim の bundle を持ってくる
+dirname $0 # dotfiles に移動
 git submodule update --init

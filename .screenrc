@@ -13,7 +13,7 @@ vbell           off
 defscrollback   10000
 altscreen       on
 #defmonitor      on
-hardcopydir     "%HOME/screen"
+hardcopydir     "%HOME/.history"
 
 termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color
 termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l' # for resize
