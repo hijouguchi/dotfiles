@@ -45,7 +45,7 @@ function! s:verilogAutoGetIO(file)
       let type = (str =~# '\<input\>') ? 'input' : 'output'
       let bits = matchstr(str, '\[.*\]')
       let str = substitute(str, '\<\(in\|out\)put\>', '', '')
-      let str = substitute(str, 'wire', '', '')   " wire 宣言を削除
+      let str = substitute(str, '\(wire\|reg\)', '', '')   " wire 宣言を削除
       let str = substitute(str, '\[.*\]', '', '') " 配列宣言を削除
       let str = substitute(str, '\s', '', 'g')    " 無駄なスペースを消去
       let str = substitute(str, ';', '', 'g')     " ; を削除
