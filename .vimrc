@@ -134,6 +134,8 @@ nnoremap : ;
 
 nnoremap Y  y$
 nnoremap dl 0d$
+nnoremap d) dt)
+nnoremap d, dt,
 
 nnoremap -- mzgg=G`z
 
@@ -366,6 +368,9 @@ Bundle 'https://github.com/kana/vim-smartinput.git'
 Bundle 'https://github.com/thinca/vim-quickrun.git'
 Bundle 'https://github.com/osyo-manga/quickrun-outputter-replace_region.git'
 Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
+
+Bundle 'https://github.com/kana/vim-textobj-user.git'
+Bundle 'https://github.com/sgur/vim-textobj-parameter.git'
 " Bundle 'vimwiki'
 
 filetype plugin indent on
