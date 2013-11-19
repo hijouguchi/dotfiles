@@ -4,9 +4,12 @@ include Math
 
 class Object
   class Numeric
-    def to_b; format("%#b", self); end
-    def to_o; format("%#o", self); end
-    def to_x; format("%#x", self); end
+    %w[b o x].each do |n| # to_b, to_o, to_x
+      define_method "to_#{n}", lambda {|arg=nil|
+        f = arg ? "%#0#{arg}#{n}" : "%##{n}"
+        format f, self
+      }
+    end
   end
 end
 
