@@ -218,6 +218,12 @@ cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
 
 
+" xmap {{{2
+xmap s  <Plug>VSurround
+xmap gs <Plug>VgSurround
+
+
+
 " command {{{1
 " default commands {{{2
 function! InsertEnvAndCoding()
