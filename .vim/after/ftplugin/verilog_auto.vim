@@ -13,10 +13,11 @@ if !exists(":VerilogAutoInst")
   command VerilogAutoInst call <SID>verilogAutoInst()
 endif
 
-
 function! s:verilogAutoGetIO(file)
-  " [type, port_name, '[lhs:rhs]'] 形式のリストを返す
-  "                    ^^^^^^^^^ この部分はソースコードコピペ
+  " input (wire) [n:0] hoge
+  " wire [n:0] hoge
+  " の部分を取り出す (wire は auto-inst で使用)
+  " [[type, bits, val], ...] の形式で返す
   if bufexists(a:file) != 0
     if bufnr(a:file) == bufnr('%')
       " current buffer
@@ -29,35 +30,36 @@ function! s:verilogAutoGetIO(file)
   else
     let lines = readfile(a:file)
   endif
-  let ports = []
+
+  let ports        = []
+  let l:regexp_io  = '\(input\|output\|inout\|wire\|reg\)\s\+'
+  let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)\?'
+  let l:regexp_arr = '\%(\[\s*\([1-9]\d*\)\s*:\s*0\s*\]\s\+\)\?'
+  let l:regexp_val = '\(\h\w*\)'
+  let l:regexp     = '^\s*' . l:regexp_io . l:regexp_wr
+  let l:regexp     = l:regexp . l:regexp_arr . l:regexp_val
+
+  let l:is_comment = 0
 
   for line in lines
-    let str = line
-
-    " コメントを無視
-    " FIXME: 今のところ '//' スタイルだけ
-    if str =~ '//'
-      let str = substitute(str, '//.*$', '', '')
+    " コメント行を無視する
+    let line = substitute(line, '/\*.\{-}\*/', '', 'g')
+    if l:is_comment
+      if line =~ '\*/'
+        let l:is_comment = 0
+      else
+        continue
+      endif
+    elseif line =~ '/\*'
+      let l:is_comment = 1
+      continue
     endif
 
-    " input, output の行を探す
-    if str =~# '\<\(in\|out\)put\>'
-      let type = (str =~# '\<input\>') ? 'input' : 'output'
-      let bits = matchstr(str, '\[.*\]')
-      let str = substitute(str, '\<\(in\|out\)put\>', '', '')
-      let str = substitute(str, '\(wire\|reg\)', '', '')   " wire 宣言を削除
-      let str = substitute(str, '\[.*\]', '', '') " 配列宣言を削除
-      let str = substitute(str, '\s', '', 'g')    " 無駄なスペースを消去
-      let str = substitute(str, ';', '', 'g')     " ; を削除
+    let l:match = matchlist(line, l:regexp)
 
-      " FIXME: , で区切られたタイプを考慮していない
-      if str =~ ','
-        for str_split in split(str, ',\s*')
-          call add(ports, [type, str_split, bits])
-        endfor
-      else
-        call add(ports, [type, str, bits])
-      endif
+    if !empty(l:match)
+      let l:bits = l:match[2] + 1
+      call add(ports, [l:match[1], l:bits, l:match[3]])
     endif
   endfor
 
@@ -66,124 +68,122 @@ endfunction
 
 
 function! s:verilogAutoArg()
+  let l:pattern     = '/\*\s*autoarg\s*\*/'
   call cursor(1, 1)
-  let lnum = search('/\*AUTOARG\*/', 'e')
-  let ports = <SID>verilogAutoGetIO(expand('%'))
 
-  " インデントと ',' を追加する
-  for i in range(0, len(ports)-1)
-      " FIXME: extendtab 前提で書いた
-      let ports[i] = repeat(' ', indent('.') + &sw) . ports[i][1]
-    if i != len(ports)-1
-      let ports[i] = ports[i] . ','
+  let l:lnum = search(l:pattern, 'e')
+  let l:ports = <SID>verilogAutoGetIO(expand('%'))
+  call filter(l:ports, 'index(["input", "output", "inout"], v:val[0]) >= 0')
+
+
+
+  " ports を成形する
+  let l:tab = repeat(' ', indent(".") + &sw)
+  for i in range(0, len(l:ports)-1)
+    let l:tmp = l:tab . l:ports[i][2]
+
+    if i != len(l:ports)-1
+      let l:tmp = l:tmp . ','
     endif
+
+    let l:ports[i] = l:tmp
   endfor
 
   " AUTOARG に挿入されるようにする
-  let line = split(getline('.'), '/\*AUTOARG\*/')
+  let l:line = split(getline('.'), '/\*\s*autoarg\s*\*/')
   d _
   " FIXME: ');' のインデントが考慮されていない
-  call append(lnum-1, line)
-  call append(lnum, ports)
+  call append(l:lnum-1, l:line)
+  call append(l:lnum, l:ports)
 endfunction
 
 
 function! s:verilogAutoInst()
-  " ports_top: ['type', 'port_name', '[lhs:rhs]', count]
-  let ports_top = []
-
+  " ports_top: ['type', 'port_name', bits]
+  let l:pattern_inst = '/\*\s*autoinst\s*\*/'
+  let l:local_wire   = <SID>verilogAutoGetIO(expand('%'))
+  let l:ports_top    = []
   call cursor(1,1)
-  " AUTOINST が無くなるまで続ける
-  while search('/\*AUTOINST\*/', 'e')
-    let lnum = line('.')
-    let line = substitute(getline('.'), '^\s*', '', '') " 行頭のインデントを削除してから
-    let inst_name = matchstr(line, '\S*')
 
-    let ports_assign = []
+  let l:local_wire = map(l:local_wire, "v:val[2]")
 
-    " ports 取得
+  " autoinst が無くなるまで
+  while search(l:pattern_inst, 'e')
+    let l:num       = line('.')
+    let l:inst_name = matchlist(getline(l:num), '^\s*\(\S\+\)')[1]
+
+    " ports () 取得
     if !filereadable(inst_name . '.v')
       echoerr inst_name . '.v is not exist'
       return
     endif
-    let ports = <SID>verilogAutoGetIO(inst_name . '.v')
+    let l:ports = <SID>verilogAutoGetIO(inst_name . '.v')
+    call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
 
-    " ports_top にマージ
-    for port in ports
-      let port_exist = 0
-      for port_top in ports_top
-        if port_top[1] == port[1]
-          let port_exist = 1
-          let port_top[3] = port_top[3] + 1
+    " autoinst 書き換え
+    let l:indent       = repeat(' ', indent(l:num) + &sw)
+    let l:inst_port    = filter(copy(l:ports), 'index(["input", "output"], v:val[0]) >= 0')
+    call map(l:inst_port, 'l:indent . "." . v:val[2] . "(" . v:val[2] . ")"')
+    for i in range(0, len(l:inst_port)-2)
+      let l:inst_port[i] = l:inst_port[i] . ','
+    endfor
+    let l:line_list    = split(getline(l:num), l:pattern_inst)
+    let l:line_list[1] = repeat(' ', indent(l:num)) . l:line_list[1]
+    d _
+    call append(l:num-1, line_list)
+    call append(l:num, l:inst_port)
+
+
+    " l:local_wire にあれば無視
+    call filter(l:ports, 'index(l:local_wire, v:val[2]) == -1')
+
+    " l:ports_top にマージ
+    for port in l:ports
+      let l:exist = 0
+      for port_top in l:ports_top
+        if port_top[2] == port[2]
+          " 同じ物が見つかったら， wire に書き換え
+          let l:exist = 1
+          let port_top[0] = 'wire'
           break
         endif
       endfor
-
-      if port_exist == 0
-        call add(ports_top, [port[0], port[1], port[2], 1])
+      " 見つからなかった場合は追加
+      if !l:exist
+        call add(l:ports_top, port)
       endif
     endfor
-
-    for i in range(0, len(ports)-1)
-      let str = repeat(' ', indent(lnum)+&sw) . '.' . ports[i][1] . '(' . ports[i][1] . ')'
-      if i != len(ports)-1
-        let str = str . ','
-      endif
-      call add(ports_assign, str)
-    endfor
-
-
-
-    " AUTOINST 書き換え
-    let line_list = split(getline('.'), '/\*AUTOINST\*/')
-    let line_list[1] = repeat(' ', indent(lnum)) . line_list[1]
-    d _
-    call append(lnum-1, line_list)
-    call append(lnum, ports_assign)
-
-    call cursor(1,1)
   endwhile
 
-  " input, output, wire 宣言
-  let ports_input  = []
-  let ports_output = []
-  let ports_wire   = []
-  for port_top in ports_top
-    if port_top[3] > 1
-      call add(ports_wire, port_top[2] . ' ' . port_top[1])
-    elseif port_top[0] == 'input'
-      call add(ports_input, port_top[2] . ' ' . port_top[1])
-    else
-      call add(ports_output, port_top[2] . ' ' . port_top[1])
+  " 宣言追加
+  " input, output, input, wire の順に並ぶように
+  let l:ports_assign = []
+  call extend(l:ports_assign, filter(copy(l:ports_top), 'v:val[0] == "input"'))
+  call extend(l:ports_assign, filter(copy(l:ports_top), 'v:val[0] == "output"'))
+  call extend(l:ports_assign, filter(copy(l:ports_top), 'v:val[0] == "inout"'))
+  call extend(l:ports_assign, filter(copy(l:ports_top), 'v:val[0] == "wire"'))
+
+  let l:pattern_wire = '/\*\s*autowire\s*\*/'
+
+  call cursor(1,1)
+  let l:num = search(l:pattern_wire, 'e')
+
+  let l:indent = repeat(' ', indent('.'))
+
+  for i in range(0, len(l:ports_assign)-1)
+    let l:tmp = l:indent . l:ports_assign[i][0]
+
+    if l:ports_assign[i][1] != 1
+      let l:tmp = l:tmp . ' [' . (l:ports_assign[i][1]-1) . ':0]'
     endif
+
+    let l:tmp = l:tmp . ' ' . l:ports_assign[i][2] . ';'
+
+    let l:ports_assign[i] = l:tmp
   endfor
 
-  " input
-  call cursor(1,1)
-  let lnum = search('/\*AUTOINPUT\*/', 'e')
-  for i in range(0, len(ports_input)-1)
-    let ports_input[i] = repeat(' ', indent(lnum)) . 'input ' . ports_input[i] . ';'
-  endfor
+  call append(l:num, l:ports_assign)
   d _
-  call append(lnum-1, ports_input)
-
-  " output
-  call cursor(1,1)
-  let lnum = search('/\*AUTOOUTPUT\*/', 'e')
-  for i in range(0, len(ports_output)-1)
-    let ports_output[i] = repeat(' ', indent(lnum)) . 'output ' . ports_output[i] . ';'
-  endfor
-  d _
-  call append(lnum-1, ports_output)
-
-  " wire
-  call cursor(1,1)
-  let lnum = search('/\*AUTOWIRE\*/', 'e')
-  for i in range(0, len(ports_wire)-1)
-    let ports_wire[i] = repeat(' ', indent(lnum)) . 'wire ' . ports_wire[i] . ';'
-  endfor
-  d _
-  call append(lnum-1, ports_wire)
 endfunction
 
 let &cpo = s:save_cpo
