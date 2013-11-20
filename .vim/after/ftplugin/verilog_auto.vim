@@ -12,6 +12,9 @@ endif
 if !exists(":VerilogAutoInst")
   command VerilogAutoInst call <SID>verilogAutoInst()
 endif
+if !exists(":VerilogAutoTestTemplate")
+  command -nargs=1 VerilogAutoTestTemplate call <SID>verilogAutoTestTemplate(<q-args>)
+endif
 
 function! s:verilogAutoGetIO(file)
   " input (wire) [n:0] hoge
@@ -35,7 +38,7 @@ function! s:verilogAutoGetIO(file)
   let l:regexp_io  = '\(input\|output\|inout\|wire\|reg\)\s\+'
   let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)\?'
   let l:regexp_arr = '\%(\[\s*\([1-9]\d*\)\s*:\s*0\s*\]\s\+\)\?'
-  let l:regexp_val = '\(\h\w*\)'
+  let l:regexp_val = '\(\h\w*\%(\s*,\s*\h\w*\)*\)'
   let l:regexp     = '^\s*' . l:regexp_io . l:regexp_wr
   let l:regexp     = l:regexp . l:regexp_arr . l:regexp_val
 
@@ -59,7 +62,9 @@ function! s:verilogAutoGetIO(file)
 
     if !empty(l:match)
       let l:bits = l:match[2] + 1
-      call add(ports, [l:match[1], l:bits, l:match[3]])
+      for prt in split(l:match[3], '\s*,\s*')
+        call add(ports, [l:match[1], l:bits, prt])
+      endfor
     endif
   endfor
 
@@ -184,6 +189,27 @@ function! s:verilogAutoInst()
 
   call append(l:num, l:ports_assign)
   d _
+endfunction
+
+function! s:verilogAutoTestTemplate(target)
+  let l:ports = <SID>verilogAutoGetIO(a:target . '.v')
+  let l:inout = filter(copy(l:ports), 'v:val[0] == "inout"')
+  call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
+
+  " l:ports を書き換える
+  " input -> reg, output -> wire
+  for i in range(0, len(l:ports)-1)
+    if     l:ports[i][0] == 'input'
+      let l:ports[i][0] = 'reg'
+    elseif l:ports[i][0] == 'output'
+      let l:ports[i][0] = 'wire'
+    else
+      echoerr l:ports[i][0] . ' is unknown'
+      return 1
+    endif
+  endfor
+
+  echo l:ports
 endfunction
 
 let &cpo = s:save_cpo
