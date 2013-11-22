@@ -1,13 +1,19 @@
-" Vundle settings {{{1
+" First {{{1
 set nocompatible
+" set verbosefile=~/vim.log
+" set verbose=9
+
+
+" Bundle settings {{{1
 filetype off
 
 set runtimepath& runtimepath+=~/.vim/vundle.git
 call vundle#rc()
 
-" Vundle plugins {{{2
+" Bundle plugins {{{2
 
 Bundle 'https://github.com/vim-jp/vimdoc-ja.git'
+Bundle 'https://github.com/kana/vim-smartchr.git'
 Bundle 'Align'
 Bundle 'surround.vim'
 " Bundle 'Zenburn'
@@ -32,15 +38,14 @@ call submode#map('Window', 'n', '', '>', '<C-W>>')
 
 " vim-smartinput {{{3
 Bundle 'https://github.com/kana/vim-smartinput.git'
-Bundle 'https://github.com/kana/vim-smartchr.git'
 
-call smartinput#map_to_trigger('i', '%', '%', '%')
-call smartinput#define_rule({
-      \   'at'       : '<\%#',
-      \   'char'     : '%',
-      \   'input'    : '% %><Left><Left><Left>',
-      \   'filetype' : ['eruby.verilog'],
-      \ })
+" call smartinput#map_to_trigger('i', '%', '%', '%')
+" call smartinput#define_rule({
+"       \   'at'       : '<\%#',
+"       \   'char'     : '%',
+"       \   'input'    : '% %><Left><Left><Left>',
+"       \   'filetype' : ['eruby.verilog'],
+"       \ })
 
 
 " vim-textobj {{{3
@@ -55,13 +60,13 @@ Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
 
 
 let g:quickrun_config = {
-\   "_" : {
-\       "hook/close_buffer/enable_failure" : 1,
-\       "hook/close_buffer/enable_empty_data" : 1,
-\       "outputter" : "multi:buffer:quickfix",
-\       "outputter/buffer/split" : ":topleft",
-\   }
-\}
+      \   "_" : {
+      \       "hook/close_buffer/enable_failure" : 1,
+      \       "hook/close_buffer/enable_empty_data" : 1,
+      \       "outputter" : "multi:buffer:quickfix",
+      \       "outputter/buffer/split" : ":topleft",
+      \   }
+      \}
 
 
 " neocomplecache {{{3
@@ -69,9 +74,22 @@ Bundle 'https://github.com/Shougo/neocomplcache.git'
 Bundle 'https://github.com/Shougo/neosnippet'
 
 " set temporary directory
-let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
+let g:neocomplcache_temporary_dir     = '~/.history/neocon'
 " enable neocomplcache
 let g:neocomplcache_enable_at_startup = 1
+
+" neosnippet snippets directory
+let g:neosnippet#snippets_directory = [
+      \ '~/.vim/snippet',
+      \ ]
+
+
+
+" foldCC {{{3
+Bundle 'https://github.com/LeafCage/foldCC.git'
+" 使い方は autoload/fildCC.vim を参照 (help 無し)
+" let g:foldCCtext_head = 'helo '
+
 
 
 " settings {{{1
@@ -99,6 +117,7 @@ set matchpairs& matchpairs+=<:>
 set smartindent
 set completeopt=menuone,preview
 set formatoptions=nlM1
+set cindent
 
 " complete settings
 "set complete=.,w,b,u,t,i,d,k
@@ -129,6 +148,11 @@ set backupext=.bak
 set backupdir=/tmp
 set directory=/tmp
 
+
+" fold settings
+set foldmethod=marker
+set foldopen=hor,insert,mark,percent,quickfix,undo
+set foldtext=FoldCCtext()
 
 " window settings
 set number
@@ -161,15 +185,25 @@ endfunction "}}}
 " MEMO: 色を確認する場合は， :runtime syntax/colortest.vim を開く
 "       :hilight で，適応されているのが確認できる
 " FIXME: 対応していない端末をどうやって探すか
-set t_Co=16
+set t_Co=256
+
+if exists('s:loaded_my_vimrc')
+  " 設定したい colorscheme において
+  " 指定されなかったグループをデフォルトにする
+  colorscheme default
+endif
 
 colorscheme desert
 
-hi Folded        cterm=bold ctermfg=LightBlue ctermbg=LightGray
-hi Pmenu                    ctermfg=White     ctermbg=DarkGray
-hi PmenuSel      cterm=bold ctermfg=Black     ctermbg=White
-hi PmenuSbar                ctermbg=DarkGray
-hi PmenuThumb               ctermbg=White
+highlight Folded        cterm=bold ctermfg=DarkBlue ctermbg=LightGray
+
+highlight Pmenu         cterm=NONE ctermfg=White     ctermbg=DarkGray
+highlight PmenuSel      cterm=bold ctermfg=LightGray ctermbg=DarkRed
+highlight PmenuSbar                                  ctermbg=DarkGray
+highlight PmenuThumb                                 ctermbg=White
+
+" original highlight group
+highlight TrailingSpacess                            ctermbg=Red
 
 
 
@@ -217,11 +251,11 @@ function! s:insertEnvAndCoding() "{{{
   if(! exists('b:current_env'))
     let b:current_env = '#!/usr/bin/env ' . &l:filetype
   endif
-    call append(0, [
-          \ b:current_env,
-          \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
-          \ ''
-          \ ])
+  call append(0, [
+        \ b:current_env,
+        \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
+        \ ''
+        \ ])
 endfunction "}}}
 
 command! -nargs=* -range SubstituteInsertLines call s:substituteInsertLines(<line1>, <line2>, <f-args>)
@@ -262,14 +296,14 @@ command! -bang Dos    e<bang> ++ff=dos
 
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
-\   ReplaceRegion
-\   silent! QuickRun
-\       -mode v
-\       -outputter error
-\       -outputter/success replace_region
-\       -outputter/error message
-\       -outputter/message/log 1
-\       <args>
+      \   ReplaceRegion
+      \   silent! QuickRun
+      \       -mode v
+      \       -outputter error
+      \       -outputter/success replace_region
+      \       -outputter/error message
+      \       -outputter/message/log 1
+      \       <args>
 
 " autocmd {{{1
 augroup VimrcAutoCmd
@@ -306,9 +340,9 @@ augroup VimrcAutoCmd
   autocmd BufRead,BufNewFile *.mdl     set filetype=spice
   autocmd BufRead,BufNewFile *.gp      set filetype=gnuplot
 
-  autocmd BufRead,BufNewfile *.v.erb   set filetype=eruby.verilog
-  autocmd BufRead,BufNewfile *.sp.erb  set filetype=eruby.spice
-  autocmd BufRead,BufNewfile *.gp.erb  set filetype=eruby.gnuplot
+  autocmd BufRead,BufNewFile *.v.erb   set filetype=eruby.verilog
+  autocmd BufRead,BufNewFile *.sp.erb  set filetype=eruby.spice
+  autocmd BufRead,BufNewFile *.gp.erb  set filetype=eruby.gnuplot
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
@@ -316,22 +350,15 @@ augroup VimrcAutoCmd
 augroup END
 
 
-augroup HighlightTrailingSpaces
-  autocmd!
-
-	autocmd WinEnter,BufEnter,ColorScheme *
-				\  highlight TrailingSpacess ctermbg=Red
-  autocmd WinEnter,BufEnter *
-				\   if &l:filetype != 'help'
-				\ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
-        \ | else
-        \ |  match none
-				\ | endif
-augroup END
-
-" if !exists('s:loaded_my_vimrc')
-"   doautocmd HighlightTrailingSpaces
-" endif
+" augroup HighlightTrailingSpaces
+"   autocmd!
+"   autocmd BufRead,BufNewFile *
+"         \   if &l:filetype == 'help'
+"         \ |   match none
+"         \ | else
+"         \ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
+"         \ | endif
+" augroup END
 
 
 augroup BinaryXXD
@@ -348,8 +375,16 @@ augroup END
 
 " keymap settings {{{1
 
-nmap <Space> [SPACE]
-nmap [SPACE]w <C-W>
+nmap <Space>w <C-W>
+
+nnoremap <Space>bl :buffers<CR>
+nnoremap <Space>bn :bnext<CR>
+nnoremap <Space>bp :bprevious<CR>
+
+for i in range(1, 9)
+  " nnoremap <Space>b0 :buffer 0<CR>
+  execute 'silent! nnoremap <Space>b'. i . ' :buffer ' . i . '<CR>'
+endfor
 
 " 何もさせない
 noremap  <F1> <NOP>
@@ -357,6 +392,7 @@ noremap! <F1> <NOP>
 nnoremap q    <NOP>
 nnoremap Q    <NOP>
 
+" normal mode
 noremap ; :
 noremap : ;
 
@@ -379,7 +415,7 @@ nnoremap -- mzgg=G`z
 " search highlight
 nnoremap / :set hlsearch<CR>/
 nnoremap * :set hlsearch<CR>*
-nnoremap [SPACE]/ :set hlsearch! \| :set hlsearch?<CR>
+nnoremap <Space>/ :set hlsearch! \| :set hlsearch?<CR>
 
 " fold を展開して，画面の中央にする
 nnoremap gg ggzvzz
@@ -387,26 +423,27 @@ nnoremap n  nzvzz
 nnoremap N  Nzvzz
 
 " set paste をトグルする
-nnoremap [SPACE]p :set paste! \| :set paste?<CR>
+nnoremap <Space>p :set paste! \| :set paste?<CR>
 
 " tag jump
 nnoremap <C-N> <C-]>
 nnoremap <C-P> <C-T>
 
-
 " スクリプトを実行してみる
-nnoremap [SPACE]e :!./%<CR>
+" nnoremap <Space>e :!./%<CR>
 
 
-" insert mode
-inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
-inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+" insert, select mode
+inoremap <expr> <Tab>   InsertTabWrapper()
 inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-" inoremap        <C-]>   <C-O>:
+inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 
-imap		<C-K> <Plug>(neosnippet_expand_or_jump)
-smap		<C-K> <Plug>(neosnippet_expand_or_jump)
+imap    <C-K> <Plug>(neosnippet_expand_or_jump)
+smap    <C-K> <Plug>(neosnippet_expand_or_jump)
+
+imap    <C-L> <Plug>(neosnippet_expand)
+smap    <C-L> <Plug>(neosnippet_expand)
 
 " visual mode
 vnoremap i I
@@ -426,9 +463,10 @@ cnoremap <C-N> <down>
 
 " respected from kana
 " Search slashes easily (too lazy to prefix backslashes to slashes)
-cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
-cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
-cnoremap <expr> [  getcmdtype() == '/' ? '\[' : '['
+cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
+cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
+cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
 
 " sorround
 " s, gs を S, gS と等価にさせる
@@ -450,6 +488,18 @@ function! InsertTabWrapper() "{{{
   endif
 endfunction "}}}
 
+
+" Fin. {{{1
+
+if !exists('s:loaded_my_vimrc')
+  let s:loaded_my_vimrc = 1
+endif
+
+set secure
+
+
+
 " __END__ {{{1
-" vim: et fdm=marker
+" vim: et ts=2 sts=2 st=2
+" vim: fdm=marker et
 

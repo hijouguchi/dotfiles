@@ -1,21 +1,17 @@
-" module 内部でインデントを起こす
-" module hoge;
-"		input ...
+setlocal commentstring=\ //%s
+
 let b:verilog_indent_modules = 1
+let b:surround_{char2nr("b")} = "begin \r end"
 
-let g:surround_{char2nr("b")} = "begin \r end"
-
-
-nnoremap <buffer> [SPACE]e <C-U>:!verilator --lint-only %<CR>
-nnoremap <buffer> [SPACE]a :VerilogExpandArray<CR>
+nnoremap <buffer> <Space>e <C-U>:!verilator --lint-only %<CR>
+nnoremap <buffer> <Space>a :VerilogExpandArray<CR>
 inoremap <buffer> <expr> = smartchr#loop(' = ', ' <= ', ' == ', '=')
 
 
 
 " 'input reg [n] hoge [m]' -> 'input reg [n-1:0] hoge [m-1:0]'
-command! -nargs=0 -range=% VerilogExpandArray call VerilogExpandArray(<line1>, <line2>)
-
-function! VerilogExpandArray(line1, line2)
+command! -nargs=0 -range=% VerilogExpandArray call <SID>verilogExpandArray(<line1>, <line2>)
+function! s:verilogExpandArray(line1, line2) "{{{
   " 'input reg [n] hoge [m]' の部分をマッチさせる
   let l:regexp_io  = '\%(\%(input\|output\|inout\)\s\+\)'
   let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)'
@@ -43,4 +39,7 @@ function! VerilogExpandArray(line1, line2)
       endif
     endif
   endfor
-endfunction
+endfunction "}}}
+
+" vim: fdm=marker
+

@@ -1,3 +1,7 @@
+setlocal commentstring=\ //%s
+
+command! -buffer InsertIncludeGuard call <SID>InsertIncludeGuard()
+
 function! s:InsertIncludeGuard()
 	let l:def_str = toupper(expand("%"))
 	let l:def_str = substitute(l:def_str, '\W\+', '_', 'g')
@@ -5,7 +9,3 @@ function! s:InsertIncludeGuard()
 	call append(0, ['#ifndef ' . l:def_str, '#define ' . l:def_str, ''])
 	call append(line('$'), ['', '#endif'])
 endfunction
-
-command! -buffer InsertIncludeGuard call <SID>InsertIncludeGuard()
-
-nnoremap <buffer> [Space]m make

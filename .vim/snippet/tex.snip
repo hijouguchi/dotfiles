@@ -1,0 +1,8 @@
+snippet     figure
+abbr        \begin{figure} ... \end{figure}
+  \begin{figure}[tb]
+    \centering
+    \includegraphics[width=\linewidth]{${1:#path}}
+    \caption{${2:#title}}
+    \label{${3:label}}
+  \end{figure}${0}

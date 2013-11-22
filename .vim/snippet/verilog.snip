@@ -1,9 +1,24 @@
 snippet    always@
 abbr       always @(posedge clk or negedge xrst)
-    always @(posedge clk or negedge xrst) begin // ${1:#:variable}
-        if(!xrst)
-          $1 <= ${2:1'b0};
-        else${3:TARGET}
-          $1 <= ${4:1'b0};
+  always @(posedge clk or negedge xrst) begin // ${1:#:variable} {{{
+    if(!xrst) begin
+      $1 <= ${2:1'b0};
+    end else ${3:TARGET}begin
+      $1 <= ${4:1'b0};
     end
-    ${0}
+  end // }}}${0}
+
+
+snippet     task
+abbr        task
+  task ${1}; // {{{
+    ${2}
+    begin
+      ${3}
+    end
+  endtask // }}}${0}
+
+snippet     module
+abbr        module
+  module ${0:TARGET}
+  endmodule
