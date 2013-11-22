@@ -8,6 +8,7 @@ let g:surround_{char2nr("b")} = "begin \r end"
 
 nnoremap <buffer> [SPACE]e <C-U>:!verilator --lint-only %<CR>
 nnoremap <buffer> [SPACE]a :VerilogExpandArray<CR>
+inoremap <buffer> <expr> = smartchr#loop(' = ', ' <= ', ' == ', '=')
 
 
 
