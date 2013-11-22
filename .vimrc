@@ -1,63 +1,177 @@
-" option {{{1
-" reglar settings {{{2
+" Vundle settings {{{1
 set nocompatible
+filetype off
+
+set runtimepath& runtimepath+=~/.vim/vundle.git
+call vundle#rc()
+
+" Vundle plugins {{{2
+
+Bundle 'https://github.com/vim-jp/vimdoc-ja.git'
+Bundle 'Align'
+Bundle 'surround.vim'
+" Bundle 'Zenburn'
+" Bundle 'https://github.com/kana/vim-ku.git'
+" Bundle 'https://github.com/thinca/vim-ref.git'
+
+
+" vim-submode {{{3
+Bundle 'https://github.com/kana/vim-submode.git'
+
+call submode#enter_with('Window', 'n', '', '<C-W>+')
+call submode#enter_with('Window', 'n', '', '<C-W>-')
+call submode#enter_with('Window', 'n', '', '<C-W>>')
+call submode#enter_with('Window', 'n', '', '<C-W><')
+call submode#leave_with('Window', 'n', '', '<Esc>')
+call submode#map('Window', 'n', '', '-', '<C-W>-')
+call submode#map('Window', 'n', '', '=', '<C-W>+')
+call submode#map('Window', 'n', '', '+', '<C-W>+')
+call submode#map('Window', 'n', '', '<', '<C-W><')
+call submode#map('Window', 'n', '', '>', '<C-W>>')
+
+
+" vim-smartinput {{{3
+Bundle 'https://github.com/kana/vim-smartinput.git'
+Bundle 'https://github.com/kana/vim-smartchr.git'
+
+call smartinput#map_to_trigger('i', '%', '%', '%')
+call smartinput#define_rule({
+      \   'at'       : '<\%#',
+      \   'char'     : '%',
+      \   'input'    : '% %><Left><Left><Left>',
+      \   'filetype' : ['eruby.verilog'],
+      \ })
+
+
+" vim-textobj {{{3
+Bundle 'https://github.com/kana/vim-textobj-user.git'
+Bundle 'https://github.com/sgur/vim-textobj-parameter.git'
+
+
+" vim-quickrun {{{3
+Bundle 'https://github.com/thinca/vim-quickrun.git'
+Bundle 'https://github.com/osyo-manga/quickrun-outputter-replace_region.git'
+Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
+
+
+let g:quickrun_config = {
+\   "_" : {
+\       "hook/close_buffer/enable_failure" : 1,
+\       "hook/close_buffer/enable_empty_data" : 1,
+\       "outputter" : "multi:buffer:quickfix",
+\       "outputter/buffer/split" : ":topleft",
+\   }
+\}
+
+
+" neocomplecache {{{3
+Bundle 'https://github.com/Shougo/neocomplcache.git'
+Bundle 'https://github.com/Shougo/neosnippet'
+
+" set temporary directory
+let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
+" enable neocomplcache
+let g:neocomplcache_enable_at_startup = 1
+
+
+" settings {{{1
+filetype plugin indent on
 syntax enable
 
-set background=dark
 
-filetype plugin indent on
+" ^a, ^x を押したときの増減の挙動
+set nrformats=alpha,hex
 
-set viminfo='100,<50,s10,h,n~/.vim/viminfo
-set history=1000
+" 矩形選択時に文字がないところにもカーソルを移動できるように
+set virtualedit=block
 
-" C の再インデントに影響を与える
+set noerrorbells
+
+
+" indent settings
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set autoindent
 set cinoptions=:0,t0,(0,W1s
+set backspace=indent,eol,start
+set matchpairs& matchpairs+=<:>
+set smartindent
+set completeopt=menuone,preview
+set formatoptions=nlM1
 
-" コマンドライン補完関係
+" complete settings
+"set complete=.,w,b,u,t,i,d,k
+set complete=.,w,b,u,t,k
+
 set wildmenu
 set wildchar=<tab>
 set wildmode=list:longest,full
 
-set autoindent
-set number
-" bs などを押したときのインデント関係の挙動
-set backspace=indent,eol,start
-set matchpairs+=<:>
-" ^a, ^x を押したときの増減の挙動
-set nrformats=alpha,hex
-" 新しい行を作ったときのインデントの挙動
-set smartindent
-" エラー時にベルを鳴らさない
-set noerrorbells
-" fold を有効にする
-" NOTE: ここら辺の設定は ソース中の vim: ... に記述するべき
-set foldmethod=marker
 
-set completeopt=menuone,preview
+" history settings
+set viminfo='100,<50,s10,h,n~/.history/viminfo
+set history=1000
 
-"search option
+
+"search options
 set incsearch
 set ignorecase
 set smartcase
 set wrapscan
 
-set autowrite
 
-set nowritebackup
-
-"set complete=.,w,b,u,t,i,d,k
-set complete=.,w,b,u,t,k
-
-set backup
+" backup options
+" 編集中のみバックアップが存在するように
+set nobackup
+set writebackup
 set backupext=.bak
 set backupdir=/tmp
 set directory=/tmp
 
-set formatoptions=nlM1
 
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
+" window settings
+set number
+set list
+
+
+
+set listchars=tab:\ \ ,eol:.,trail:_
+
+set showcmd
+set showmode
+
+set laststatus=2
+set statusline=%<%f%=
+set statusline+=%{MyStatusSpec()}
+set statusline+=\ %3cC,%3l/%LL\ %P
+
+function! MyStatusSpec() "{{{
+  let l = []
+  if &paste | call add(l, 'paste') | endif
+  if &modified | call add(l, '+') | endif
+  if !&modifiable || &readonly | call add(l, '-') | endif
+  if len(&filetype)>0 | call add(l, &filetype) | endif
+  call add(l, len(&fenc)>0?&fenc:&enc)
+  call add(l, &fileformat)
+  return '[' . join(l, ',') . ']'
+endfunction "}}}
+
+
+" MEMO: 色を確認する場合は， :runtime syntax/colortest.vim を開く
+"       :hilight で，適応されているのが確認できる
+" FIXME: 対応していない端末をどうやって探すか
+set t_Co=16
+
+colorscheme desert
+
+hi Folded        cterm=bold ctermfg=LightBlue ctermbg=LightGray
+hi Pmenu                    ctermfg=White     ctermbg=DarkGray
+hi PmenuSel      cterm=bold ctermfg=Black     ctermbg=White
+hi PmenuSbar                ctermbg=DarkGray
+hi PmenuThumb               ctermbg=White
+
+
 
 "fileencodings {{{2
 
@@ -95,138 +209,11 @@ unlet s:enc_jis
 set fileformats=unix,dos,mac
 set ambiwidth=double
 
-" window settings {{{2
-"
-set t_Co=256
-colorscheme desert
-highlight Pmenu cterm=underline ctermbg=8
-highlight PmenuSel ctermbg=7 ctermfg=0
-highlight PmenuSbar ctermbg=0
-
-"highlight Folded cterm=bold ctermbg=4 ctermfg=7
-highlight Folded cterm=bold ctermbg=7 ctermfg=4
-
-set listchars=tab:\ \ ,eol:.,trail:_
-
-set list
-set showcmd
-set showmode
-
-" for statusline
-set laststatus=2
-set statusline=%<%f%=
-set statusline+=%{MyStatusSpec()}
-set statusline+=\ %3cC,%3l/%LL\ %P
-
-
-" keymap settings {{{1
-" default map {{{2
-" do not show help when press F1
-noremap  <F1> <NOP>
-inoremap <F1> <NOP>
-
-
-" normal node {{{2
-" normal settings {{{3
-nmap <Space> [SPACE]
-nnoremap ; :
-nnoremap : ;
-
-nnoremap Y  y$
-nnoremap dl 0d$
-nnoremap d) dt)
-nnoremap d, dt,
-
-nnoremap -- mzgg=G`z
-
-nnoremap j gj
-nnoremap k gk
-
-nnoremap q    <NOP>
-nnoremap Q    <NOP>
-
-nnoremap ) t)
-nnoremap ( t(
-
-"help
-noremap <C-H> :help<Space>
-
-"save file
-nnoremap ,w :up<CR>
-
-
-" search highlight
-nnoremap / :set hlsearch<CR>/
-nnoremap * :set hlsearch<CR>*
-nnoremap [SPACE]/ :set hlsearch! \| :set hlsearch?<CR>
-
-" fold を展開して，画面の中央にする
-nnoremap gg ggzvzz
-nnoremap n  nzvzz
-nnoremap N  Nzvzz
-
-" set paste をトグルする
-nnoremap [SPACE]p :set paste! \| :set paste?<CR>
-
-" tag ジャンプ
-" next
-nnoremap <C-N> <C-]>
-" previous
-nnoremap <C-P> <C-T>
-
-
-" スクリプトを実行してみる
-nnoremap [SPACE]e :!./%<CR>
-
-" for window mode (in normal) {{{3
-nmap [SPACE]w <C-W>
-
-
-" insert mode {{{2
-inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
-inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
-inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-" inoremap        <C-]>   <C-O>:
-
-imap		<C-K> <Plug>(neosnippet_expand_or_jump)
-smap		<C-K> <Plug>(neosnippet_expand_or_jump)
-
-
-" visual mode {{{2
-vnoremap ; :
-vnoremap : ;
-
-vnoremap i I
-vnoremap a A
-
-
-" command line mode {{{2
-" コマンドラインは emacs キーバインドで良い気がする
-cnoremap <C-B> <left>
-cnoremap <C-F> <right>
-cnoremap <C-A> <Home>
-
-" 補完方向が逆の方がしっくりくるので
-cnoremap <C-P> <up>
-cnoremap <C-N> <down>
-
-
-" respected from kana
-" Search slashes easily (too lazy to prefix backslashes to slashes)
-cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
-cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
-
-
-" xmap {{{2
-xmap s  <Plug>VSurround
-xmap gs <Plug>VgSurround
-
-
 
 " command {{{1
-" default commands {{{2
-function! InsertEnvAndCoding()
+
+command! InsertEnvAndCoding call s:insertEnvAndCoding()
+function! s:insertEnvAndCoding() "{{{
   if(! exists('b:current_env'))
     let b:current_env = '#!/usr/bin/env ' . &l:filetype
   endif
@@ -235,14 +222,35 @@ function! InsertEnvAndCoding()
           \ '# coding: ' . ((&l:fenc!= '') ? &l:fenc : &l:enc),
           \ ''
           \ ])
-endfunction
-command! InsertEnvAndCoding call InsertEnvAndCoding()
+endfunction "}}}
 
-" command! InsertDate
-"       \ call append(".", strftime("%Y/%m/%d"))
+command! -nargs=* -range SubstituteInsertLines call s:substituteInsertLines(<line1>, <line2>, <f-args>)
+function! s:substituteInsertLines(...) "{{{
+  if(a:0 != 5)
+    return 1
+  endif
 
-" change a character code {{{2
-command! -bang DefaultLocale e<bang> ++enc=utf-8 ++ff=unix
+  let l:line1   = a:1
+  let l:line2   = a:2
+  let l:pattern = a:3
+  let l:s_num   = a:4
+  let l:e_num   = a:5
+
+  let l:lines = getline(l:line1, l:line2)
+  let l:array = []
+
+  for l:i in range(l:s_num + 1, l:e_num)
+    for l:line in l:lines
+      let l:tmp = substitute(l:line, l:pattern, l:i, "g")
+      call add(l:array, l:tmp)
+    endfor
+  endfor
+
+  call append(l:line2, l:array)
+  execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
+endfunction "}}}
+
+
 command! -bang Utf8   e<bang> ++enc=utf-8
 command! -bang Euc    e<bang> ++enc=euc-jp
 command! -bang Cp932  e<bang> ++enc=cp932
@@ -253,10 +261,21 @@ command! -bang Mac    e<bang> ++ff=mac
 command! -bang Dos    e<bang> ++ff=dos
 
 
+command! -nargs=* -range=0 -complete=customlist,quickrun#complete
+\   ReplaceRegion
+\   silent! QuickRun
+\       -mode v
+\       -outputter error
+\       -outputter/success replace_region
+\       -outputter/error message
+\       -outputter/message/log 1
+\       <args>
+
 " autocmd {{{1
-" basic autocmd {{{2
-augroup MyAutoCmd
-	autocmd!
+augroup VimrcAutoCmd
+  autocmd!
+
+
   autocmd BufWritePost * if getline(1) =~ "^#!" |
         \ silent! exe "silent! !chmod +x %" | endif
 
@@ -282,18 +301,14 @@ augroup MyAutoCmd
 
 
 
-	"set filetype R for .r (not set to rexx)
-	autocmd BufRead,BufNewFile *.r,*.R set filetype=r
-	"set filetype octave for .m, .mat (not set to matlab)
-	autocmd BufRead,BufNewFile *.m,*.mat set filetype=octave
-  " set filetype spice for .mdl
-	autocmd BufRead,BufNewFile *.mdl set filetype=spice
-  " set filetype gnuplot for .gp
-	autocmd BufRead,BufNewFile *.gp set filetype=gnuplot
+  autocmd BufRead,BufNewFile *.r,*.R   set filetype=r
+  autocmd BufRead,BufNewFile *.m,*.mat set filetype=octave
+  autocmd BufRead,BufNewFile *.mdl     set filetype=spice
+  autocmd BufRead,BufNewFile *.gp      set filetype=gnuplot
 
-  autocmd BufRead,BufNewfile *.v.erb set filetype=eruby.verilog
-  autocmd BufRead,BufNewfile *.sp.erb set filetype=eruby.spice
-  autocmd BufRead,BufNewfile *.gp.erb set filetype=eruby.gnuplot
+  autocmd BufRead,BufNewfile *.v.erb   set filetype=eruby.verilog
+  autocmd BufRead,BufNewfile *.sp.erb  set filetype=eruby.spice
+  autocmd BufRead,BufNewfile *.gp.erb  set filetype=eruby.gnuplot
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
@@ -301,13 +316,12 @@ augroup MyAutoCmd
 augroup END
 
 
-" display trailing spaces {{{2
 augroup HighlightTrailingSpaces
   autocmd!
 
-	autocmd BufEnter,ColorScheme *
-				\  highlight TrailingSpacess guibg=Red ctermbg=Red
-  autocmd BufEnter *
+	autocmd WinEnter,BufEnter,ColorScheme *
+				\  highlight TrailingSpacess ctermbg=Red
+  autocmd WinEnter,BufEnter *
 				\   if &l:filetype != 'help'
 				\ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
         \ | else
@@ -315,145 +329,117 @@ augroup HighlightTrailingSpaces
 				\ | endif
 augroup END
 
+" if !exists('s:loaded_my_vimrc')
+"   doautocmd HighlightTrailingSpaces
+" endif
 
 
-" set binary format {{{2
 augroup BinaryXXD
   autocmd!
-  autocmd BufReadPre   *.bin let &l:binary = 1
+  autocmd BufReadPre   *.bin set binary
 
   autocmd BufReadPost  * if &l:binary
   autocmd BufReadPost  *   set ft=xxd
+  autocmd BufReadPost  *   set readonly
   autocmd BufReadPost  *   silent %!xxd -g 1
   autocmd BufReadPost  * endif
-
-  autocmd BufWritePre  * if &l:binary
-  autocmd BufWritePre  *   %!xxd -r
-  autocmd BufWritePre  * endif
-
-  autocmd BufWritePost * if &l:binary
-  autocmd BufWritePost *   silent %!xxd -g 1
-  autocmd BufWritePost * endif
 augroup END
 
-" foldmethod が重い時の対処 {{{2
-" see also: http://d.hatena.ne.jp/thinca/20110523/1306080318
-augroup foldmethod-expr
-  autocmd!
-  autocmd InsertEnter * if &l:foldmethod ==# 'expr'
-  \                   |   let b:foldinfo = [&l:foldmethod, &l:foldexpr]
-  \                   |   setlocal foldmethod=manual foldexpr=0
-  \                   | endif
-  autocmd InsertLeave * if exists('b:foldinfo')
-  \                   |   let [&l:foldmethod, &l:foldexpr] = b:foldinfo
-  \                   | endif
-augroup END
 
-" plugin {{{1
-" bundle settings {{{2
-" see also http://vim-users.jp/2011/04/hack215/
-filetype off
+" keymap settings {{{1
 
-set rtp+=~/.vim/vundle.git/
-call vundle#rc()
+nmap <Space> [SPACE]
+nmap [SPACE]w <C-W>
 
+" 何もさせない
+noremap  <F1> <NOP>
+noremap! <F1> <NOP>
+nnoremap q    <NOP>
+nnoremap Q    <NOP>
 
-" help (japanese)
-Bundle 'https://github.com/vim-jp/vimdoc-ja.git'
+noremap ; :
+noremap : ;
 
-Bundle 'https://github.com/kana/vim-ku.git'
-Bundle "surround.vim"
-Bundle 'https://github.com/kana/vim-submode.git'
-Bundle 'Align'
+nnoremap j gj
+nnoremap k gk
 
-Bundle 'https://github.com/Shougo/neocomplcache.git'
-Bundle 'https://github.com/Shougo/neosnippet'
-Bundle 'https://github.com/thinca/vim-ref.git'
-Bundle 'https://github.com/kana/vim-smartinput.git'
+nnoremap ) t)
+nnoremap ( t(
 
-Bundle 'https://github.com/thinca/vim-quickrun.git'
-Bundle 'https://github.com/osyo-manga/quickrun-outputter-replace_region.git'
-Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
+noremap <C-H> :help<Space>
 
-Bundle 'https://github.com/kana/vim-textobj-user.git'
-Bundle 'https://github.com/sgur/vim-textobj-parameter.git'
-" Bundle 'vimwiki'
+nnoremap Y  y$
+nnoremap dl 0d$
 
-filetype plugin indent on
-" neocomplcache {{{2
-" set temporary directory
-let g:neocomplcache_temporary_dir     = '/var/tmp/neocon'
-" enable neocomplcache
-let g:neocomplcache_enable_at_startup = 1
+" すべての行でインデントをしなおす
+nnoremap -- mzgg=G`z
 
 
 
-" neosnippet {{{2
-let g:neosnippet#snippets_directory		= '$HOME/.vim/snippet'
+" search highlight
+nnoremap / :set hlsearch<CR>/
+nnoremap * :set hlsearch<CR>*
+nnoremap [SPACE]/ :set hlsearch! \| :set hlsearch?<CR>
+
+" fold を展開して，画面の中央にする
+nnoremap gg ggzvzz
+nnoremap n  nzvzz
+nnoremap N  Nzvzz
+
+" set paste をトグルする
+nnoremap [SPACE]p :set paste! \| :set paste?<CR>
+
+" tag jump
+nnoremap <C-N> <C-]>
+nnoremap <C-P> <C-T>
 
 
-
-" vim-smartinput {{{2
-"call smartinput#map_to_trigger('i', '%', '%', '%')
-"call smartinput#define_rule({
-"      \   'at': '<\%#', 'char': '%', 'input': '%%',
-"      \   'filetype': ['eruby.verilog'],
-"      \ })
-"call smartinput#define_rule({
-"      \   'at': '%.*\%#%', 'char': '%', 'input': '',
-"      \   'filetype': ['eruby.verilog'],
-"      \ })
+" スクリプトを実行してみる
+nnoremap [SPACE]e :!./%<CR>
 
 
-" Quickrun {{{2
+" insert mode
+inoremap        <Tab>   <C-R>=InsertTabWrapper()<CR>
+inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
+inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
+" inoremap        <C-]>   <C-O>:
 
-let g:quickrun_config = {
-\   "_" : {
-\       "hook/close_buffer/enable_failure" : 1,
-\       "hook/close_buffer/enable_empty_data" : 1,
-\       "outputter" : "multi:buffer:quickfix",
-\       "outputter/buffer/split" : ":topleft",
-\   }
-\}
+imap		<C-K> <Plug>(neosnippet_expand_or_jump)
+smap		<C-K> <Plug>(neosnippet_expand_or_jump)
 
-command! -nargs=* -range=0 -complete=customlist,quickrun#complete
-\   ReplaceRegion
-\   silent! QuickRun
-\       -mode v
-\       -outputter error
-\       -outputter/success replace_region
-\       -outputter/error message
-\       -outputter/message/log 1
-\       <args>
+" visual mode
+vnoremap i I
+vnoremap a A
+
 vnoremap <Space>rp :ReplaceRegion ruby<CR>
 
-" submode {{{2
-" solve ^W < - + > ...
-call submode#enter_with('Window', 'n', '', '<C-W>+')
-call submode#enter_with('Window', 'n', '', '<C-W>-')
-call submode#enter_with('Window', 'n', '', '<C-W>>')
-call submode#enter_with('Window', 'n', '', '<C-W><')
-call submode#leave_with('Window', 'n', '', '<Esc>')
-call submode#map('Window', 'n', '', '-', '<C-W>-')
-call submode#map('Window', 'n', '', '=', '<C-W>+')
-call submode#map('Window', 'n', '', '+', '<C-W>+')
-call submode#map('Window', 'n', '', '<', '<C-W><')
-call submode#map('Window', 'n', '', '>', '<C-W>>')
+" command mode
+cnoremap <C-B> <left>
+cnoremap <C-F> <right>
+cnoremap <C-A> <Home>
+cnoremap <C-E> <End>
 
-" tiny function {{{1
-function! MyStatusSpec() "{{{2
-  let l = []
-  if &paste | call add(l, 'paste') | endif
-  if &modified | call add(l, '+') | endif
-  if !&modifiable || &readonly | call add(l, '-') | endif
-  if len(&filetype)>0 | call add(l, &filetype) | endif
-  call add(l, len(&fenc)>0?&fenc:&enc)
-  call add(l, &fileformat)
-  return '[' . join(l, ',') . ']'
-endfunction
+" 補完方向が逆の方がしっくりくるので
+cnoremap <C-P> <up>
+cnoremap <C-N> <down>
+
+" respected from kana
+" Search slashes easily (too lazy to prefix backslashes to slashes)
+cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> \  getcmdtype() == '/' ? '\\' : '\'
+cnoremap <expr> [  getcmdtype() == '/' ? '\[' : '['
+
+" sorround
+" s, gs を S, gS と等価にさせる
+xmap s  <Plug>VSurround
+xmap gs <Plug>VgSurround
 
 
-function! InsertTabWrapper() "{{{2
+
+
+
+function! InsertTabWrapper() "{{{
   if pumvisible()
     return "\<C-N>"
   elseif getline('.')[col('.')-2] =~ '\k'
@@ -462,62 +448,8 @@ function! InsertTabWrapper() "{{{2
   else
     return "\<TAB>"
   endif
-endfunction
+endfunction "}}}
 
+" __END__ {{{1
+" vim: et fdm=marker
 
-function! Man(...) "{{{2
-  if(a:0 == 2)
-    execute "topleft new " . a:2
-    silent! execute "0r!man " . a:1 . ' ' . a:2
-  else
-    execute "topleft new " . a:1
-    silent! execute "0r!man " . a:1
-  endif
-
-  silent! execute '%s/.//g'
-  setlocal nolist
-  setlocal nonumber
-  call cursor(1, 1)
-  setlocal nomodified
-  setlocal readonly
-endfunction
-command! -nargs=+ Man call Man(<f-args>)
-
-
-function! SubstituteInsertLines(...) "{{{2
-  if(a:0 != 5)
-    return 1
-  endif
-
-  let l:line1   = a:1
-  let l:line2   = a:2
-  let l:pattern = a:3
-  let l:s_num   = a:4
-  let l:e_num   = a:5
-
-  let l:lines = getline(l:line1, l:line2)
-  let l:array = []
-
-  for l:i in range(l:s_num + 1, l:e_num)
-    for l:line in l:lines
-      let l:tmp = substitute(l:line, l:pattern, l:i, "g")
-      call add(l:array, l:tmp)
-    endfor
-  endfor
-
-  call append(l:line2, l:array)
-  execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
-endfunction
-command! -nargs=* -range SubstituteInsertLines call SubstituteInsertLines(<line1>, <line2>, <f-args>)
-" usage: :[range]SubstituteInsertLines {pattern} {start_num} {end_num}
-" for each lines in [range] replace a match of {pattern} with
-" {start_num}...{end_num}
-"
-" foo Z bar " befour
-"
-" Foo 0 bar " after
-" Foo 1 bar
-" ...
-
-" END {{{1
-" vim:fdm=marker:et
