@@ -39,6 +39,14 @@ call submode#map('Window', 'n', '', '>', '<C-W>>')
 " vim-smartinput {{{3
 Bundle 'https://github.com/kana/vim-smartinput.git'
 
+call smartinput#map_to_trigger('i', '<Plug>(vimrc_cr)', '<CR>', '<CR>')
+call smartinput#define_rule({
+\ 'at': '^\%(.*=\)\?\s*\zs\%(begin\)\>\%(.*[^.:@$]\<end\>\)\@!.*\%#$',
+\ 'char': '<CR>',
+\ 'input': '<CR>end<Esc>O',
+\ 'filetype': ['verilog', 'eruby.verilog'],
+\ })
+
 " call smartinput#map_to_trigger('i', '%', '%', '%')
 " call smartinput#define_rule({
 "       \   'at'       : '<\%#',
@@ -89,6 +97,12 @@ let g:neosnippet#snippets_directory = [
 Bundle 'https://github.com/LeafCage/foldCC.git'
 " 使い方は autoload/fildCC.vim を参照 (help 無し)
 " let g:foldCCtext_head = 'helo '
+
+
+
+" matchit {{{3
+" MEMO: bundle ではない
+runtime macros/matchit.vim
 
 
 
@@ -195,10 +209,11 @@ endif
 
 colorscheme desert
 
-highlight Folded        cterm=bold ctermfg=DarkBlue ctermbg=LightGray
+highlight Folded NONE
+highlight link Folded Comment
 
-highlight Pmenu         cterm=NONE ctermfg=White     ctermbg=DarkGray
-highlight PmenuSel      cterm=bold ctermfg=LightGray ctermbg=DarkRed
+highlight Pmenu         term=NONE ctermfg=White     ctermbg=DarkGray
+highlight PmenuSel      term=bold ctermfg=LightGray ctermbg=DarkRed
 highlight PmenuSbar                                  ctermbg=DarkGray
 highlight PmenuThumb                                 ctermbg=White
 
@@ -437,7 +452,9 @@ nnoremap <C-P> <C-T>
 inoremap <expr> <Tab>   InsertTabWrapper()
 inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+imap     <expr> <CR>    pumvisible() ?
+      \ neocomplcache#close_popup() . "\<Plug>(vimrc_cr)" :
+      \ "\<Plug>(vimrc_cr)"
 
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)

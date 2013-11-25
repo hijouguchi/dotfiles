@@ -200,6 +200,7 @@ alias quit=exit
 if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
   alias vim='screen vim'
   alias vimdiff='screen vimdiff'
+  alias pry='screen pry'
   alias s='screen'
   #alias emacs='screen emacs -nw'
 fi
