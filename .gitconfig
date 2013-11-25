@@ -11,6 +11,7 @@
 [core]
 	editor = vim
 	pager  = lv -c
+	excludesfile = /home/hijouguchi/.gitignore
 [alias]
 	l  = log --pretty=format:\"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset\" --graph
 	s  = status
