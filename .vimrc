@@ -16,6 +16,7 @@ Bundle 'https://github.com/vim-jp/vimdoc-ja.git'
 Bundle 'https://github.com/kana/vim-smartchr.git'
 Bundle 'Align'
 Bundle 'surround.vim'
+Bundle 'https://github.com/Shougo/vimproc.vim.git'
 " Bundle 'Zenburn'
 " Bundle 'https://github.com/kana/vim-ku.git'
 " Bundle 'https://github.com/thinca/vim-ref.git'
@@ -258,33 +259,6 @@ function! s:insertEnvAndCoding() "{{{
         \ ])
 endfunction "}}}
 
-command! -nargs=* -range SubstituteInsertLines call s:substituteInsertLines(<line1>, <line2>, <f-args>)
-function! s:substituteInsertLines(...) "{{{
-  if(a:0 != 5)
-    return 1
-  endif
-
-  let l:line1   = a:1
-  let l:line2   = a:2
-  let l:pattern = a:3
-  let l:s_num   = a:4
-  let l:e_num   = a:5
-
-  let l:lines = getline(l:line1, l:line2)
-  let l:array = []
-
-  for l:i in range(l:s_num + 1, l:e_num)
-    for l:line in l:lines
-      let l:tmp = substitute(l:line, l:pattern, l:i, "g")
-      call add(l:array, l:tmp)
-    endfor
-  endfor
-
-  call append(l:line2, l:array)
-  execute l:line1.','.l:line2.'substitute/'.l:pattern.'/'.l:s_num.'/g'
-endfunction "}}}
-
-
 command! -bang Utf8   e<bang> ++enc=utf-8
 command! -bang Euc    e<bang> ++enc=euc-jp
 command! -bang Cp932  e<bang> ++enc=cp932
@@ -429,15 +403,12 @@ nnoremap <Space>p :set paste! \| :set paste?<CR>
 nnoremap <C-N> <C-]>
 nnoremap <C-P> <C-T>
 
-" スクリプトを実行してみる
-" nnoremap <Space>e :!./%<CR>
-
 
 " insert, select mode
 inoremap <expr> <Tab>   InsertTabWrapper()
-inoremap <expr> <S-CR>  pumvisible() ? "<C-Y><CR>" : "<S-CR>"
+imap     <expr> <CR>    InsertCRWrapper()
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-inoremap <expr> <CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+inoremap <expr> <C-F>   neocomplcache#manual_filename_complete()
 
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)
@@ -461,8 +432,6 @@ cnoremap <C-E> <End>
 cnoremap <C-P> <up>
 cnoremap <C-N> <down>
 
-" respected from kana
-" Search slashes easily (too lazy to prefix backslashes to slashes)
 cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
 cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
@@ -472,8 +441,6 @@ cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
 " s, gs を S, gS と等価にさせる
 xmap s  <Plug>VSurround
 xmap gs <Plug>VgSurround
-
-
 
 
 
@@ -487,6 +454,18 @@ function! InsertTabWrapper() "{{{
     return "\<TAB>"
   endif
 endfunction "}}}
+
+function! InsertCRWrapper() "{{{
+  if neosnippet#expandable()
+    return "\<Plug>(neosnippet_expand)"
+  elseif pumvisible()
+    call neocomplcache#close_popup()
+    return "\<CR>"
+  else
+    return "\<CR>"
+  endif
+endfunction "}}}
+
 
 
 " Fin. {{{1
