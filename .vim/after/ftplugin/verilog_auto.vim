@@ -5,11 +5,13 @@ if exists("g:loaded_verilog_auto")
 endif
 let g:loaded_verilog_auto = 1
 
-let g:verilog_auto_search_path = [
-      \ '../rtl',
-      \ '../bhv',
-      \ '../test'
-      \ ]
+if !exists("g:verilog_auto_search_path")
+  let g:verilog_auto_search_path = [
+        \ '../rtl',
+        \ '../bhv',
+        \ '../test'
+        \ ]
+endif
 
 let s:save_cpo = &cpo
 set cpo&vim
