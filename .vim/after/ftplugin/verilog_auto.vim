@@ -5,6 +5,12 @@ if exists("g:loaded_verilog_auto")
 endif
 let g:loaded_verilog_auto = 1
 
+let g:verilog_auto_search_path = [
+      \ '../rtl',
+      \ '../bhv',
+      \ '../test'
+      \ ]
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -18,6 +24,24 @@ if !exists(":VerilogAutoTestTemplate")
   command -nargs=1 VerilogAutoTestTemplate call <SID>verilogAutoTestTemplate(<q-args>)
 endif
 
+function! s:verilogAutoGetPath(file) " {{{
+  " [bufnr, filepath] の形式で返す
+  " bufnr が -1 の場合，buffer が開かれていない
+  let l:list = map(copy(g:verilog_auto_search_path), 'v:val . "/" . a:file')
+  call insert(l:list, a:file, 0)
+
+  for f in l:list
+    if bufexists(f) != 0
+      return [bufnr(f), f]
+    elseif filereadable(f)
+      return [-1 , f]
+    endif
+  endfor
+
+  echoerr a:file . ' is not exist'
+  return
+endfunction " }}}
+
 function! s:verilogAutoGetIO(file) " {{{
   " input/output/inout (wire/reg) [...] hoge
   " wire/reg [...] hoge
@@ -27,17 +51,16 @@ function! s:verilogAutoGetIO(file) " {{{
   " parameter の場合は ['parameter', bits, name, val] とする
   " (デフォルト引数として値も返すように)
   " bits は [WIDTH-1:0] などを想定し，そのまま切り出す
-  if bufexists(a:file) != 0
-    if bufnr(a:file) == bufnr('%')
-      " current buffer
-      let lines = getline(1, '$')
-    else
-      " FIXME: getbufline(), 表示されていないと読めないっぽい
-      "let lines = getbufline(bufnr(a:file), 1, '$')
-      let lines = readfile(a:file)
-    endif
+  if a:file[0] == bufnr('%')
+    " current buffer
+    let lines = getline(1, '$')
+  elseif a:file[0] != -1
+    " other buffer
+    " FIXME: getbufline(), 表示されていないと読めないっぽい
+    "let lines = getbufline(bufnr(a:file), 1, '$')
+    let lines = readfile(a:file[1])
   else
-    let lines = readfile(a:file)
+    let lines = readfile(a:file[1])
   endif
 
   let ports        = []
@@ -99,7 +122,7 @@ function! s:verilogAutoArg() " {{{
   call cursor(1, 1)
 
   let l:lnum = search(l:pattern, 'e')
-  let l:ports = <SID>verilogAutoGetIO(expand('%'))
+  let l:ports = <SID>verilogAutoGetIO(<SID>verilogAutoGetPath(expand('%')))
   call filter(l:ports, 'index(["input", "output", "inout"], v:val[0]) >= 0')
 
 
@@ -127,7 +150,7 @@ endfunction " }}}
 function! s:verilogAutoInst() " {{{
   " ports_top: ['type', 'port_name', bits]
   let l:pattern_inst = '/\*\s*autoinst\s*\*/'
-  let l:local_wire   = <SID>verilogAutoGetIO(expand('%'))
+  let l:local_wire   = <SID>verilogAutoGetIO(<SID>verilogAutoGetPath(expand('%')))
   let l:ports_top    = []
   let l:param_top    = []
   call cursor(1,1)
@@ -144,11 +167,7 @@ function! s:verilogAutoInst() " {{{
     let l:inst_name = matchlist(getline(l:num), '^\s*\(\S\+\)')[1]
 
     " ports 取得
-    if !filereadable(inst_name . '.v')
-      echoerr inst_name . '.v is not exist'
-      return
-    endif
-    let l:ports = <SID>verilogAutoGetIO(inst_name . '.v')
+    let l:ports = <SID>verilogAutoGetIO(<SID>verilogAutoGetPath(inst_name . '.v'))
     call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
 
     " param_top マージ
@@ -223,7 +242,7 @@ function! s:verilogAutoInst() " {{{
 endfunction " }}}
 
 function! s:verilogAutoTestTemplate(target) " {{{
-  let l:ports = <SID>verilogAutoGetIO(a:target . '.v')
+  let l:ports = <SID>verilogAutoGetIO(<SID>verilogAutoGetPath(a:target . '.v'))
   let l:inout = filter(copy(l:ports), 'v:val[0] == "inout"')
   call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
 
