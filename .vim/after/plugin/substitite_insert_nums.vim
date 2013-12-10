@@ -1,6 +1,6 @@
 let g:substitite_insert_nums_patterns = [
       \ {'type': 'char',    'pat': 'XXX', 'str': '%d'},
-      \ {'type': 'pattern', 'pat': '_\(%\d\+[dxX]\)_'},
+      \ {'type': 'pattern', 'pat': '_\(%\d*[dxX]\)_'},
       \ ]
 
 command! -range -nargs=+ SubstituteInsertNums <line1>,<line2>call SubstituteInsertNums(<f-args>)
