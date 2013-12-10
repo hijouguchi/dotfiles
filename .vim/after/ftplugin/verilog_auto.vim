@@ -1,3 +1,5 @@
+" TODO: bit の中に parameter が入っていたら取りだしておく
+"       autoinst 時に宣言したい
 if exists("g:loaded_verilog_auto")
   finish
 endif
@@ -17,10 +19,11 @@ if !exists(":VerilogAutoTestTemplate")
 endif
 
 function! s:verilogAutoGetIO(file)
-  " input (wire) [n:0] hoge
-  " wire [n:0] hoge
+  " input (wire) [...] hoge
+  " wire [...] hoge
   " の部分を取り出す (wire は auto-inst で使用)
   " [[type, bits, val], ...] の形式で返す
+  " bits は [WIDTH-1:0] などを想定し，そのまま切り出す
   if bufexists(a:file) != 0
     if bufnr(a:file) == bufnr('%')
       " current buffer
@@ -37,33 +40,49 @@ function! s:verilogAutoGetIO(file)
   let ports        = []
   let l:regexp_io  = '\(input\|output\|inout\|wire\|reg\)\s\+'
   let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)\?'
-  let l:regexp_arr = '\%(\[\s*\([1-9]\d*\)\s*:\s*0\s*\]\s\+\)\?'
+  "let l:regexp_arr = '\%(\[\s*\([1-9]\d*\)\s*:\s*0\s*\]\s\+\)\?'
+  let l:regexp_arr = '\%(\(\[[^]]\+\]\)\s\+\)\?'
   let l:regexp_val = '\(\h\w*\%(\s*,\s*\h\w*\)*\)'
   let l:regexp     = '^\s*' . l:regexp_io . l:regexp_wr
   let l:regexp     = l:regexp . l:regexp_arr . l:regexp_val
 
-  let l:is_comment = 0
+  let l:is_comment  = 0
+  let l:is_function = 0
 
   for line in lines
-    " コメント行を無視する
+    " コメント行，function 文などを無視する
     let line = substitute(line, '/\*.\{-}\*/', '', 'g')
+    let line = substitute(line, '//.*$', '', 'g')
     if l:is_comment
       if line =~ '\*/'
         let l:is_comment = 0
       else
         continue
       endif
-    elseif line =~ '/\*'
-      let l:is_comment = 1
-      continue
+    else
+
+      if line =~ '/\*'
+        let l:is_comment = 1
+        let line = substitute(line, '/\*.*$', '', 'g')
+      endif
+
+      " function 文などの行を無視
+      if l:is_function
+        if line =~ '\<endfunction\>\|\<endtask\>'
+          let l:is_function = 0
+        endif
+        continue
+      elseif line =~ '\<function\>\|\<task\>'
+        let l:is_function = 1
+        continue
+      endif
     endif
 
     let l:match = matchlist(line, l:regexp)
 
     if !empty(l:match)
-      let l:bits = l:match[2] + 1
       for prt in split(l:match[3], '\s*,\s*')
-        call add(ports, [l:match[1], l:bits, prt])
+        call add(ports, [l:match[1], l:match[2], prt])
       endfor
     endif
   endfor
@@ -178,8 +197,8 @@ function! s:verilogAutoInst()
   for i in range(0, len(l:ports_assign)-1)
     let l:tmp = l:indent . l:ports_assign[i][0]
 
-    if l:ports_assign[i][1] != 1
-      let l:tmp = l:tmp . ' [' . (l:ports_assign[i][1]-1) . ':0]'
+    if l:ports_assign[i][1] != ''
+      let l:tmp = l:tmp . ' ' . l:ports_assign[i][1]
     endif
 
     let l:tmp = l:tmp . ' ' . l:ports_assign[i][2] . ';'
