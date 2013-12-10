@@ -18,11 +18,14 @@ if !exists(":VerilogAutoTestTemplate")
   command -nargs=1 VerilogAutoTestTemplate call <SID>verilogAutoTestTemplate(<q-args>)
 endif
 
-function! s:verilogAutoGetIO(file)
-  " input (wire) [...] hoge
-  " wire [...] hoge
-  " の部分を取り出す (wire は auto-inst で使用)
-  " [[type, bits, val], ...] の形式で返す
+function! s:verilogAutoGetIO(file) " {{{
+  " input/output/inout (wire/reg) [...] hoge
+  " wire/reg [...] hoge
+  " parameter [...] hoge = val;
+  " の部分を取り出す (wire/reg/parameter は autoinst で使用)
+  " [[type, bits, name], ...] の形式で返す
+  " parameter の場合は ['parameter', bits, name, val] とする
+  " (デフォルト引数として値も返すように)
   " bits は [WIDTH-1:0] などを想定し，そのまま切り出す
   if bufexists(a:file) != 0
     if bufnr(a:file) == bufnr('%')
@@ -39,12 +42,13 @@ function! s:verilogAutoGetIO(file)
 
   let ports        = []
   let l:regexp_io  = '\(input\|output\|inout\|wire\|reg\)\s\+'
-  let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)\?'
-  "let l:regexp_arr = '\%(\[\s*\([1-9]\d*\)\s*:\s*0\s*\]\s\+\)\?'
-  let l:regexp_arr = '\%(\(\[[^]]\+\]\)\s\+\)\?'
+  let l:regexp_wr  = '\%(\%(wire\|reg\|parameter\)\s\+\)\?'
+  let l:regexp_arr = '\%(\(\[[^\]]\+\]\)\s\+\)\?'
   let l:regexp_val = '\(\h\w*\%(\s*,\s*\h\w*\)*\)'
   let l:regexp     = '^\s*' . l:regexp_io . l:regexp_wr
   let l:regexp     = l:regexp . l:regexp_arr . l:regexp_val
+
+  let l:regexp_param = '^\s+'
 
   let l:is_comment  = 0
   let l:is_function = 0
@@ -88,10 +92,9 @@ function! s:verilogAutoGetIO(file)
   endfor
 
   return ports
-endfunction
+endfunction " }}}
 
-
-function! s:verilogAutoArg()
+function! s:verilogAutoArg() " {{{
   let l:pattern     = '/\*\s*autoarg\s*\*/'
   call cursor(1, 1)
 
@@ -119,30 +122,39 @@ function! s:verilogAutoArg()
   " FIXME: ');' のインデントが考慮されていない
   call append(l:lnum-1, l:line)
   call append(l:lnum, l:ports)
-endfunction
+endfunction " }}}
 
-
-function! s:verilogAutoInst()
+function! s:verilogAutoInst() " {{{
   " ports_top: ['type', 'port_name', bits]
   let l:pattern_inst = '/\*\s*autoinst\s*\*/'
   let l:local_wire   = <SID>verilogAutoGetIO(expand('%'))
   let l:ports_top    = []
+  let l:param_top    = []
   call cursor(1,1)
 
-  let l:local_wire = map(l:local_wire, "v:val[2]")
+  let l:local_param = map(
+        \ filter(copy(l:local_wire), 'v:val[0] != "parameter"'),
+        \ 'v:val[2]')
+  call filter(l:local_wire, 'v:val[0] == "parameter"')
+  let l:local_wire  = map(l:local_wire, 'v:val[2]')
 
   " autoinst が無くなるまで
   while search(l:pattern_inst, 'e')
     let l:num       = line('.')
     let l:inst_name = matchlist(getline(l:num), '^\s*\(\S\+\)')[1]
 
-    " ports () 取得
+    " ports 取得
     if !filereadable(inst_name . '.v')
       echoerr inst_name . '.v is not exist'
       return
     endif
     let l:ports = <SID>verilogAutoGetIO(inst_name . '.v')
     call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
+
+    " param_top マージ
+    " [name, val] だけにする
+    " FIXME: 書きかけ
+    " let l:param_tmp = map(filter(copy(l:ports), 'v:val[0] != "parameter"'), '[v:val[2], v:val[3]]')
 
     " autoinst 書き換え
     let l:indent       = repeat(' ', indent(l:num) + &sw)
@@ -208,9 +220,9 @@ function! s:verilogAutoInst()
 
   call append(l:num, l:ports_assign)
   d _
-endfunction
+endfunction " }}}
 
-function! s:verilogAutoTestTemplate(target)
+function! s:verilogAutoTestTemplate(target) " {{{
   let l:ports = <SID>verilogAutoGetIO(a:target . '.v')
   let l:inout = filter(copy(l:ports), 'v:val[0] == "inout"')
   call filter(l:ports, 'index(["input", "output"], v:val[0]) >= 0')
@@ -229,7 +241,7 @@ function! s:verilogAutoTestTemplate(target)
   endfor
 
   echo l:ports
-endfunction
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
