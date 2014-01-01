@@ -59,7 +59,6 @@ function! SubstituteInsertNums(...) range "{{{
     echoerr ":SubstituteInsertNums [start] [incr] [last]"
   endif
 
-  echo [num_first, num_last, num_incr]
   let lines = getline(a:firstline, a:lastline)
 
   " 元の行を削除する
