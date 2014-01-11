@@ -6,3 +6,15 @@ abbr        \begin{figure} ... \end{figure}
     \caption{${2:#title}}
     \label{${3:label}}
   \end{figure}${0}
+
+snippet     table
+abbr        \begin{table} ... \end{table}
+  \begin{table}[tb]
+    \centering
+    \caption{${1:#title}}
+    \label{${2:label}}
+    \begin{tabular}{${3}}
+      \hline
+      ${4}
+    \end{tabular}
+  \end{table}${0}

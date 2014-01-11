@@ -79,14 +79,15 @@ let g:quickrun_config = {
       \}
 
 
-" neocomplecache {{{3
-Bundle 'https://github.com/Shougo/neocomplcache.git'
+" neocomplete {{{3
+"Bundle 'https://github.com/Shougo/neocomplcache.git'
+Bundle 'https://github.com/Shougo/neocomplete.vim.git'
 Bundle 'https://github.com/Shougo/neosnippet'
 
 " set temporary directory
-let g:neocomplcache_temporary_dir     = '~/.history/neocon'
-" enable neocomplcache
-let g:neocomplcache_enable_at_startup = 1
+let g:neocomplete#data_directory		= '~/.history/neocomplete'
+" enable neocomplate
+let g:neocomplete#enable_at_startup = 1
 
 " neosnippet snippets directory
 let g:neosnippet#snippets_directory = [
@@ -322,14 +323,16 @@ augroup VimrcAutoCmd
 
 
 
-  autocmd BufRead,BufNewFile *.r,*.R   set filetype=r
-  autocmd BufRead,BufNewFile *.m,*.mat set filetype=octave
-  autocmd BufRead,BufNewFile *.mdl     set filetype=spice
-  autocmd BufRead,BufNewFile *.gp      set filetype=gnuplot
+  autocmd BufRead,BufNewFile *.r,*.R     set filetype=r
+  autocmd BufRead,BufNewFile *.m,*.mat   set filetype=octave
+  autocmd BufRead,BufNewFile *.mdl       set filetype=spice
+  autocmd BufRead,BufNewFile *.gp        set filetype=gnuplot
 
-  autocmd BufRead,BufNewFile *.v.erb   set filetype=eruby.verilog
-  autocmd BufRead,BufNewFile *.sp.erb  set filetype=eruby.spice
-  autocmd BufRead,BufNewFile *.gp.erb  set filetype=eruby.gnuplot
+  autocmd BufRead,BufNewFile *.v.erb     set filetype=eruby.verilog
+  autocmd BufRead,BufNewFile *.sp.erb    set filetype=eruby.spice
+  autocmd BufRead,BufNewFile *.gp.erb    set filetype=eruby.gnuplot
+  autocmd BufRead,BufNewFile *.htm.erb   set filetype=eruby.html
+  autocmd BufRead,BufNewFile *.html.erb  set filetype=eruby.html
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
@@ -421,7 +424,8 @@ nnoremap <C-P> <C-T>
 inoremap <expr> <Tab>   InsertTabWrapper()
 imap     <expr> <CR>    InsertCRWrapper()
 inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
-inoremap <expr> <C-F>   neocomplcache#manual_filename_complete()
+"inoremap <expr> <C-F>   neocomplcache#manual_filename_complete()
+inoremap <expr> <C-F>   neocomplete#manual_filename_complete()
 
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)
@@ -461,7 +465,8 @@ function! InsertTabWrapper() "{{{
   if pumvisible()
     return "\<C-N>"
   elseif getline('.')[col('.')-2] =~ '\k'
-    call neocomplcache#start_manual_complete()
+    "call neocomplcache#start_manual_complete()
+    call neocomplete#start_manual_complete()
     return "\<C-N>"
   else
     return "\<TAB>"
@@ -472,7 +477,8 @@ function! InsertCRWrapper() "{{{
   if neosnippet#expandable()
     return "\<Plug>(neosnippet_expand)"
   elseif pumvisible()
-    call neocomplcache#close_popup()
+    "call neocomplcache#close_popup()
+    call neocomplete#close_popup()
     return "\<CR>"
   else
     return "\<CR>"
