@@ -4,7 +4,9 @@ let b:verilog_indent_modules = 1
 let b:surround_{char2nr("b")} = "begin \r end"
 let b:match_words = '\<begin\>:\<end\>'
 
-nnoremap <buffer> <Space>e :!verilator --lint-only %<CR>
+if &l:filetype !~ '^eruby.'
+  nnoremap <buffer> <Space>e :!verilator --lint-only %<CR>
+endif
 nnoremap <buffer> <Space>a :VerilogExpandArray<CR>
 " inoremap <buffer> <expr> = smartchr#loop(' = ', ' <= ', ' == ', '=')
 
