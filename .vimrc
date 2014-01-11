@@ -70,10 +70,11 @@ Bundle 'https://github.com/osyo-manga/shabadou.vim.git'
 
 let g:quickrun_config = {
       \   "_" : {
-      \       "hook/close_buffer/enable_failure" : 1,
-      \       "hook/close_buffer/enable_empty_data" : 1,
-      \       "outputter" : "multi:buffer:quickfix",
-      \       "outputter/buffer/split" : ":topleft",
+      \       "outputter/buffer/split"              : ":topleft",
+      \       "outputter/error/error"               : "quickfix",
+      \       "outputter/error/success"             : "buffer",
+      \       "outputter"                           : "error",
+      \       "outputter/buffer/close_on_empty"     : 1
       \   }
       \}
 
@@ -285,14 +286,11 @@ command! -bang Dos    e<bang> ++ff=dos
 
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
-      \   ReplaceRegion
-      \   silent! QuickRun
-      \       -mode v
-      \       -outputter error
-      \       -outputter/success replace_region
-      \       -outputter/error message
-      \       -outputter/message/log 1
-      \       <args>
+      \ ReplaceRegion QuickRun
+      \ -mode v
+      \ -outputter replace_region
+      \ -outputter/message/log 1
+      \ <args>
 
 " autocmd {{{1
 augroup VimrcAutoCmd
@@ -435,7 +433,7 @@ smap    <C-L> <Plug>(neosnippet_expand)
 vnoremap i I
 vnoremap a A
 
-vnoremap <Space>rp :ReplaceRegion ruby<CR>
+vnoremap <Space>rp :ReplaceRegion erb -T -<CR>
 
 " command mode
 cnoremap <C-B> <left>
