@@ -40,22 +40,27 @@ bind ^[
 bind  n screen
 bind  p paste .
 bind  q remove
-bind \' eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
 bind ^k eval '@kill'
 bind ^m monitor
 
 bind  s split
 bind  v split -v
 
-bind y eval copy "stuff Y"
 
-bind A eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
 
 # make invalid keybind side effects for edit mode
-bind  ; eval colon 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g'
+bind \' eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
+bind  A eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
+bind  ; eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
 
 # copy mode {{{2
 # migrated to copy mode after resister the keybind, y, ^v, of V
+#bind ^v eval \
+#  "bindkey -m -t  y stuff Y" \
+#  "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" \
+#  "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" \
+#  'bindkey -m -t  g stuff gw^f^b' \
+#  copy
 bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" 'bindkey -m -t g stuff gw^f^b' copy
 
 
