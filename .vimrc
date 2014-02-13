@@ -88,11 +88,8 @@ Bundle 'https://github.com/Shougo/neosnippet'
 let g:neocomplete#data_directory		= '~/.history/neocomplete'
 " enable neocomplate
 let g:neocomplete#enable_at_startup = 1
-
 " neosnippet snippets directory
-let g:neosnippet#snippets_directory = [
-      \ '~/.vim/snippet',
-      \ ]
+let g:neosnippet#snippets_directory = '~/.vim/snippet'
 
 
 
