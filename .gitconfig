@@ -7,7 +7,7 @@
 	grep        = auto
 [user]
 	name = hijouguchi
-	email = taka13.mac@gmail.com
+	email = 
 [core]
 	editor = vim
 	pager  = lv -c
