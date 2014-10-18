@@ -26,7 +26,9 @@ defbce "on"
 rendition bell    "=U"  "rk"
 rendition monitor "=b"  "RW"
 rendition so      "=b"  "wk"
-caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P -- COPY MODE --%?%=%{-}"
+# FIXME: -- SCREEN -- は カレントだけに表示したい
+#        %? がネストできないので不可能？
+caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P -- COPY MODE --%?%=%?%E-- SCREEN -- %?%{-}"
 hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%s]"
 
 windowlist title  '%{u .g}Num Flags Title%='
