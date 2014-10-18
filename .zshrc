@@ -269,7 +269,7 @@ _set_screen_title() {
   command_name=${${1##sudo[[:blank:]]}%%[[:blank:]]*}
 
   case "$command_name" in
-  ls|cd|*sh|vim|emacs|git) ;;
+  ls|cd|*sh|vim|emacs|git|..) ;;
   less|tail|man) title_name="$1" ;;
   *) title_name="$command_name" ;;
   esac
