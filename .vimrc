@@ -1,11 +1,12 @@
 " First {{{1
 set nocompatible
+filetype off
+" vim が何をしてるかを確認する用の設定
 " set verbosefile=~/vim.log
 " set verbose=9
 
 
 " Bundle settings {{{1
-filetype off
 
 set runtimepath& runtimepath+=~/.vim/vundle.git
 call vundle#rc()
@@ -40,13 +41,15 @@ call submode#map('Window', 'n', '', '>', '<C-W>>')
 " vim-smartinput {{{3
 Bundle 'https://github.com/kana/vim-smartinput.git'
 
-call smartinput#map_to_trigger('i', '<Plug>(vimrc_cr)', '<CR>', '<CR>')
-call smartinput#define_rule({
-\ 'at': '^\%(.*=\)\?\s*\zs\%(begin\)\>\%(.*[^.:@$]\<end\>\)\@!.*\%#$',
-\ 'char': '<CR>',
-\ 'input': '<CR>end<Esc>O',
-\ 'filetype': ['verilog', 'eruby.verilog'],
-\ })
+" " FIXME: この設定で smartinput#define_rule() で改行ができない (なぜ？)
+" "        改行が必要な場合は、代替として <C-O>o, <Esc>o を使う
+" call smartinput#map_to_trigger('i', '<Plug>(vimrc_cr)', '<CR>', '<CR>')
+" call smartinput#define_rule({
+" \ 'at': '^\%(.*=\)\?\s*\zs\%(begin\)\>\%(.*[^.:@$]\<end\>\)\@!.*\%#$',
+" \ 'char': '<CR>',
+" \ 'input': '<C-O>oend<C-O>O',
+" \ 'filetype': ['verilog', 'eruby.verilog'],
+" \ })
 
 " call smartinput#map_to_trigger('i', '%', '%', '%')
 " call smartinput#define_rule({
@@ -146,7 +149,7 @@ set wildmode=list:longest,full
 
 
 " history settings
-set viminfo='100,<50,s10,h,n~/.history/viminfo
+set viminfo='100,<50,s10,h
 set history=1000
 
 
@@ -158,12 +161,13 @@ set wrapscan
 
 
 " backup options
-" 編集中のみバックアップが存在するように
+" 何もバックアップを作らない
 set nobackup
-set writebackup
-set backupext=.bak
-set backupdir=/tmp
-set directory=/tmp
+set nowritebackup
+set noundofile
+" set backupext=.bak
+" set backupdir-=.
+" set directory-=.
 
 
 " fold settings
@@ -174,6 +178,9 @@ set foldtext=FoldCCtext()
 " window settings
 set number
 set list
+
+" no display intro
+set shortmess+=I
 
 
 
@@ -200,35 +207,39 @@ endfunction "}}}
 
 
 " MEMO: 色を確認する場合は， :runtime syntax/colortest.vim を開く
-"       :hilight で，適応されているのが確認できる
+"       :highlight で，適応されているのが確認できる
 " FIXME: 対応していない端末をどうやって探すか
 set t_Co=256
 
-if exists('s:loaded_my_vimrc')
-  " 設定したい colorscheme において
-  " 指定されなかったグループをデフォルトにする
-  colorscheme default
-endif
+" GUI 起動時に 'background' などが上書きされてしまうことがあるらしい
+" GUI では、colorscheme 系を再設定した方が良い
+" それらを関数でまとめて、autocmd GUIEnter で呼び出すようにする
+function! SetMyColorscheme()
+  colorscheme desert
 
-colorscheme desert
+  highlight Folded NONE
+  highlight link Folded Comment
 
-highlight Folded NONE
-highlight link Folded Comment
+  highlight Pmenu         term=NONE ctermfg=White     ctermbg=DarkGray
+  highlight PmenuSel      term=bold ctermfg=LightGray ctermbg=DarkRed
+  highlight PmenuSbar                                  ctermbg=DarkGray
+  highlight PmenuThumb                                 ctermbg=White
 
-highlight Pmenu         term=NONE ctermfg=White     ctermbg=DarkGray
-highlight PmenuSel      term=bold ctermfg=LightGray ctermbg=DarkRed
-highlight PmenuSbar                                  ctermbg=DarkGray
-highlight PmenuThumb                                 ctermbg=White
+  " GUI で色が付けられると見にくい
+  highlight NonText     gui=NONE guibg=NONE
+endfunction
 
-" original highlight group
-highlight TrailingSpacess                            ctermbg=Red
-
-
-
-"fileencodings {{{2
+" CUI 用に一度呼び出す
+call SetMyColorscheme()
 
 
-if iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+"enc, fencs, ff {{{2
+
+set fileformats=unix,dos,mac
+set ambiwidth=double
+
+" KaoriYa をベースにしている
+if has('iconv') && iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
   let s:enc_euc = 'euc-jisx0213,euc-jp'
   let s:enc_jis = 'iso-2022-jp-3'
 else
@@ -236,30 +247,23 @@ else
   let s:enc_jis = 'iso-2022-jp'
 endif
 
-
-let &fileencodings = 'ucs-bom'
-let &fileencodings .= ',' . s:enc_jis
-
-
-if &encoding ==# 'utf-8'
-  "append euc-jp, utf-8(from endoding) and cp932
-  let &fileencodings .= ',' . s:enc_euc
-  let &fileencodings .= ',' . &encoding
-  let &fileencodings .= ',' . 'cp932'
-elseif &encoding ==# 'euc-jp'
-  "append utf-8, cp932 and euc-jp
-  let &fileencodings .= ',' . 'utf-8'
-  let &fileencodings .= ',' . s:enc_euc
-  let &fileencodings .= ',' . 'cp932'
+" encoding によって fileencodings を設定する
+if &encoding ==? 'utf-8'
+  let &fileencodings = join([s:enc_jis, 'cp932', s:enc_euc, 'ucs-bom'], ',')
+elseif &encoding ==? 'cp932'
+  let &fileencodings = join(['ucs-bom', 'latin1', s:enc_jis, 'utf-8', s:enc_euc], ',')
+elseif &encoding ==? 'euc-jp' || &encoding ==? 'euc-jisx0213'
+  let &fileencodings = join(['ucs-bom', 'latin1', s:enc_jis, 'utf-8', 'cp932'], ',')
 endif
 
-
+" KaoriYa vim only
+if has('guess_encode')
+  let &fileencodings = 'guess,' . &fileencodings
+end
 
 unlet s:enc_euc
 unlet s:enc_jis
 
-set fileformats=unix,dos,mac
-set ambiwidth=double
 
 
 " command {{{1
@@ -309,6 +313,7 @@ augroup VimrcAutoCmd
         \ | endif
 
   " if the file doesn't have used tab by space, set expandtab
+  " FIXME: Makefile などの、tab 必須のファイルでも expandtab が有効になってしまう
   autocmd BufReadPost *
         \   if search('^\t', 'cnw') == 0
         \ |   setlocal expandtab
@@ -340,17 +345,6 @@ augroup VimrcAutoCmd
 augroup END
 
 
-" augroup HighlightTrailingSpaces
-"   autocmd!
-"   autocmd BufRead,BufNewFile *
-"         \   if &l:filetype == 'help'
-"         \ |   match none
-"         \ | else
-"         \ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
-"         \ | endif
-" augroup END
-
-
 augroup BinaryXXD
   autocmd!
   autocmd BufReadPre   *.bin set binary
@@ -362,6 +356,10 @@ augroup BinaryXXD
   autocmd BufReadPost  * endif
 augroup END
 
+augroup GuiColorScheme
+  autocmd!
+  autocmd GUIEnter * call SetMyColorscheme()
+augroup END
 
 " keymap settings {{{1
 
@@ -404,7 +402,7 @@ nnoremap -- mzgg=G`z
 
 " search highlight
 nnoremap / :set hlsearch<CR>/
-nnoremap * :set hlsearch<CR>*
+nnoremap * :set hlsearch<CR>*zv
 nnoremap <Space>/ :set hlsearch! \| :set hlsearch?<CR>
 
 " fold を展開して，画面の中央にする
@@ -460,7 +458,7 @@ xmap s  <Plug>VSurround
 xmap gs <Plug>VgSurround
 
 
-
+" tiny functions {{{1
 function! InsertTabWrapper() "{{{
   if pumvisible()
     return "\<C-N>"
@@ -477,27 +475,23 @@ function! InsertCRWrapper() "{{{
   if neosnippet#expandable()
     return "\<Plug>(neosnippet_expand)"
   elseif pumvisible()
-    "call neocomplcache#close_popup()
-    call neocomplete#close_popup()
-    return "\<CR>"
+    let key = neocomplete#close_popup()
+    return key . "\<CR>"
+    "return "\<Plug>(vimrc_cr)"
   else
     return "\<CR>"
+    "return "\<Plug>(vimrc_cr)"
   endif
 endfunction "}}}
 
 
-
 " Fin. {{{1
-
-if !exists('s:loaded_my_vimrc')
-  let s:loaded_my_vimrc = 1
-endif
 
 set secure
 
 
 
 " __END__ {{{1
-" vim: et ts=2 sts=2 st=2
+" vim: et ts=2 sts=2 st=2 tw=0
 " vim: fdm=marker et
 
