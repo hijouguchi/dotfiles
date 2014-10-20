@@ -39,7 +39,7 @@ export LESS='--ignore-case -R'
 export EDITOR=vim
 
 
-eval `dircolors -b`
+[[ -x `which dircolors 2>/dev/null` ]] && eval `dircolors -b`
 
 disable r           # r で R が起動できるように
 setopt prompt_subst # $(...) によるの変数を prompt に表示
@@ -66,7 +66,7 @@ cdpath=($HOME $HOME/work)
 # for history
 HISTSIZE=10000
 SAVEHIST=10000
-HISTFILE=$HOME/.history/zhistory
+HISTFILE=~/.zhistory
 setopt hist_ignore_all_dups
 setopt inc_append_history
 setopt share_history
