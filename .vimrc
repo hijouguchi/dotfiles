@@ -58,6 +58,15 @@ Bundle 'https://github.com/kana/vim-smartinput.git'
 "       \   'input'    : '% %><Left><Left><Left>',
 "       \   'filetype' : ['eruby.verilog'],
 "       \ })
+"
+
+call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')
+call smartinput#define_rule({
+      \   'at': '\({\|\<do\>\)\s*\%#',
+      \   'char': '<Bar>',
+      \   'input': '<Bar><Bar><Left>',
+      \   'filetype': ['ruby'],
+      \ })
 
 
 " vim-textobj {{{3
@@ -418,7 +427,8 @@ nnoremap <C-P> <C-T>
 " insert, select mode
 inoremap <expr> <Tab>   InsertTabWrapper()
 imap     <expr> <CR>    InsertCRWrapper()
-inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
+"inoremap <expr> <Esc>[Z pumvisible() ? "<C-P>"     : "<S-Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "<C-P>"     : "<S-Tab>"
 "inoremap <expr> <C-F>   neocomplcache#manual_filename_complete()
 inoremap <expr> <C-F>   neocomplete#manual_filename_complete()
 
