@@ -195,6 +195,7 @@ alias du='du -h'
 alias scp='scp -c arcfour256'
 
 alias grep='grep --color'
+alias wget='wget -c'
 alias quit=exit
 
 if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
