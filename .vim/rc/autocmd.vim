@@ -52,6 +52,10 @@ augroup VimrcAutoCmd
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
   autocmd QuickFixCmdPost *grep* cwindow
+
+  " if already open file, read as readonly
+  " see also: http://itchyny.hatenablog.com/entry/2014/12/25/090000
+  autocmd SwapExists * let v:swapchoice = 'o'
 augroup END
 
 

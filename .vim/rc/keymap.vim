@@ -37,7 +37,11 @@ nnoremap gg ggzvzz
 nnoremap n  nzvzz
 nnoremap N  Nzvzz
 
-nnoremap <Space>p :set paste! \| :set paste?<CR>
+nnoremap + <C-A>
+nnoremap - <C-X>
+
+nnoremap <Space>p :set paste!    \| :set paste?<CR>
+nnoremap <Space>h :set readonly! \| :set readonly?<CR>
 
 nnoremap <Space>m :marks<CR>
 nnoremap <Space>r :registers<CR>

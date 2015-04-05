@@ -14,6 +14,10 @@ set backspace=indent,eol,start
 
 set history=1000
 
+set display=lastline
+set shortmess& shortmess+=I
+
+
 set helplang=ja,en
 
 set incsearch
@@ -34,6 +38,8 @@ set wildmode=list:longest,full
 set tabstop=2
 set shiftwidth=2
 set softtabstop=0
+
+set pumheight=15
 
 set laststatus=2
 set statusline=%<%f%=
