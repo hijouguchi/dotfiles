@@ -29,8 +29,8 @@ nnoremap <F1> <NOP>
 " require itchyny/thumbnail.vim
 nnoremap <Space>b :Thumbnail -here<CR>
 
-" TODO: quickrun に書き換える
-execute 'nnoremap <Space>e :!' . expand('%:p') . '<CR>'
+" MEMO: quickrun に変更
+" execute 'nnoremap <Space>e :!' . expand('%:p') . '<CR>'
 
 " fold を展開して，画面の中央にする
 nnoremap gg ggzvzz
