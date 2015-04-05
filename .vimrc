@@ -1,3 +1,7 @@
+" .vimrc
+"
+" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
+" Last Change: 2015 Apr 05
 
 set encoding=utf-8
 scriptencoding utf-8
