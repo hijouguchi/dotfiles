@@ -1,7 +1,7 @@
 " .vim/rc/autocmd.vim
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015 Apr 05
+" Last Change: 2015-04-05
 
 augroup VimrcAutoCmd
   autocmd!
@@ -31,18 +31,8 @@ augroup VimrcAutoCmd
         \ | endif
 
   " FIXME: cursor can't not use
-  "autocmd BufWritePre * call <SID>UpdateLastChange()
+  autocmd BufWritePre * call <SID>UpdateLastChange()
 
-  function! s:UpdateLastChange()
-    let s:pos = getpos('.')
-
-    call cursor(0,0)
-    if search('Last Change')
-      execute 'silent! s/Last\ Change:\zs.*$/ ' . strftime('%Y %b %d') . '/'
-    endif
-
-    call cursor(s:pos)
-  endfunction
 
   autocmd BufWinEnter,Filetype help wincmd K
 
@@ -87,6 +77,16 @@ augroup BinaryXXD
   autocmd BufReadPost  * endif
 augroup END
 
+function! s:UpdateLastChange()
+  let s:pos = getpos('.')
+
+  call setpos('.', [0, 0, 0, 0])
+  if search('Last\sChange')
+    execute 'silent! s/Last\ Change:\zs.*$/ ' . strftime('%Y-%m-%d') . '/'
+  endif
+
+  call setpos('.', s:pos)
+endfunction
 
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
