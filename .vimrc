@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-05
+" Last Change: 2015-04-06
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -28,8 +28,7 @@ NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
 NeoBundle 'sgur/vim-textobj-parameter.git'
-" NeoBundle 'guns/xterm-color-table.vim'
-" NeoBundle 'vim-scripts/CSApprox'
+NeoBundle 'vim-scripts/desert256.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
 NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by rc/keymap.vim
 
@@ -51,8 +50,12 @@ NeoBundleCheck
 
 source ~/.vim/rc/general.vim
 source ~/.vim/rc/fileencodings.vim
-" source ~/.vim/rc/command.vim
+source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
+
+if !has('gui')
+  colorscheme desert256
+end
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker

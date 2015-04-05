@@ -1,3 +1,11 @@
+" .vim/rc/keymap.vim
+"
+" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
+" Last Change: 2015-04-06
+
+let s:save_cpo = &cpo
+set cpo&vim
+
 noremap ; :
 noremap : ;
 
@@ -37,8 +45,8 @@ nnoremap gg ggzvzz
 nnoremap n  nzvzz
 nnoremap N  Nzvzz
 
-nnoremap + <C-A>
-nnoremap - <C-X>
+" nnoremap + <C-A>
+" nnoremap - <C-X>
 
 nnoremap <Space>p :set paste!    \| :set paste?<CR>
 nnoremap <Space>h :set readonly! \| :set readonly?<CR>
@@ -68,4 +76,9 @@ cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
 cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
 cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
 
-" vim: ts=2 sw=2 sts=2 et
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: ts=2 sw=2 sts=2 et fdm=marker
+
