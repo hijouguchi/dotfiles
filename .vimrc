@@ -22,8 +22,8 @@ NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
 NeoBundle 'sgur/vim-textobj-parameter.git'
-NeoBundle 'itchyny/thumbnail.vim' " depened by rc/keymap.vim
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
+NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by rc/keymap.vim
 
 source ~/.vim/rc/bundle/surround.vim
 source ~/.vim/rc/bundle/vim-submode.vim
