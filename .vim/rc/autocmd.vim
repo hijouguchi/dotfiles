@@ -3,6 +3,9 @@
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
 " Last Change: 2015-04-05
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 augroup VimrcAutoCmd
   autocmd!
 
@@ -49,6 +52,9 @@ augroup VimrcAutoCmd
   autocmd BufRead,BufNewFile *.htm.erb   set filetype=eruby.html
   autocmd BufRead,BufNewFile *.html.erb  set filetype=eruby.html
 
+  autocmd FileType crontab setlocal nobackup
+  autocmd FileType make    setlocal noexpandtab
+
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b
   autocmd QuickFixCmdPost *grep* cwindow
@@ -92,5 +98,8 @@ function! s:UpdateLastChange()
   call setpos('.', s:pos)
 endfunction
 
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker

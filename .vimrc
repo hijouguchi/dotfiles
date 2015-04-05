@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015 Apr 05
+" Last Change: 2015-04-05
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -28,6 +28,8 @@ NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
 NeoBundle 'sgur/vim-textobj-parameter.git'
+" NeoBundle 'guns/xterm-color-table.vim'
+" NeoBundle 'vim-scripts/CSApprox'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
 NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by rc/keymap.vim
 
