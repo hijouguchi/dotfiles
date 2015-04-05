@@ -1,9 +1,30 @@
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
+" .vim/rc/bundle/neocomplete.vim
+" Last Change: 2015 Apr 05
+" Maintainer:  hijouguchi <taka13.mac+vim@gmail.com>
 
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
+" FIXME: ファイルだけ補完したい場合はどうすれば？
+"        現状 <C-X><C-F> で頑張る
+
+let s:save_cpo = &cpo
+set cpo&vim
+
+" NeoBundle 'Shougo/neocomplete.vim'
+" NeoBundle 'Shougo/neosnippet.vim'
+" NeoBundle 'Shougo/neosnippet-snippets'
+
+NeoBundleLazy 'Shougo/neocomplete.vim', {
+      \ 'depends' : [
+      \   'Shougo/neosnippet.vim',
+      \   'Shougo/neosnippet-snippets'
+      \  ],
+      \ 'insert' : 1
+      \ }
+
+
+let g:neocomplete#enable_at_startup  = 1
+let g:neocomplete#enable_smart_case  = 1
+let g:neocomplete#enable_auto_select = 1
+let g:neosnippet#snippets_directory  = '~/.vim/snippet'
 let g:neocomplete#sources#syntax#min_keyword_length = 2
 
 if !exists('g:neocomplete#keyword_patterns')
@@ -15,9 +36,12 @@ endif
 
 inoremap <expr> <Tab>   <SID>InsertTabWrapper()
 inoremap <expr> <CR>    <SID>InsertCRWrapper()
-"inoremap <expr> <Esc>[Z pumvisible() ? <C-P> : <S-Tab>
-inoremap <expr> <S-Tab> pumvisible() ? <C-P> : <S-Tab>
-inoremap <expr> <C-F>   neocomplete#manual_filename_complete()
+"inoremap <expr> <Esc>[Z pumvisible() ? "\<C-P>" : "\<S-Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<S-Tab>"
+" neocomplete#manual_filename_complete() is outdead
+" inoremap <expr> <C-F>   neocomplete#manual_filename_complete()
+
+
 
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)
@@ -48,4 +72,6 @@ function! s:InsertCRWrapper() "{{{
   endif
 endfunction "}}}
 
-" vim: ts=2 sw=2 sts=2 et
+let &cpo = s:save_cpo
+unlet s:save_cpo
+" vim: ts=2 sw=2 sts=2 et fdm=marker

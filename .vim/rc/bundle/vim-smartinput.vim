@@ -1,3 +1,10 @@
+" .vim/rc/bundle/vim-smartinput.vim
+" Last Change: 2015 Apr 05
+" Maintainer:  hijouguchi <taka13.mac+vim@gmail.com>
+
+let s:save_cpo = &cpo
+set cpo&vim
+
 NeoBundleLazy 'kana/vim-smartinput.git', {'insert' : 1 }
 
 let s:bundle = neobundle#get('vim-smartinput')

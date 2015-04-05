@@ -1,5 +1,3 @@
-" MEMO: quickrun に書き換える
-nnoremap <buffer> <Space>e :!ruby %<CR>
 setlocal tabstop=2
 setlocal shiftwidth=2
 setlocal softtabstop=2

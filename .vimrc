@@ -18,6 +18,12 @@ endif
 call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \   'mac'   : 'make -f make_mac.mak',
+      \   'linux' : 'make'
+      \   }
+      \ }
 NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
@@ -30,6 +36,7 @@ source ~/.vim/rc/bundle/vim-submode.vim
 source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim
+source ~/.vim/rc/bundle/vim-quickrun.vim
 
 runtime macros/matchit.vim
 

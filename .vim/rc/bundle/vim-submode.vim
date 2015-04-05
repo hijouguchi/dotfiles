@@ -5,6 +5,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" NeoBundle 'kana/vim-submode.git'
+
 NeoBundleLazy 'kana/vim-submode.git', {'mappings' : '<C-W>'}
 
 let s:bundle = neobundle#get('vim-submode')
