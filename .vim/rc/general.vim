@@ -1,5 +1,6 @@
 
-set visualbell t_vb=
+set visualbell
+set t_vb=
 set noerrorbells
 set number
 set list
@@ -16,6 +17,18 @@ set history=1000
 
 set display=lastline
 set shortmess& shortmess+=I
+
+if has('windows')
+  set dictionary=$TEMP
+else
+  set dictyonary=/tmp
+endif
+let &undodir = &directory
+
+set swapfile
+set noundofile
+set nobackup
+set nowritebackup
 
 
 set helplang=ja,en

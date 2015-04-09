@@ -1,5 +1,5 @@
 " .vim/rc/bundle/neocomplete.vim
-" Last Change: 2015 Apr 05
+" Last Change: 2015-04-09
 " Maintainer:  hijouguchi <taka13.mac+vim@gmail.com>
 
 " FIXME: ファイルだけ補完したい場合はどうすれば？
@@ -22,10 +22,11 @@ NeoBundleLazy 'Shougo/neocomplete.vim', {
 
 
 let g:neocomplete#enable_at_startup  = 1
+let g:neocomplete#max_keyword_width  = 30
 let g:neocomplete#enable_smart_case  = 1
-let g:neocomplete#enable_auto_select = 1
-let g:neosnippet#snippets_directory  = '~/.vim/snippet'
+let g:neocomplete#enable_auto_select = 0
 let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#use_vimproc        = 1
 
 if !exists('g:neocomplete#keyword_patterns')
   let g:neocomplete#keyword_patterns = {
@@ -35,7 +36,7 @@ endif
 
 
 inoremap <expr> <Tab>   <SID>InsertTabWrapper()
-inoremap <expr> <CR>    <SID>InsertCRWrapper()
+imap     <expr> <CR>    <SID>InsertCRWrapper()
 "inoremap <expr> <Esc>[Z pumvisible() ? "\<C-P>" : "\<S-Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<S-Tab>"
 " neocomplete#manual_filename_complete() is outdead
@@ -46,8 +47,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<S-Tab>"
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)
 
-imap    <C-L> <Plug>(neosnippet_expand)
-smap    <C-L> <Plug>(neosnippet_expand)
+" imap    <C-L> <Plug>(neosnippet_expand)
+" smap    <C-L> <Plug>(neosnippet_expand)
 
 function! s:InsertTabWrapper() "{{{
   if pumvisible()
@@ -61,14 +62,12 @@ function! s:InsertTabWrapper() "{{{
   endif
 endfunction "}}}
 function! s:InsertCRWrapper() "{{{
-  if neosnippet#expandable()
-    return "\<Plug>(neosnippet_expand)"
-  elseif pumvisible()
-    "call neocomplcache#close_popup()
-    call neocomplete#close_popup()
+  if !pumvisible()
     return "\<CR>"
+  " elseif neosnippet#expandable()
+  "   return "\<Plug>(neosnippet_expand)"
   else
-    return "\<CR>"
+    return neocomplete#close_popup() . "\<CR>"
   endif
 endfunction "}}}
 

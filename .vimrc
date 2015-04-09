@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-06
+" Last Change: 2015-04-09
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -18,12 +18,14 @@ endif
 call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \   'mac'   : 'make -f make_mac.mak',
-      \   'linux' : 'make'
-      \   }
-      \ }
+if !has('windows')
+  NeoBundle 'Shougo/vimproc.vim', {
+        \ 'build' : {
+        \   'mac'   : 'make -f make_mac.mak',
+        \   'linux' : 'make'
+        \   }
+        \ }
+endif
 NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
@@ -56,6 +58,7 @@ source ~/.vim/rc/keymap.vim
 
 if !has('gui')
   colorscheme desert256
+  " colorscheme mycolor
 end
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker

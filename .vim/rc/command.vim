@@ -17,13 +17,15 @@ command! -bang Dos   e<bang> ++ff=dos
 
 
 " カーソル下のハイライトグループを表示する
-command! HighlightName
-      \    execute 'highlight ' . synIDattr(<SID>get_syn_id(0), 'name')
-      \  | execute 'highlight ' . synIDattr(<SID>get_syn_id(1), 'name')
+command! HighlightName call <SID>get_syn_id()
 
-function! s:get_syn_id(trans)
-  let l:synid = synID(line('.'), col('.'), 1)
-  return a:trans ? synIDtrans(l:synid) : l:synid
+function! s:get_syn_id()
+  let l:id    = synID(line("."), col("."), 1)
+  let l:trans = synIDtrans(l:id)
+  execute 'highlight ' . synIDattr(l:id, 'name')
+  if l:trans != l:id
+    execute 'highlight ' . synIDattr(l:trans, 'name')
+  end
 endfunction
 
 
