@@ -18,7 +18,7 @@ endif
 call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-if !has('windows')
+if !has('win32') && !has('win32unix')
   NeoBundle 'Shougo/vimproc.vim', {
         \ 'build' : {
         \   'mac'   : 'make -f make_mac.mak',
@@ -31,6 +31,7 @@ NeoBundle 'vim-scripts/Align'
 NeoBundle 'kana/vim-textobj-user.git'
 NeoBundle 'sgur/vim-textobj-parameter.git'
 NeoBundle 'vim-scripts/desert256.vim'
+NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
 NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by rc/keymap.vim
 
@@ -56,8 +57,9 @@ source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
 
-if !has('gui')
-  colorscheme desert256
+if !has('gui_running')
+  " colorscheme desert256
+  colorscheme landscape
   " colorscheme mycolor
 end
 

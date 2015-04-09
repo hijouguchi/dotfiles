@@ -1,4 +1,5 @@
 
+set t_Co=256
 set visualbell
 set t_vb=
 set noerrorbells
@@ -18,10 +19,10 @@ set history=1000
 set display=lastline
 set shortmess& shortmess+=I
 
-if has('windows')
-  set dictionary=$TEMP
+if has('win32') || has('win32unix')
+  set directory=$TEMP
 else
-  set dictyonary=/tmp
+  set directory=/tmp
 endif
 let &undodir = &directory
 
