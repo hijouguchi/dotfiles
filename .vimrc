@@ -28,8 +28,6 @@ if !has('win32') && !has('win32unix')
 endif
 NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
-NeoBundle 'kana/vim-textobj-user.git'
-NeoBundle 'sgur/vim-textobj-parameter.git'
 NeoBundle 'vim-scripts/desert256.vim'
 NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
@@ -37,6 +35,7 @@ NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by r
 
 source ~/.vim/rc/bundle/surround.vim
 source ~/.vim/rc/bundle/vim-submode.vim
+source ~/.vim/rc/bundle/vim-textobj.vim
 source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim

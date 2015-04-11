@@ -1,5 +1,5 @@
 " .vim/rc/bundle/vim-template.vim
-" Last Change: 2015 Apr 05
+" Last Change: 2015-04-11
 " Maintainer:  hijouguchi <taka13.mac+vim@gmail.com>
 
 let s:save_cpo = &cpo
@@ -15,6 +15,7 @@ function! s:bundle.hooks.on_source(bundle)
         \    if search('<+CURSOR+>')
         \  |   execute 'normal! "_da>'
         \  | endif
+  autocmd User plugin-template-loaded setlocal nomodified
 endfunction
 unlet s:bundle
 

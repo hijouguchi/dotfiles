@@ -56,7 +56,7 @@ set softtabstop=0
 set pumheight=15
 
 set laststatus=2
-set statusline=%{MyStatusLineEnter()}
+set statusline=%{MyStatusLine(1)}
 
 let s:mode = {
       \ "n"      : "NORMAL",
@@ -68,24 +68,17 @@ let s:mode = {
       \ "?"      : "??????"
       \ }
 
-function! MyStatusLineEnter() "{{{
+function! MyStatusLine(enter) abort "{{{
   let nr = bufnr('%')
-  let s = printf(' %%{MyStatusLineMode(%d)}', nr)
-  let s = s . ' %<%f'
+  let s = ''
+  if a:enter
+    let s = printf(' %%{MyStatusLineMode(%d)} ', nr)
+  endif
+  let s = s . '%<%f'
   let s = s . printf(' %%{MyStatusLineModified(%d)}', nr)
   let s = s . '%='
   let s = s . printf(' %%{MyStatusLineFileType(%d)}', nr)
-  let s = s . ' %cC,%l/%LL %P'
-  let &l:statusline = s
-endfunction "}}}
-
-function! MyStatusLineLeave() "{{{
-  let nr = bufnr('%')
-  let s = '%<%f'
-  let s = s . printf(' %%{MyStatusLineModified(%d)}', nr)
-  let s = s . '%='
-  let s = s . printf(' %%{MyStatusLineFileType(%d)}', nr)
-  let s = s . ' %cC,%l/%LL %P'
+  let s = s . ' %cC,%l/%LL %p%%'
   let &l:statusline = s
 endfunction "}}}
 
@@ -108,20 +101,23 @@ function! MyStatusLineFileType(nr) "{{{
 endfunction "}}}
 
 function! MyStatusLineModified(nr) "{{{
-  if getbufvar(a:nr, "&modified")
-    return '+'
-  elseif !getbufvar(a:nr, "&modifiable")
-    return '-'
-  else
+  let l = []
+  if  getbufvar(a:nr, "&readonly")   | call add(l, 'RO') | endif
+  if !getbufvar(a:nr, "&modifiable") | call add(l, '-')  | endif
+  if  getbufvar(a:nr, "&modified")   | call add(l, '+')  | endif
+
+  if empty(l)
     return ''
+  else
+    return '[' . join(l, ',') . ']'
   endif
 endfunction "}}}
 
 augroup MyStatusLine "{{{
   autocmd!
 
-  autocmd! WinEnter * call MyStatusLineEnter()
-  autocmd! WinLeave * call MyStatusLineLeave()
+  autocmd! WinEnter * call MyStatusLine(1)
+  autocmd! WinLeave * call MyStatusLine(0)
 augroup END "}}}
 
 
