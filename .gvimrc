@@ -1,8 +1,9 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-09
+" Last Change: 2015-04-10
 
+set t_vb=
 " colorscheme desert256
 colorscheme landscape
 
