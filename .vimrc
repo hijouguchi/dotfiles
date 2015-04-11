@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-09
+" Last Change: 2015-04-11
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -41,6 +41,7 @@ source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
+" source ~/.vim/rc/bundle/lightline.vim
 
 runtime macros/matchit.vim
 
