@@ -24,7 +24,7 @@ function! MySmartinputDisable() abort "{{{
   return
 endfunction "}}}
 
-function! MySmartinputEnable() abort
+function! MySmartinputEnable() abort "{{{
   if g:my_smartinput_loaded
     return
   endif
@@ -48,7 +48,7 @@ function! MySmartinputEnable() abort
   "       \ })
 
   let g:my_smartinput_loaded = 1
-endfunction
+endfunction "}}}
 
 " ブロック挿入の挙動が変なので無効にさせる
 vnoremap I :<C-U>call MySmartinputDisable()<CR>gvI
