@@ -15,17 +15,29 @@ command! -bang Unix  e<bang> ++ff=unix
 command! -bang Mac   e<bang> ++ff=mac
 command! -bang Dos   e<bang> ++ff=dos
 
-command! -nargs=+ -complete=file Diff call <SID>diff_start(<f-args>)
+command! -nargs=* -complete=file Diff call <SID>diff_start(<f-args>)
 
 function! s:diff_start(...) abort "{{{
   let fname = expand('%')
 
-  tabnew
-
-  if a:0 == 1
-    execute 'edit ' . fname
+  if a:0 == 0
+    ":help DiffOrig
+    let ft=&l:filetype
+    vertical new
+    setlocal buftype=nofile
+    let &l:filetype=ft
+    read ++edit #
+    0d_
+    diffthis
+    wincmd p
+    diffthis
+  elseif a:0 == 1
+    " tabnew
+    " execute 'edit ' . fname
+    diffthis
     execute 'vertical diffsplit ' . a:1
   else
+    tabnew
     execute 'edit ' . a:1
     for i in range(1,a:0-1)
       execute 'vertical diffsplit ' . a:000[i]
