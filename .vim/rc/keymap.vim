@@ -1,13 +1,14 @@
 " .vim/rc/keymap.vim
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-06
+" Last Change: 2015-04-17
 
 let s:save_cpo = &cpo
 set cpo&vim
 
 noremap ; :
 noremap : ;
+nnoremap q; q:
 
 noremap  <F1> <NOP>
 noremap! <F1> <NOP>
@@ -34,12 +35,6 @@ nnoremap <Space>/ :set hlsearch! \| set hlsearch?<CR>
 
 nnoremap <F1> <NOP>
 
-" require itchyny/thumbnail.vim
-nnoremap <Space>b :Thumbnail -here<CR>
-
-" MEMO: quickrun に変更
-" execute 'nnoremap <Space>e :!' . expand('%:p') . '<CR>'
-
 " fold を展開して，画面の中央にする
 nnoremap gg ggzvzz
 nnoremap n  nzvzz
@@ -59,22 +54,53 @@ nnoremap <Space>r :registers<CR>
 
 nmap <Space>w <C-W>
 
+nnoremap <Space>tj gt
+nnoremap <Space>tk gT
 
-vnoremap i I
-vnoremap a A
+for s:i in range(0,9)
+  execute printf("nnoremap <Space>t%d %dgt", s:i, s:i+1)
+endfor
+unlet s:i
 
+
+" NOTE: text object を殺してしまう
+" vnoremap i I
+" vnoremap a A
+
+" emacs like keybind for cmdline
 cnoremap <C-B> <Left>
 cnoremap <C-F> <Right>
 cnoremap <C-A> <Home>
 cnoremap <C-E> <End>
 
+" NOTE: <Esc> を使わないキーバインドにしたい
+" cnoremap <C-[><C-B> <S-Left>
+" cnoremap <C-[><C-F> <S-Right>
+" cnoremap <C-[><C-[> <Esc>
+
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
-cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
-cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
-cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
-cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
+" cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
+" cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
+" cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
+" cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
+cnoremap <expr> / <SID>MyCmdLineWrapper('/', '\/', '/')
+cnoremap <expr> \ <SID>MyCmdLineWrapper('\', '\\', '\\')
+cnoremap <expr> [ <SID>MyCmdLineWrapper('[', '\[', '\[')
+cnoremap <expr> < <SID>MyCmdLineWrapper('<', '\<', '\<')
+cnoremap <expr> > <SID>MyCmdLineWrapper('>', '\>', '\>')
+cnoremap <expr> <CR> <SID>MyCmdLineWrapper("\<CR>", "\<CR>zvzz", "\<CR>")
+
+function! s:MyCmdLineWrapper(...) abort "{{{
+  if getcmdtype() =~ '[/?]'
+    return a:2
+  elseif getcmdline() =~? '\<s\(ubstitute\)\?/'
+    return a:3
+  else
+    return a:1
+  endif
+endfunction "}}}
 
 
 let &cpo = s:save_cpo

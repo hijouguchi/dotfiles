@@ -31,7 +31,6 @@ NeoBundle 'vim-scripts/Align'
 NeoBundle 'vim-scripts/desert256.vim'
 NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
-NeoBundleLazy 'itchyny/thumbnail.vim', {'commands' : 'Thumbnail'} " depened by rc/keymap.vim
 
 source ~/.vim/rc/bundle/surround.vim
 source ~/.vim/rc/bundle/vim-submode.vim
@@ -40,6 +39,7 @@ source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
+source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
 
 runtime macros/matchit.vim

@@ -1,10 +1,12 @@
 " .vim/rc/command.vim
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-13
+" Last Change: 2015-04-17
 
 let s:save_cpo = &cpo
 set cpo&vim
+
+command! Cd cd %:h
 
 command! -bang Utf8  e<bang> ++enc=utf-8
 command! -bang Euc   e<bang> ++enc=euc-jp

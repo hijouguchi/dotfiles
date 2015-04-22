@@ -9,6 +9,9 @@ set listchars=tab:\ \ ,trail:_,eol:.
 set completeopt=menuone,preview
 set matchpairs& matchpairs+=<:>
 
+set showmatch
+set matchtime=1
+
 set autoindent
 set cindent
 set complete=.,w,b,u,t,k
@@ -39,6 +42,8 @@ set ignorecase
 set smartcase
 set wrapscan
 
+set scrolloff=10
+
 set foldmethod=marker
 set foldopen=hor,insert,mark,percent,quickfix,undo
 
@@ -47,7 +52,7 @@ set noshowmode
 
 set wildmenu
 set wildchar=<tab>
-set wildmode=list:longest,full
+set wildmode=longest,full
 
 set tabstop=2
 set shiftwidth=2
@@ -65,6 +70,7 @@ let s:mode = {
       \ "\<C-V>" : "VISUAL BLOCK",
       \ "i"      : "INSERT",
       \ "R"      : "REPLACE",
+      \ "c"      : "COMMAND",
       \ "?"      : "??????"
       \ }
 
@@ -94,7 +100,7 @@ function! MyStatusLineFileType(nr) "{{{
   let ff   = getbufvar(a:nr, '&l:fileformat')
 
   let s = '['
-  if ft | let s = s . ft . ',' | endif
+  if ft !=# '' | let s = s . ft . ',' | endif
   let s = s . (fenc ? fenc : &encoding) . ','
   let s = s . ff . ']'
   return s

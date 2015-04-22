@@ -1,7 +1,7 @@
 " .vim/rc/autocmd.vim
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-05
+" Last Change: 2015-04-17
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -27,6 +27,10 @@ augroup VimrcAutoCmd
   "      \ | endif
 
   "autocmd BufNewFile * setlocal expandtab
+  autocmd BufNewFile *
+        \   if &l:filetype !=? 'make'
+        \ |   setlocal expandtab
+        \ | endif
 
   autocmd FileType *
         \   if &l:omnifunc == ''
@@ -34,7 +38,7 @@ augroup VimrcAutoCmd
         \ | endif
 
   " FIXME: cursor can't not use
-  autocmd BufWritePre * call <SID>UpdateLastChange()
+  " autocmd BufWritePre * call <SID>UpdateLastChange()
 
 
   autocmd BufWinEnter,Filetype help wincmd K
@@ -87,7 +91,7 @@ augroup BinaryXXD
   autocmd BufReadPost  * endif
 augroup END
 
-function! s:UpdateLastChange()
+function! s:UpdateLastChange() "{{{
   let s:pos = getpos('.')
 
   call setpos('.', [0, 0, 0, 0])
@@ -96,7 +100,7 @@ function! s:UpdateLastChange()
   endif
 
   call setpos('.', s:pos)
-endfunction
+endfunction "}}}
 
 
 let &cpo = s:save_cpo

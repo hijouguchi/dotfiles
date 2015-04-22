@@ -1,9 +1,6 @@
 " .vim/rc/bundle/neocomplete.vim
-" Last Change: 2015-04-09
+" Last Change: 2015-04-17
 " Maintainer:  hijouguchi <taka13.mac+vim@gmail.com>
-
-" FIXME: ファイルだけ補完したい場合はどうすれば？
-"        現状 <C-X><C-F> で頑張る
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -36,11 +33,10 @@ endif
 
 
 inoremap <expr> <Tab>   <SID>InsertTabWrapper()
-imap     <expr> <CR>    <SID>InsertCRWrapper()
+inoremap <expr> <CR>    <SID>InsertCRWrapper()
 "inoremap <expr> <Esc>[Z pumvisible() ? "\<C-P>" : "\<S-Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<S-Tab>"
-" neocomplete#manual_filename_complete() is outdead
-" inoremap <expr> <C-F>   neocomplete#manual_filename_complete()
+inoremap <expr> <C-F>   <SID>FileCompleteWrapper()
 
 
 
@@ -69,6 +65,10 @@ function! s:InsertCRWrapper() "{{{
   else
     return neocomplete#close_popup() . "\<CR>"
   endif
+endfunction "}}}
+function! s:FileCompleteWrapper() "{{{
+  call feedkeys(neocomplete#start_manual_complete('file'))
+  return pumvisible() ? '' : "\<C-X>\<C-F>"
 endfunction "}}}
 
 let &cpo = s:save_cpo
