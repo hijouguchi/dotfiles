@@ -1,3 +1,6 @@
+" substitite_insert_nums.vim
+" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
+"
 " Usage
 " :SubstituteInsertNums <start> <end>
 "   選択行のパターンを置換して，行を追加していく
@@ -21,26 +24,24 @@
 " int a = 2;
 " int b = 3;
 "
+let s:save_cpo = &cpo
+set cpo&vim
+
 if exists("g:loaded_substitute_insert_nums")
   finish
 endif
 let g:loaded_substitute_insert_nums = 1
 
 
-if !exists("g:substitite_insert_nums_patterns")
-  let g:substitite_insert_nums_patterns = [
-        \ {'type': 'char',    'pat': 'XXX', 'str': '%d'},
-        \ {'type': 'pattern', 'pat': '_\(%\d*[dxX]\)_'},
+if !exists("g:substitite_patterns")
+  let g:substitite_patterns = [
+        \ {'pat': 'XXX',             'str': '"%d"'},
+        \ {'pat': '_\(%\d*[dxX]\)_', 'str': 'submatch(1)'},
         \ ]
 endif
 
-if !exists(":SubstituteInsertNums")
-  command -range -nargs=+ SubstituteInsertNums <line1>,<line2>call SubstituteInsertNums(<f-args>)
-endif
-
-if !exists(":SubstituteNums")
-  command -range -nargs=* SubstituteNums       <line1>,<line2>call SubstituteNums(<f-args>)
-endif
+command! -range -nargs=+ SubstituteInsertNums <line1>,<line2>call SubstituteInsertNums(<f-args>)
+command! -range -nargs=* SubstituteNums       <line1>,<line2>call SubstituteNums(<f-args>)
 
 function! SubstituteInsertNums(...) range "{{{
   if a:0 == 1
@@ -60,9 +61,8 @@ function! SubstituteInsertNums(...) range "{{{
   endif
 
   let lines = getline(a:firstline, a:lastline)
-
   " 元の行を削除する
-  call cursor(a:firstline, 0)
+  call cursor(a:firstline, 1)
   execute a:firstline. ',' . a:lastline . 'd _'
   let now_num = a:firstline - 1
 
@@ -70,13 +70,7 @@ function! SubstituteInsertNums(...) range "{{{
     let ltmp = copy(lines)
 
     for j in range(0, len(ltmp)-1)
-      for pats in g:substitite_insert_nums_patterns
-        if pats['type'] == 'pattern'
-          let ltmp[j] = substitute(ltmp[j], pats['pat'], '\=printf(submatch(1), '.i.')', 'g')
-        elseif pats['type'] == 'char'
-          let ltmp[j] = substitute(ltmp[j], pats['pat'], printf(pats['str'], i), 'g')
-        endif
-      endfor
+      let ltmp[j] = s:substitute(ltmp[j], i)
     endfor
 
     call append(now_num, ltmp)
@@ -91,15 +85,28 @@ function! SubstituteNums(...) range "{{{
 
   for i in range(a:firstline, a:lastline)
     call cursor(i, col)
-    for pats in g:substitite_insert_nums_patterns
-      if pats['type'] == 'pattern'
-        execute 'silent! s/' . pats['pat'] . '/\=printf(submatch(1), ' . idx . ')/g'
-      elseif pats['type'] == 'char'
-        execute 'silent! s/' . pats['pat'] . '/' . printf(pats['str'], idx) . '/g'
-      endif
-    endfor
+    let str_cur = getline('.')
+    let str_sub = s:substitute(str_cur, idx)
 
-    let idx = idx + incr
+    if str_cur != str_sub
+      call setline(line('.'), str_sub)
+      let idx = idx + incr
+    endif
   endfor
 endfunction "}}}
 
+function! s:substitute(str, idx) abort "{{{
+  let str = a:str
+
+  for pats in g:substitite_patterns
+    let str = substitute(str, pats['pat'],
+          \ '\=printf(' . pats['str'] . ', ' . a:idx . ')', 'g')
+  endfor
+
+  return str
+endfunction "}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: ts=2 sw=2 sts=2 et fdm=marker
