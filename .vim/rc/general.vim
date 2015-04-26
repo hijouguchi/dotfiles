@@ -1,3 +1,10 @@
+" .vim/rc/keymap.vim
+"
+" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
+" Last Change: 2015-04-26
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 set t_Co=256
 set visualbell
@@ -42,7 +49,7 @@ set ignorecase
 set smartcase
 set wrapscan
 
-set scrolloff=10
+set scrolloff=3
 
 set foldmethod=marker
 set foldopen=hor,insert,mark,percent,quickfix,undo
@@ -100,8 +107,8 @@ function! MyStatusLineFileType(nr) "{{{
   let ff   = getbufvar(a:nr, '&l:fileformat')
 
   let s = '['
-  if ft !=# '' | let s = s . ft . ',' | endif
-  let s = s . (fenc ? fenc : &encoding) . ','
+  if ft != '' | let s = s . ft . ',' | endif
+  let s = s . (fenc != '' ? fenc : &encoding) . ','
   let s = s . ff . ']'
   return s
 endfunction "}}}
@@ -126,5 +133,8 @@ augroup MyStatusLine "{{{
   autocmd! WinLeave * call MyStatusLine(0)
 augroup END "}}}
 
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
