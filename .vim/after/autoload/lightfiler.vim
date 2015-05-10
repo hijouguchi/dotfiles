@@ -105,14 +105,14 @@ function! lightfiler#complete_function(findstart, base) abort "{{{
 
     if base == ''
       let b:items = glob('*', 1, 1)
-      " elseif base == '~'
-      "   let b:items = glob('~/*', 1, 1)
-      " elseif base =~ '\*'
-      "   let b:items = s:search_recursive(base)
+      call map(b:items,
+            \ "{'word': v:val, 'menu': isdirectory(v:val) ? '[dir]' : '[file]'}")
     else
       let b:items = s:search_recursive(base)
-      " let b:items = s:search_normal(base)
     endif
+
+    " add buffer
+    let b:items = extend(s:search_buffer(base), b:items)
 
     if empty(b:items)
       return -1
@@ -121,10 +121,8 @@ function! lightfiler#complete_function(findstart, base) abort "{{{
     return match(cur_text, pat)
   endif
 
-  let sep = has('win32') ? '\' : '/'
   if exists('b:items')
-    return map(copy(b:items),
-          \ 'isdirectory(v:val) ? v:val.sep : v:val')
+    return b:items
   else
     return []
   endif
@@ -198,9 +196,24 @@ function! s:search_recursive(base) abort "{{{
     return glob(lhs, 1, 1)
   endif
 
-  return list
+  " return list
+  let sep = has('win32') ? '\' : '/'
+  return map(list,
+        \ "{'word': v:val, 'menu': isdirectory(v:val) ? '[dir]' : '[file]'}")
 endfunction "}}}
 
+" FIXME: あいまい検索できるようにする
+function! s:search_buffer(base) abort "{{{
+			let buflist = []
+			for i in range(tabpagenr('$'))
+			   call extend(buflist, tabpagebuflist(i + 1))
+			endfor
+
+      call uniq(buflist)
+      call map(buflist, 'bufname(v:val)')
+      call filter(buflist, 'match(v:val, "' . a:base . '") != -1')
+      return map(buflist, "{'word': v:val, 'menu': '[buffer]'}")
+endfunction "}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
