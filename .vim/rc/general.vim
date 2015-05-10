@@ -91,7 +91,7 @@ function! MyStatusLine(enter) abort "{{{
   let s = s . printf(' %%{MyStatusLineModified(%d)}', nr)
   let s = s . '%='
   let s = s . printf(' %%{MyStatusLineFileType(%d)}', nr)
-  let s = s . ' %cC,%l/%LL %p%%'
+  let s = s . ' %2cC,%l/%LL %p%%'
   let &l:statusline = s
 endfunction "}}}
 
