@@ -77,10 +77,10 @@ endfunction "}}}
 function! lightfiler#openfile(targ) abort "{{{
   let fname = matchstr(getline('.'), '\f*$')
 
-  if !filereadable(fname)
-    execute 'echomsg ' . fname . 'is not exist'
-    return ''
-  endif
+  " if !filereadable(fname)
+  "   execute 'echomsg ' . fname . 'is not exist'
+  "   return ''
+  " endif
 
   if a:targ == 'here'
     execute winnr('#') . 'wincmd w'
@@ -90,6 +90,7 @@ function! lightfiler#openfile(targ) abort "{{{
   elseif a:targ == 'split'
     execute 'split ' . fname
   elseif a:targ == 'vsplit'
+    execute winnr('#') . 'wincmd w'
     execute 'vsplit ' . fname
   endif
 
@@ -98,31 +99,108 @@ endfunction "}}}
 
 function! lightfiler#complete_function(findstart, base) abort "{{{
   if a:findstart
+    let pat      = '\(\f\|\*\)*$'
     let cur_text = getline('.')
-    let base     = matchstr(cur_text, '\f*$')
-    let list     = glob(base . '*')
+    let base     = matchstr(cur_text, pat)
 
-    if list == ''
-      let list = substitute(base, '\(\w\)\@<=/', '*/', 'g')
-      let list = glob(list . '*')
-    endif
-
-    if list == ''
-      let b:items = []
-      return -1
+    if base == ''
+      let b:items = glob('*', 1, 1)
+      " elseif base == '~'
+      "   let b:items = glob('~/*', 1, 1)
+      " elseif base =~ '\*'
+      "   let b:items = s:search_recursive(base)
     else
-      let b:items = split(list, "\<NL>")
-      return match(cur_text, '\f*$')
+      let b:items = s:search_recursive(base)
+      " let b:items = s:search_normal(base)
     endif
+
+    if empty(b:items)
+      return -1
+    endif
+
+    return match(cur_text, pat)
   endif
 
+  let sep = has('win32') ? '\' : '/'
   if exists('b:items')
-    return b:items
+    return map(copy(b:items),
+          \ 'isdirectory(v:val) ? v:val.sep : v:val')
   else
     return []
   endif
 
 endfunction "}}}
+
+function! s:search_normal(base) abort "{{{
+  let list = glob(a:base . '*', 1, 1)
+
+  if empty(list)
+    let base = substitute(a:base, '\(\w\)\@<=/', '*/', 'g')
+    let list = glob(base. '*', 1, 1)
+  endif
+
+  return list
+endfunction "}}}
+
+function! s:search_recursive(base) abort "{{{
+  let files  = split(a:base, '[\/]\+', 1)
+  let ppath  = get(b:, 'ppath', [])
+  let iseek  = 0
+
+  " 前回と重複してるディレクトリを見つける
+  let len = min([len(files), len(ppath)])
+  if len > 0
+    for i in range(0, len-1)
+      if files[i] != ppath[i]
+        let iseek = i
+        break
+      endif
+    endfor
+  endif
+
+  " make search path
+  let list = []
+  let wildcard = -1
+
+  for i in range(iseek, (len(files)-1))
+    " check wildcard mode
+    if files[i] == '**'
+      let wildcard = i
+      break
+    endif
+
+    if i != 0 || files[i] !~ '^\(\~\)\?$'
+      let str  = join(files[0:i], '/')
+      let list = glob(str . '*', 1, 1)
+
+      if empty(list)
+        return []
+      elseif len(list) == 1
+        let files[i] = matchstr(list[0], '[^\/]*$')
+      else
+        let files[i] = files[i] . '*'
+      endif
+    endif
+  endfor
+
+  let b:ppath = files
+
+  " wildcard mode
+  if wildcard != -1
+    let lhs = join(files[0:(wildcard-1)], '/')
+
+    let rhs = ''
+    if wildcard < len(files)-1
+      let rhs = substitute(join(files[(wildcard+1):-1], '/'),
+            \ '\*', '.*', 'g')
+    endif
+
+    return glob(lhs, 1, 1)
+  endif
+
+  return list
+endfunction "}}}
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
