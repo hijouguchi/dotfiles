@@ -97,22 +97,26 @@ function! lightfiler#openfile(targ) abort "{{{
   return ''
 endfunction "}}}
 
+function! s:transform_to_completion_dist_for_file(item) abort "{{{
+  let sep = has('win32') || has('win64') ? '\' : '/'
+  let item = map(copy(a:item),
+        \ "isdirectory(v:val) ? v:val . '" . sep . "' : v:val")
+  return map(item,
+        \ "{'word': v:val, 'menu': isdirectory(v:val) ? '[dir]' : '[file]'}")
+endfunction "}}}
+
 function! lightfiler#complete_function(findstart, base) abort "{{{
   if a:findstart
     let pat      = '\(\f\|\*\)*$'
     let cur_text = getline('.')
     let base     = matchstr(cur_text, pat)
 
-    if base == ''
-      let b:items = glob('*', 1, 1)
-      call map(b:items,
-            \ "{'word': v:val, 'menu': isdirectory(v:val) ? '[dir]' : '[file]'}")
-    else
-      let b:items = s:search_recursive(base)
-    endif
+    " find files
+    let list    = s:search_files(base)
+    let b:items = s:transform_to_completion_dist_for_file(list)
 
     " add buffer
-    let b:items = extend(s:search_buffer(base), b:items)
+    let b:items = extend(s:search_buffers(base), b:items)
 
     if empty(b:items)
       return -1
@@ -129,18 +133,11 @@ function! lightfiler#complete_function(findstart, base) abort "{{{
 
 endfunction "}}}
 
-function! s:search_normal(base) abort "{{{
-  let list = glob(a:base . '*', 1, 1)
-
-  if empty(list)
-    let base = substitute(a:base, '\(\w\)\@<=/', '*/', 'g')
-    let list = glob(base. '*', 1, 1)
+function! s:search_files(base) abort "{{{
+  if a:base == ''
+    return glob('*', 1, 1)
   endif
 
-  return list
-endfunction "}}}
-
-function! s:search_recursive(base) abort "{{{
   let files  = split(a:base, '[\/]\+', 1)
   let ppath  = get(b:, 'ppath', [])
   let iseek  = 0
@@ -196,23 +193,24 @@ function! s:search_recursive(base) abort "{{{
     return glob(lhs, 1, 1)
   endif
 
-  " return list
-  let sep = has('win32') ? '\' : '/'
-  return map(list,
-        \ "{'word': v:val, 'menu': isdirectory(v:val) ? '[dir]' : '[file]'}")
+  return list
 endfunction "}}}
 
-" FIXME: あいまい検索できるようにする
-function! s:search_buffer(base) abort "{{{
-			let buflist = []
-			for i in range(tabpagenr('$'))
-			   call extend(buflist, tabpagebuflist(i + 1))
-			endfor
+function! s:search_buffers(base) abort "{{{
+  let buflist = []
+  for i in range(tabpagenr('$'))
+    call extend(buflist, tabpagebuflist(i + 1))
+  endfor
 
-      call uniq(buflist)
-      call map(buflist, 'bufname(v:val)')
-      call filter(buflist, 'match(v:val, "' . a:base . '") != -1')
-      return map(buflist, "{'word': v:val, 'menu': '[buffer]'}")
+  call uniq(buflist)
+  call filter(buflist, 'v:val != bufnr("")') " 自分自身を削除する
+  call map(buflist, 'bufname(v:val)')
+
+  let pat = substitute(a:base, '\([.~]\)', '\\\1', 'g')
+  let pat = substitute(pat, '\(\w\+\)/', '\1[^/]*/', 'g')
+  let str = printf("match(v:val, '%s') != -1", pat)
+  call filter(buflist, str)
+  return map(buflist, "{'word': v:val, 'menu': '[buffer]'}")
 endfunction "}}}
 
 let &cpo = s:save_cpo
