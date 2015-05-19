@@ -12,6 +12,9 @@ if has('vim_starting')
     set nocompatible
   endif
 
+  if has('win32') || has('win32unix')
+  set runtimepath+=~/.vim/after/
+  endif
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
