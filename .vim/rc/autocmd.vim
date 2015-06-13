@@ -10,8 +10,10 @@ augroup VimrcAutoCmd
   autocmd!
 
 
-  autocmd BufWritePost * if getline(1) =~ "^#!" |
-        \ silent! exe "silent! !chmod +x %" | endif
+  autocmd BufWritePost *
+        \   if getline(1) =~ "^#!"
+        \ |   silent! exe "silent! !chmod +x %"
+        \ | endif
 
   " if the file doesn't have used Japanese, set fileencoding to utf-8
   " from kana's vimrc http://github.com/kana/config/
@@ -26,12 +28,6 @@ augroup VimrcAutoCmd
   "      \ |   setlocal expandtab
   "      \ | endif
 
-  "autocmd BufNewFile * setlocal expandtab
-  autocmd BufNewFile *
-        \   if &l:filetype !=? 'make'
-        \ |   setlocal expandtab
-        \ | endif
-
   autocmd FileType *
         \   if &l:omnifunc == ''
         \ | setlocal omnifunc=syntaxcomplete#Complete
@@ -43,18 +39,16 @@ augroup VimrcAutoCmd
 
   autocmd BufWinEnter,Filetype help wincmd K
 
+  autocmd BufNewFile,BufRead *.r,*.R     setfiletype r
+  autocmd BufNewFile,BufRead *.m,*.mat   setfiletype octave
+  autocmd BufNewFile,BufRead *.mdl       setfiletype spice
+  autocmd BufNewFile,BufRead *.gp        setfiletype gnuplot
 
-
-  autocmd BufRead,BufNewFile *.r,*.R     set filetype=r
-  autocmd BufRead,BufNewFile *.m,*.mat   set filetype=octave
-  autocmd BufRead,BufNewFile *.mdl       set filetype=spice
-  autocmd BufRead,BufNewFile *.gp        set filetype=gnuplot
-
-  autocmd BufRead,BufNewFile *.v.erb     set filetype=eruby.verilog
-  autocmd BufRead,BufNewFile *.sp.erb    set filetype=eruby.spice
-  autocmd BufRead,BufNewFile *.gp.erb    set filetype=eruby.gnuplot
-  autocmd BufRead,BufNewFile *.htm.erb   set filetype=eruby.html
-  autocmd BufRead,BufNewFile *.html.erb  set filetype=eruby.html
+  autocmd BufNewFile,BufRead *.v.erb     setfiletype eruby.verilog
+  autocmd BufNewFile,BufRead *.sp.erb    setfiletype eruby.spice
+  autocmd BufNewFile,BufRead *.gp.erb    setfiletype eruby.gnuplot
+  autocmd BufNewFile,BufRead *.htm.erb   setfiletype eruby.html
+  autocmd BufNewFile,BufRead *.html.erb  setfiletype eruby.html
 
   autocmd FileType crontab setlocal nobackup
   autocmd FileType make    setlocal noexpandtab
@@ -68,27 +62,64 @@ augroup VimrcAutoCmd
   autocmd SwapExists * let v:swapchoice = 'o'
 augroup END
 
+let s:space_match_config = {
+      \ 'SpaceEnd'     : '\s\+$',
+      \ 'TabAndSpace'  : '\s*\(\t \| \t\)\s*',
+      \ 'ZenkakuSpace' : '\s*　\s*'
+      \ }
 
-" augroup HighlightTrailingSpaces
-"   autocmd!
-"   autocmd BufRead,BufNewFile *
-"         \   if &l:filetype == 'help'
-"         \ |   match none
-"         \ | else
-"         \ |   match TrailingSpacess /\(\s*\( \t\|\t \)\s*\|\s\s*$\)/
-"         \ | endif
-" augroup END
+augroup HighlightTrailingSpaces
+  autocmd!
+  for k in keys(s:space_match_config)
+    execute 'autocmd ColorScheme     * highlight default link '.k.' Error'
+  endfor
+
+  autocmd VimEnter,Syntax * call <SID>HighlightTrailingSpacesEnable()
+  autocmd InsertLeave     * call <SID>HighlightTrailingSpacesEnable('SpaceEnd')
+  autocmd InsertEnter     * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
+augroup END
+
+function! s:HighlightTrailingSpacesEnable(...) abort "{{{
+  " MEMO: Insert Mode でカーソル行はハイライトすると目障りかも
+
+  " ハイライトさせたくないファイルタイプ
+  if get(b:, 'current_syntax', '') == 'help'
+    call s:HighlightTrailingSpacesDisanable()
+    return
+  endif
+
+  let mlist = getmatches()
+  let args = (a:0 == 0) ? keys(s:space_match_config) : a:000
+  for li in args
+    if has_key(s:space_match_config, li) &&
+          \ empty(filter(copy(mlist), 'v:val["group"] == li'))
+      call matchadd(li, s:space_match_config[li])
+    endif
+  endfor
+endfunction "}}}
+
+function! s:HighlightTrailingSpacesDisanable(...) abort "{{{
+  let mlist = getmatches()
+  let args = (a:0 == 0) ? keys(s:space_match_config) : a:000
+  for li in args
+    for mg in filter(copy(mlist), 'v:val["group"] == li')
+      call matchdelete(mg['id'])
+    endfor
+  endfor
+endfunction "}}}
+
 
 
 augroup BinaryXXD
   autocmd!
   autocmd BufReadPre   *.bin set binary
 
-  autocmd BufReadPost  * if &l:binary
-  autocmd BufReadPost  *   set ft=xxd
-  autocmd BufReadPost  *   set readonly
-  autocmd BufReadPost  *   silent %!xxd -g 1
-  autocmd BufReadPost  * endif
+  autocmd BufReadPost  *
+        \   if &l:binary
+        \ |   set ft=xxd
+        \ |   set readonly
+        \ |   silent %!xxd -g 1
+        \ | endif
 augroup END
 
 function! s:UpdateLastChange() "{{{
