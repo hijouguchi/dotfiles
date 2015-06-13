@@ -11,12 +11,15 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! lightfiler#setup() abort "{{{
+function! lightfiler#setup(...) abort "{{{
   topleft 3new [filer]
   setlocal buftype=nofile
   setlocal completefunc=lightfiler#complete_function
   call lightfiler#initalize()
   call feedkeys('i> ')
+  if a:0 > 0
+    call feedkeys(a:1)
+  endif
   call lightfiler#set_keymap()
 endfunction "}}}
 
@@ -164,7 +167,7 @@ function! s:search_files(base) abort "{{{
       break
     endif
 
-    if i != 0 || files[i] !~ '^\(\~\)\?$'
+    if i != 0 || files[i] !~ '^\(\~\|[A-Z]:\)\?$'
       let str  = join(files[0:i], '/')
       let list = glob(str . '*', 1, 1)
 
