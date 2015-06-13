@@ -21,6 +21,7 @@ endif
 call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+" kaoriya vim には vimproc が同梱されている
 if !has('win32') && !has('win32unix')
   NeoBundle 'Shougo/vimproc.vim', {
         \ 'build' : {
@@ -31,7 +32,7 @@ if !has('win32') && !has('win32unix')
 endif
 NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
-NeoBundle 'vim-scripts/desert256.vim'
+" NeoBundle 'vim-scripts/desert256.vim'
 NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
 
@@ -42,7 +43,7 @@ source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
-source ~/.vim/rc/bundle/thumbnail.vim
+" source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
 
 runtime macros/matchit.vim
