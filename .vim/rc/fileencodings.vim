@@ -29,7 +29,12 @@ endif
 unlet s:enc_euc
 unlet s:enc_jis
 
-set fileformats=unix,dos,mac
+
+if has('win32') || has('win32unix')
+  set fileformats=dos,unix,mac
+else
+  set fileformats=unix,dos,mac
+endif
 set ambiwidth=double
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker

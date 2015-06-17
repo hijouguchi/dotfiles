@@ -12,7 +12,8 @@ set t_vb=
 set noerrorbells
 set number
 set list
-set listchars=tab:\ \ ,trail:_,eol:.
+"set listchars=tab:\ \ ,trail:_,eol:.
+set listchars=tab:._,trail:_,eol:.
 set completeopt=menuone,preview
 set matchpairs& matchpairs+=<:>
 

@@ -13,7 +13,7 @@ if has('vim_starting')
   endif
 
   if has('win32') || has('win32unix')
-  set runtimepath+=~/.vim/after/
+    set runtimepath+=~/.vim/after/
   endif
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
@@ -45,6 +45,7 @@ source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
 " source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
+source ~/.vim/rc/bundle/incsearch.vim
 
 runtime macros/matchit.vim
 

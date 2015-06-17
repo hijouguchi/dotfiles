@@ -18,7 +18,8 @@ function! s:bundle.hooks.on_source(bundle)
   endif
 
   let g:quickrun_config['_'] = {
-        \   'runner' : 'vimproc',
+        \   'runner'                          : 'vimproc',
+        \   'runner/vimproc/updatetime'       : 10,
         \   'outputter/buffer/split'          : ':topleft',
         \   'outputter/error/error'           : 'quickfix',
         \   'outputter/error/success'         : 'buffer',

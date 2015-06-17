@@ -62,11 +62,21 @@ augroup VimrcAutoCmd
   autocmd SwapExists * let v:swapchoice = 'o'
 augroup END
 
+" MEMO: VimEnter 時には expandtab が反映されていないっぽい
+function! HighlightSpaceStart(name) abort "{{{
+  if &l:expandtab
+    call matchadd(a:name, '^\s*\t\s*')
+  else
+    call matchadd(a:name, '^\s* \s*')
+  endif
+endfunction "}}}
+
 let s:space_match_config = {
       \ 'SpaceEnd'     : '\s\+$',
       \ 'TabAndSpace'  : '\s*\(\t \| \t\)\s*',
       \ 'ZenkakuSpace' : '\s*　\s*'
       \ }
+      "\ 'SpaceStart'   : function('HighlightSpaceStart')
 
 augroup HighlightTrailingSpaces
   autocmd!
@@ -79,11 +89,12 @@ augroup HighlightTrailingSpaces
   autocmd InsertEnter     * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
 augroup END
 
+let s:space_no_highlight = ['help', 'diff']
 function! s:HighlightTrailingSpacesEnable(...) abort "{{{
-  " MEMO: Insert Mode でカーソル行はハイライトすると目障りかも
 
   " ハイライトさせたくないファイルタイプ
-  if get(b:, 'current_syntax', '') == 'help'
+   if exists('b:current_syntax') &&
+         \ index(s:space_no_highlight, b:current_syntax) == -1
     call s:HighlightTrailingSpacesDisanable()
     return
   endif
@@ -93,7 +104,11 @@ function! s:HighlightTrailingSpacesEnable(...) abort "{{{
   for li in args
     if has_key(s:space_match_config, li) &&
           \ empty(filter(copy(mlist), 'v:val["group"] == li'))
-      call matchadd(li, s:space_match_config[li])
+      if type(s:space_match_config[li]) == 1
+        call matchadd(li, s:space_match_config[li])
+      else
+        call call(s:space_match_config[li], [li])
+      endif
     endif
   endfor
 endfunction "}}}
@@ -109,7 +124,6 @@ function! s:HighlightTrailingSpacesDisanable(...) abort "{{{
 endfunction "}}}
 
 
-
 augroup BinaryXXD
   autocmd!
   autocmd BufReadPre   *.bin set binary
@@ -121,17 +135,6 @@ augroup BinaryXXD
         \ |   silent %!xxd -g 1
         \ | endif
 augroup END
-
-function! s:UpdateLastChange() "{{{
-  let s:pos = getpos('.')
-
-  call setpos('.', [0, 0, 0, 0])
-  if search('Last\sChange')
-    execute 'silent! s/Last\ Change:\zs.*$/ ' . strftime('%Y-%m-%d') . '/'
-  endif
-
-  call setpos('.', s:pos)
-endfunction "}}}
 
 
 let &cpo = s:save_cpo
