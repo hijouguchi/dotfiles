@@ -45,7 +45,8 @@ source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
 " source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
-source ~/.vim/rc/bundle/incsearch.vim
+" ちょっと重めなので使わない(何で重いかは後で調べる)
+" source ~/.vim/rc/bundle/incsearch.vim
 
 runtime macros/matchit.vim
 

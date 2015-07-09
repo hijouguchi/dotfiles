@@ -69,7 +69,9 @@ set softtabstop=0
 set pumheight=15
 
 set laststatus=2
-set statusline=%{MyStatusLine(1)}
+" MEMO: 複数の引数が取れない (設定値が複数として見えてしまう)
+" FIXME: たまに表示がバグるので確認する事
+set statusline=%{MyStatusLine(3)}
 
 let s:mode = {
       \ "n"      : "NORMAL",
@@ -82,18 +84,25 @@ let s:mode = {
       \ "?"      : "??????"
       \ }
 
-function! MyStatusLine(enter) abort "{{{
+function! MyStatusLine(arg) abort "{{{
   let nr = bufnr('%')
   let s = ''
-  if a:enter
+  if and(a:arg, 1) == 1
     let s = printf(' %%{MyStatusLineMode(%d)} ', nr)
   endif
   let s = s . '%<%f'
-  let s = s . printf(' %%{MyStatusLineModified(%d)}', nr)
+  let t = printf('%%{MyStatusLineModified(%d)}', nr)
+  if t != ''
+    let s = s . ' %1*' . t . '%* '
+  endif
   let s = s . '%='
   let s = s . printf(' %%{MyStatusLineFileType(%d)}', nr)
   let s = s . ' %2cC,%l/%LL %p%%'
-  let &l:statusline = s
+
+  if and(a:arg, 2) == 2
+    let &l:statusline = s
+  endif
+  return s
 endfunction "}}}
 
 function! MyStatusLineMode(nr) "{{{
@@ -132,6 +141,7 @@ augroup MyStatusLine "{{{
 
   autocmd! WinEnter * call MyStatusLine(1)
   autocmd! WinLeave * call MyStatusLine(0)
+  autocmd! ColorScheme * hi def link User1 Error
 augroup END "}}}
 
 

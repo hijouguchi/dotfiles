@@ -20,10 +20,7 @@ function! s:bundle.hooks.on_source(bundle)
   let g:quickrun_config['_'] = {
         \   'runner'                          : 'vimproc',
         \   'runner/vimproc/updatetime'       : 10,
-        \   'outputter/buffer/split'          : ':topleft',
-        \   'outputter/error/error'           : 'quickfix',
-        \   'outputter/error/success'         : 'buffer',
-        \   'outputter'                       : 'error',
+        \   'outputter/buffer/split'          : ':topleft 10',
         \   'outputter/buffer/close_on_empty' : 1
         \ }
   let g:quickrun_config['verilog'] = {

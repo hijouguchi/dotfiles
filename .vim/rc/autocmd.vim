@@ -94,7 +94,7 @@ function! s:HighlightTrailingSpacesEnable(...) abort "{{{
 
   " ハイライトさせたくないファイルタイプ
    if exists('b:current_syntax') &&
-         \ index(s:space_no_highlight, b:current_syntax) == -1
+         \ index(s:space_no_highlight, b:current_syntax) != -1
     call s:HighlightTrailingSpacesDisanable()
     return
   endif
@@ -133,6 +133,14 @@ augroup BinaryXXD
         \ |   set ft=xxd
         \ |   set readonly
         \ |   silent %!xxd -g 1
+        \ | endif
+augroup END
+
+augroup MyColor
+  autocmd!
+  autocmd ColorScheme *
+        \   if g:colors_name == 'landscape'
+        \ |   highlight! default link NonText Comment
         \ | endif
 augroup END
 

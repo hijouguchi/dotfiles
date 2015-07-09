@@ -29,43 +29,9 @@ nnoremap dl 0d$
 
 nnoremap -- mzgg=G`z
 
-" nnoremap / :set hlsearch<CR>/
+nnoremap / :set hlsearch<CR>/
 " nnoremap * :set hlsearch<CR>*
-nnoremap * :call <SID>MyHighlight()<CR>
 nnoremap <Space>/ :set hlsearch! \| set hlsearch?<CR>
-
-function! s:MyHighlight() abort "{{{
-  " カーソル位置の単語を探す
-  let line  = getline('.')
-  let left  = match(strpart(line, 0, col('.')), '\k*$')
-  let str   = matchstr(strpart(line, left), '^\k*')
-  let ptn   = '\<'.str.'\>'
-  let group = 'Search'.str
-  let gm    = s:find_match(group)
-
-  if empty(gm)
-    "FIXME: match を追加していくごとに色を変えるようにする
-    execute 'highlight def link '.group.' Error'
-    call matchadd(group, ptn)
-    call feedkeys('*', 'n')
-  else
-    call matchdelete(gm['id'])
-    execute 'highlight clear '.group
-  endif
-endfunction "}}}
-
-function! s:find_match(group) abort "{{{
-  let gm = {}
-
-  for m in getmatches()
-    if m['group'] == a:group
-      let gm = m
-      break
-    endif
-  endfor
-
-  return gm
-endfunction "}}}
 
 nnoremap <F1> <NOP>
 
