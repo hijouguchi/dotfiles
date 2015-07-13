@@ -84,9 +84,9 @@ augroup HighlightTrailingSpaces
     execute 'autocmd ColorScheme     * highlight default link '.k.' Error'
   endfor
 
-  autocmd VimEnter,Syntax * call <SID>HighlightTrailingSpacesEnable()
-  autocmd InsertLeave     * call <SID>HighlightTrailingSpacesEnable('SpaceEnd')
-  autocmd InsertEnter     * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
+  autocmd BufWinEnter,Syntax * call <SID>HighlightTrailingSpacesEnable()
+  autocmd InsertLeave        * call <SID>HighlightTrailingSpacesEnable('SpaceEnd')
+  autocmd InsertEnter        * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
 augroup END
 
 let s:space_no_highlight = ['help', 'diff']
@@ -143,6 +143,106 @@ augroup MyColor
         \ |   highlight! default link NonText Comment
         \ | endif
 augroup END
+
+" イベントチェック用
+command! EventChecker call <SID>EventChecker()
+
+function! s:EventChecker() abort "{{{
+  if !exists('g:event_list')
+    let g:event_list = []
+    augroup EventChecker "{{{
+      autocmd!
+      autocmd BufNewFile           * call add(g:event_list, 'BufNewFile')
+      autocmd BufReadPre           * call add(g:event_list, 'BufReadPre')
+      autocmd BufRead              * call add(g:event_list, 'BufRead')
+      autocmd BufReadPost          * call add(g:event_list, 'BufReadPost')
+      autocmd FileReadPre          * call add(g:event_list, 'FileReadPre')
+      autocmd FileReadPost         * call add(g:event_list, 'FileReadPost')
+      autocmd FilterReadPre        * call add(g:event_list, 'FilterReadPre')
+      autocmd FilterReadPost       * call add(g:event_list, 'FilterReadPost')
+      autocmd StdinReadPre         * call add(g:event_list, 'StdinReadPre')
+      autocmd StdinReadPost        * call add(g:event_list, 'StdinReadPost')
+      autocmd BufWrite             * call add(g:event_list, 'BufWrite')
+      autocmd BufWritePre          * call add(g:event_list, 'BufWritePre')
+      autocmd BufWritePost         * call add(g:event_list, 'BufWritePost')
+      autocmd FileWritePre         * call add(g:event_list, 'FileWritePre')
+      autocmd FileWritePost        * call add(g:event_list, 'FileWritePost')
+      autocmd FileAppendPre        * call add(g:event_list, 'FileAppendPre')
+      autocmd FileAppendPost       * call add(g:event_list, 'FileAppendPost')
+      autocmd FilterWritePre       * call add(g:event_list, 'FilterWritePre')
+      autocmd FilterWritePost      * call add(g:event_list, 'FilterWritePost')
+      autocmd BufAdd               * call add(g:event_list, 'BufAdd')
+      autocmd BufCreate            * call add(g:event_list, 'BufCreate')
+      autocmd BufDelete            * call add(g:event_list, 'BufDelete')
+      autocmd BufWipeout           * call add(g:event_list, 'BufWipeout')
+      autocmd BufFilePre           * call add(g:event_list, 'BufFilePre')
+      autocmd BufFilePost          * call add(g:event_list, 'BufFilePost')
+      autocmd BufEnter             * call add(g:event_list, 'BufEnter')
+      autocmd BufLeave             * call add(g:event_list, 'BufLeave')
+      autocmd BufWinEnter          * call add(g:event_list, 'BufWinEnter')
+      autocmd BufWinLeave          * call add(g:event_list, 'BufWinLeave')
+      autocmd BufUnload            * call add(g:event_list, 'BufUnload')
+      autocmd BufHidden            * call add(g:event_list, 'BufHidden')
+      autocmd BufNew               * call add(g:event_list, 'BufNew')
+      autocmd SwapExists           * call add(g:event_list, 'SwapExists')
+      autocmd FileType             * call add(g:event_list, 'FileType')
+      autocmd Syntax               * call add(g:event_list, 'Syntax')
+      autocmd EncodingChanged      * call add(g:event_list, 'EncodingChanged')
+      autocmd TermChanged          * call add(g:event_list, 'TermChanged')
+      autocmd VimEnter             * call add(g:event_list, 'VimEnter')
+      autocmd GUIEnter             * call add(g:event_list, 'GUIEnter')
+      autocmd GUIFailed            * call add(g:event_list, 'GUIFailed')
+      autocmd TermResponse         * call add(g:event_list, 'TermResponse')
+      autocmd QuitPre              * call add(g:event_list, 'QuitPre')
+      autocmd VimLeavePre          * call add(g:event_list, 'VimLeavePre')
+      autocmd VimLeave             * call add(g:event_list, 'VimLeave')
+      autocmd FileChangedShell     * call add(g:event_list, 'FileChangedShell')
+      autocmd FileChangedShellPost * call add(g:event_list, 'FileChangedShellPost')
+      autocmd FileChangedRO        * call add(g:event_list, 'FileChangedRO')
+      autocmd ShellCmdPost         * call add(g:event_list, 'ShellCmdPost')
+      autocmd ShellFilterPost      * call add(g:event_list, 'ShellFilterPost')
+      autocmd CmdUndefined         * call add(g:event_list, 'CmdUndefined')
+      autocmd FuncUndefined        * call add(g:event_list, 'FuncUndefined')
+      autocmd SpellFileMissing     * call add(g:event_list, 'SpellFileMissing')
+      autocmd SourcePre            * call add(g:event_list, 'SourcePre')
+      autocmd VimResized           * call add(g:event_list, 'VimResized')
+      autocmd FocusGained          * call add(g:event_list, 'FocusGained')
+      autocmd FocusLost            * call add(g:event_list, 'FocusLost')
+      autocmd CursorHold           * call add(g:event_list, 'CursorHold')
+      autocmd CursorHoldI          * call add(g:event_list, 'CursorHoldI')
+      autocmd CursorMoved          * call add(g:event_list, 'CursorMoved')
+      autocmd CursorMovedI         * call add(g:event_list, 'CursorMovedI')
+      autocmd WinEnter             * call add(g:event_list, 'WinEnter')
+      autocmd WinLeave             * call add(g:event_list, 'WinLeave')
+      autocmd TabEnter             * call add(g:event_list, 'TabEnter')
+      autocmd TabLeave             * call add(g:event_list, 'TabLeave')
+      autocmd CmdwinEnter          * call add(g:event_list, 'CmdwinEnter')
+      autocmd CmdwinLeave          * call add(g:event_list, 'CmdwinLeave')
+      autocmd InsertEnter          * call add(g:event_list, 'InsertEnter')
+      autocmd InsertChange         * call add(g:event_list, 'InsertChange')
+      autocmd InsertLeave          * call add(g:event_list, 'InsertLeave')
+      autocmd InsertCharPre        * call add(g:event_list, 'InsertCharPre')
+      autocmd TextChanged          * call add(g:event_list, 'TextChanged')
+      autocmd TextChangedI         * call add(g:event_list, 'TextChangedI')
+      autocmd ColorScheme          * call add(g:event_list, 'ColorScheme')
+      autocmd RemoteReply          * call add(g:event_list, 'RemoteReply')
+      autocmd QuickFixCmdPre       * call add(g:event_list, 'QuickFixCmdPre')
+      autocmd QuickFixCmdPost      * call add(g:event_list, 'QuickFixCmdPost')
+      autocmd SessionLoadPost      * call add(g:event_list, 'SessionLoadPost')
+      autocmd MenuPopup            * call add(g:event_list, 'MenuPopup')
+      autocmd CompleteDone         * call add(g:event_list, 'CompleteDone')
+      autocmd User                 * call add(g:event_list, 'User')
+    augroup END "}}}
+  else
+    augroup EventChecker
+      autocmd!
+    augroup END
+    topleft new
+    call append(0, g:event_list)
+    setlocal buftype=nofile
+    unlet g:event_list
+  endif
+endfunction "}}}
 
 
 let &cpo = s:save_cpo

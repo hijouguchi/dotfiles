@@ -29,7 +29,7 @@ nnoremap dl 0d$
 
 nnoremap -- mzgg=G`z
 
-nnoremap / :set hlsearch<CR>/
+" nnoremap / :set hlsearch<CR>/
 " nnoremap * :set hlsearch<CR>*
 nnoremap <Space>/ :set hlsearch! \| set hlsearch?<CR>
 

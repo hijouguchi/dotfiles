@@ -1,7 +1,7 @@
 " /Users/hijouguchi/.vim/after/plugin/highlight_words.vim
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015 Apr 05
+" Last Change: 2015/07/13
 
 " if exists("g:loaded_highlight_words")
 "   finish
@@ -11,71 +11,72 @@ let g:loaded_highlight_words = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-nnoremap * :call HighlightWords(1)<CR>
-nnoremap # :call HighlightWords(0)<CR>
+nnoremap * :call HighlightWordsAdd()<CR>
+nnoremap # :call HighlightWordsRemove()<CR>
 
 let s:highlight_count = 12
 
-function! HighlightWordsSetup() abort "{{{
-  let b:highlight_word_ids = {}
-  let b:highlight_table    = repeat([0], s:highlight_count)
-endfunction }}}"
-
 function! HighlightWordsDefHighlight() abort "{{{
-  highlight  HighlightWord0  ctermbg=90
-  highlight  HighlightWord1  ctermbg=98
-  highlight  HighlightWord2  ctermbg=88
-  highlight  HighlightWord3  ctermbg=94
-  highlight  HighlightWord4  ctermbg=100
-  highlight  HighlightWord5  ctermbg=64
-  highlight  HighlightWord6  ctermbg=28
-  highlight  HighlightWord7  ctermbg=29
-  highlight  HighlightWord8  ctermbg=30
-  highlight  HighlightWord9  ctermbg=24
-  highlight  HighlightWord10 ctermbg=18
-  highlight  HighlightWord11 ctermbg=54
+  highlight  HighlightWord0  ctermfg=black ctermbg=88  guifg=black guibg=#660000
+  highlight  HighlightWord1  ctermfg=black ctermbg=94  guifg=black guibg=#663300
+  highlight  HighlightWord2  ctermfg=black ctermbg=100 guifg=black guibg=#666600
+  highlight  HighlightWord3  ctermfg=black ctermbg=64  guifg=black guibg=#336600
+  highlight  HighlightWord4  ctermfg=black ctermbg=28  guifg=black guibg=#006600
+  highlight  HighlightWord5  ctermfg=black ctermbg=29  guifg=black guibg=#006633
+  highlight  HighlightWord6  ctermfg=black ctermbg=30  guifg=black guibg=#006666
+  highlight  HighlightWord7  ctermfg=black ctermbg=24  guifg=black guibg=#003366
+  highlight  HighlightWord8  ctermfg=black ctermbg=18  guifg=black guibg=#000066
+  highlight  HighlightWord9  ctermfg=black ctermbg=54  guifg=black guibg=#330066
+  highlight  HighlightWord10 ctermfg=black ctermbg=90  guifg=black guibg=#660066
+  highlight  HighlightWord11 ctermfg=black ctermbg=98  guifg=black guibg=#660033
 endfunction "}}}
 
-function! HighlightWords(append) abort "{{{
-  if !exists('b:highlight_word_ids')
-    let b:highlight_word_ids = {}
-    " {'word' : [match_id, highlight_id]}
-  endif
-
-  if !exists('b:highlight_table')
-    let b:highlight_table = [0, 0, 0, 0]
-  endif
-
+function! HighlightWordsAdd() abort "{{{
   let word = expand('<cword>')
-  let targ = get(b:highlight_word_ids, word, [-1, -1])
+  let gm   = filter(copy(getmatches()), 'v:val["pattern"][2:-3] == word')
 
-  if a:append
-    if targ[0] == -1
-      let hid = s:get_mininum_index()
-      let mid = matchadd('HighlightWord'.hid, '\<'.word.'\>')
-      let b:highlight_word_ids[word] = [mid, hid]
-      let b:highlight_table[hid]     = b:highlight_table[hid] + 1
-    endif
-
-    call feedkeys('*', 'n')
-
-  elseif targ[0] != -1
-    let mid = targ[0]
-    let hid = targ[1]
-    let b:highlight_table[hid] = b:highlight_table[hid] - 1
-    call matchdelete(mid)
-    call remove(b:highlight_word_ids, word)
+  if empty(gm)
+    let hid = s:get_mininum_index()
+    call matchadd('HighlightWord'.hid, '\<'.word.'\>')
   endif
+
+  call feedkeys('*zvzz', 'n')
+endfunction "}}}
+
+function! HighlightWordsRemove() abort "{{{
+  let word = expand('<cword>')
+  let gm   = filter(copy(getmatches()), 'v:val["pattern"][2:-3] == word')
+
+  if !empty(gm)
+    for g in gm
+      call matchdelete(g['id'])
+    endfor
+  endif
+endfunction "}}}
+
+function! HighlightWordsClear() abort "{{{
+  let list = map(filter(copy(getmatches()),
+        \ 'v:val["group"] =~ "^HighlightWord"'),
+        \ 'v:val["id"]')
+
+  for d in list
+    call matchdelete(d)
+  endfor
 endfunction "}}}
 
 function! s:get_mininum_index() "{{{
+  let list = map(filter(copy(getmatches()),
+        \ 'v:val["group"] =~ "^HighlightWord"'),
+        \ 'str2nr(substitute(v:val["group"], "^Highlightword", "", ""))')
+
   let it = 0
   let im = 100
 
   for i in range(s:highlight_count)
-    if b:highlight_table[i] < im
+    let cnt = count(list, i)
+    if cnt < im
       let it = i
-      let im = b:highlight_table[i]
+      let im = cnt
     endif
   endfor
 
@@ -84,8 +85,7 @@ endfunction "}}}
 
 augroup HighghtWord "{{{
   autocmd!
-  autocmd BufEnter,ColorScheme * call HighlightWordsDefHighlight()
-  autocmd BufEnter             * call HighlightWordsSetup()
+  autocmd BufWinEnter,ColorScheme * call HighlightWordsDefHighlight()
 augroup END "}}}
 
 

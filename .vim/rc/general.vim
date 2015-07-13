@@ -71,7 +71,6 @@ set pumheight=15
 set laststatus=2
 " MEMO: 複数の引数が取れない (設定値が複数として見えてしまう)
 " FIXME: たまに表示がバグるので確認する事
-set statusline=%{MyStatusLine(3)}
 
 let s:mode = {
       \ "n"      : "NORMAL",
@@ -139,9 +138,9 @@ endfunction "}}}
 augroup MyStatusLine "{{{
   autocmd!
 
-  autocmd! WinEnter * call MyStatusLine(1)
-  autocmd! WinLeave * call MyStatusLine(0)
-  autocmd! ColorScheme * hi def link User1 Error
+  autocmd! BufWinEnter,WinEnter * call MyStatusLine(3)
+  autocmd! WinLeave             * call MyStatusLine(2)
+  autocmd! ColorScheme          * hi def link User1 Error
 augroup END "}}}
 
 
