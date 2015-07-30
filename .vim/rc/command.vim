@@ -17,6 +17,8 @@ command! -bang Unix  e<bang> ++ff=unix
 command! -bang Mac   e<bang> ++ff=mac
 command! -bang Dos   e<bang> ++ff=dos
 
+command! Ruby silent new [ruby] | setl bt=nofile ft=ruby
+
 command! -nargs=* -complete=file Diff call <SID>diff_start(<f-args>)
 
 function! s:diff_start(...) abort "{{{

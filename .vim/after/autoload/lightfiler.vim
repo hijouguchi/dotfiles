@@ -12,15 +12,55 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! lightfiler#setup(...) abort "{{{
+  let fname = s:check_arguments(a:000)
   topleft 3new [filer]
   setlocal buftype=nofile
   setlocal completefunc=lightfiler#complete_function
   call lightfiler#initalize()
   call feedkeys('i> ')
   if a:0 > 0
-    call feedkeys(a:1)
+    call feedkeys(fname)
   endif
   call lightfiler#set_keymap()
+endfunction "}}}
+
+function! s:check_arguments(arg) abort "{{{
+  let s:type = {
+        \ 'target' : [],
+        \ 'window' : 'here'
+        \ }
+
+  let fname = ''
+
+  for a in a:arg
+    if a =~ '^-h\(ere\)\?$'
+      let s:type.winow = 'here'
+    elseif a =~ '^-t\(ab\)\?$'
+      let s:type.winow = 'tab'
+    elseif a =~ '^-s\(p\(lit\)\?\)\?$'
+      let s:type.winow = 'split'
+    elseif a =~ '^-v\(s\(plit\)\?\)\?$'
+      let s:type.winow = 'vsplit'
+    elseif a =~ '^-f\(ile\)\?$'
+      call add(s:type.target, 'file')
+    elseif a =~ '^-b\(uffer\)\?$'
+      call add(s:type.target, 'buffer')
+    else
+      let fname = a
+    endif
+  endfor
+
+  if empty(s:type.target)
+    let s:type.target = ['file', 'buffer']
+  else
+    call uniq(s:type.target)
+  endif
+
+  if fname[-1] != '/' && isdirectory(expand(fname))
+    let fname = fname . '/'
+  endif
+
+  return fname
 endfunction "}}}
 
 function! lightfiler#initalize() abort "{{{
@@ -28,8 +68,8 @@ function! lightfiler#initalize() abort "{{{
   "        このプラグインが呼ばれると NG (insert mode に入ると結局
   "        neocomplete が起動する)
   if get(g:, 'neocomplete#enable_at_startup')
-    if exists('NeoCompleteDisable')
-      NeoCompleteDisable
+    if exists('NeoCompleteLock')
+      NeoCompleteLock
     endif
   endif
 
@@ -57,8 +97,8 @@ function! lightfiler#finalize() abort "{{{
   augroup END
 
   if get(g:, 'neocomplete#enable_at_startup')
-    if exists('NeoCompleteEnable')
-      NeoCompleteEnable
+    if exists('NeoCompleteUnlock')
+      NeoCompleteUnlock
     endif
   endif
 
@@ -77,22 +117,24 @@ function! lightfiler#set_keymap() abort "{{{
   inoremap <buffer> <C-V> <Esc>:call lightfiler#openfile('vsplit')<CR>
 endfunction "}}}
 
-function! lightfiler#openfile(targ) abort "{{{
+function! lightfiler#openfile(...) abort "{{{
   let fname = matchstr(getline('.'), '\f*$')
+
+  let targ = (a:0 > 0) ? a:1 : s:type.window
 
   " if !filereadable(fname)
   "   execute 'echomsg ' . fname . 'is not exist'
   "   return ''
   " endif
 
-  if a:targ == 'here'
+  if targ == 'here'
     execute winnr('#') . 'wincmd w'
     execute 'edit ' . fname
-  elseif a:targ == 'tab'
+  elseif targ == 'tab'
     execute 'tabnew ' . fname
-  elseif a:targ == 'split'
+  elseif targ == 'split'
     execute 'split ' . fname
-  elseif a:targ == 'vsplit'
+  elseif targ == 'vsplit'
     execute winnr('#') . 'wincmd w'
     execute 'vsplit ' . fname
   endif
@@ -114,12 +156,19 @@ function! lightfiler#complete_function(findstart, base) abort "{{{
     let cur_text = getline('.')
     let base     = matchstr(cur_text, pat)
 
+    let b:items = []
+
     " find files
-    let list    = s:search_files(base)
-    let b:items = s:transform_to_completion_dist_for_file(list)
+    if count(s:type.target, 'file') > 0
+      let list = s:search_files(base)
+      call extend(b:items,
+            \ s:transform_to_completion_dist_for_file(list))
+    endif
 
     " add buffer
-    let b:items = extend(s:search_buffers(base), b:items)
+    if count(s:type.target, 'buffer') > 0
+      let b:items = extend(s:search_buffers(base), b:items)
+    endif
 
     if empty(b:items)
       return -1
@@ -200,14 +249,15 @@ function! s:search_files(base) abort "{{{
 endfunction "}}}
 
 function! s:search_buffers(base) abort "{{{
+  let mynr    = bufnr('')
   let buflist = []
-  for i in range(tabpagenr('$'))
-    call extend(buflist, tabpagebuflist(i + 1))
+  for i in range(1, bufnr('$'))
+    if buflisted(i) && i != mynr
+      call add(buflist, expand(bufname(i)))
+    endif
   endfor
 
   call uniq(buflist)
-  call filter(buflist, 'v:val != bufnr("")') " 自分自身を削除する
-  call map(buflist, 'bufname(v:val)')
 
   let pat = substitute(a:base, '\([.~]\)', '\\\1', 'g')
   let pat = substitute(pat, '\(\w\+\)/', '\1[^/]*/', 'g')

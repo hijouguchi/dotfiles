@@ -21,11 +21,10 @@ let g:alignlight_separator = {
 command! -range -nargs=* AlignLight <line1>,<line2>call AlignLight(<f-args>)
 
 function! AlignLight(...) range abort "{{{
-  "XXX: とりあえず , のみ
-  let sep = get(g:alignlight_separator, a:1, ',')
+  call s:getopt(a:000)
 
   " make bufline
-  let bufline = s:make_bufline(sep, a:firstline, a:lastline)
+  let bufline = s:parse_bufline(a:firstline, a:lastline)
 
   " search maximum number of charactors of each word, separator
   let elm_chars_list = s:make_elm_chars_list(bufline)
@@ -40,10 +39,27 @@ function! AlignLight(...) range abort "{{{
   call cursor(cursor)
 endfunction "}}}
 
-function! s:make_bufline(sep, line1, line2) abort "{{{
-  let pat  = '\s*'    . a:sep . '\s*'    " セパレータ境界
-  let patl = '\s*\zs' . a:sep . '\s*'    " 左スペース
-  let patr = '\s*'    . a:sep . '\s*\zs' " 右スペース
+function! s:getopt(argv) abort "{{{
+  let s:sep   = []
+  let s:align = []
+
+  let i = 0
+  while i < len(a:argv)
+    if (a:argv[i] == '-a' || a:argv[i] == '-align')
+      let s:align = split(a:argv[i+1], '\zs')
+      let i = i + 2
+    else
+      call add(s:sep, a:argv[i])
+      let i = i + 1
+    endif
+  endwhile
+endfunction "}}}
+
+function! s:parse_bufline(line1, line2) abort "{{{
+  let mat  = '\(' . join(s:sep, '\|') . '\)'
+  let pat  = '\s*'    . mat . '\s*'    " セパレータ境界
+  let patl = '\s*\zs' . mat . '\s*'    " 左スペース
+  let patr = '\s*'    . mat . '\zs\s*' " 右スペース
 
   " make bufline
   let bufline = []
@@ -81,7 +97,15 @@ function! s:make_elm_chars_list(bufline) abort "{{{
   let elm_cnt_max = float2nr(ceil(max(
         \ map(copy(a:bufline), 'len(v:val[1])'))/4.0))
 
+  if empty(s:align)
+    let s:align = repeat(['l'], elm_cnt_max)
+  elseif len(s:align) < elm_cnt_max
+    call extend(s:align,
+          \ repeat([s:align[-1]], elm_cnt_max-len(s:align)))
+  endif
+
   " search maximum number of charactors of each word, separator
+  " even: word, odd: separator
   let elm_chars_list = []
   for i in range(2*elm_cnt_max-1)
     let tmp = max(map(copy(a:bufline),
@@ -101,13 +125,25 @@ function! s:make_alignment(elm_chars_list, bufline) abort "{{{
     let [line, tmp] = b
 
     let s = ind
-    for i in range(float2nr(floor(len(tmp)/4.0)))
+    for i in range(float2nr(len(tmp)/4.0))
       let word = strpart(line, tmp[4*i  ], tmp[4*i+1]-tmp[4*i  ])
       let sepa = strpart(line, tmp[4*i+2], tmp[4*i+3]-tmp[4*i+2])
-      let s    = s . word
-      let s    = s . repeat(' ', a:elm_chars_list[2*i  ]-strchars(word)+1)
-      let s    = s . sepa
-      let s    = s . repeat(' ', a:elm_chars_list[2*i+1]-strchars(sepa)+1)
+      " let s    = s . word
+      " let s    = s . repeat(' ', a:elm_chars_list[2*i  ]-strchars(word)+1)
+      " let s    = s . sepa
+      " let s    = s . repeat(' ', a:elm_chars_list[2*i+1]-strchars(sepa)+1)
+      let spc = a:elm_chars_list[2*i  ] + a:elm_chars_list[2*i+1]
+            \ - strchars(word) - strchars(sepa)
+
+      if s:align[i] == 'l'
+        let s = s . word . repeat(' ', spc+1) . sepa . ' '
+      elseif s:align[i] == 'r'
+        let s = s . repeat(' ', spc) . word . ' ' . sepa . ' '
+      elseif s:align[i] == 'c'
+        let s = s . repeat(' ', spc/2) . word . repeat(' ', spc-(spc/2)+1) . sepa . ' '
+      elseif s:align[i] == 'w'
+        let s = s  . word . sepa . repeat(' ', spc+1)
+      endif
     endfor
 
     " 最後の word を追加

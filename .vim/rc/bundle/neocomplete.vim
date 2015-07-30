@@ -36,9 +36,17 @@ inoremap <expr> <Tab>   <SID>InsertTabWrapper()
 inoremap <expr> <CR>    <SID>InsertCRWrapper()
 "inoremap <expr> <Esc>[Z pumvisible() ? "\<C-P>" : "\<S-Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<S-Tab>"
-inoremap <expr> <C-F>   <SID>FileCompleteWrapper()
+"inoremap <expr> <C-F>   <SID>FileCompleteWrapper()
+inoremap <expr> <C-F>   neocomplete#start_manual_complete('file')
 
+" see also: https://github.com/Shougo/neocomplete.vim/issues/333
+" <Plug>(vimrc_bs) is defined by
+" .vim/rc/bundle/vim-smartinput.vim (#map_to_triger)
+" vim-smartinput が呼ばれたときに再定義される
+imap <unique> <Plug>(vimrc_bs) <BS>
 
+imap <expr> <C-H> neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
+imap <expr> <BS>  neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
 
 imap    <C-K> <Plug>(neosnippet_expand_or_jump)
 smap    <C-K> <Plug>(neosnippet_expand_or_jump)
@@ -66,10 +74,10 @@ function! s:InsertCRWrapper() "{{{
     return neocomplete#close_popup() . "\<CR>"
   endif
 endfunction "}}}
-function! s:FileCompleteWrapper() "{{{
-  call feedkeys(neocomplete#start_manual_complete('file'))
-  return pumvisible() ? '' : "\<C-X>\<C-F>"
-endfunction "}}}
+" function! s:FileCompleteWrapper() "{{{
+"   call feedkeys(neocomplete#start_manual_complete('file'))
+"   return pumvisible() ? '' : "\<C-X>\<C-F>"
+" endfunction "}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -7,12 +7,13 @@
 "   finish
 " endif
 let g:loaded_highlight_words = 1
+let g:highlight_words_nohl   = 0
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-nnoremap * :call HighlightWordsAdd()<CR>
-nnoremap # :call HighlightWordsRemove()<CR>
+nnoremap          * :call HighlightWordsAdd()<CR>*zvzz
+nnoremap <silent> # :call HighlightWordsRemove()<CR>
 
 let s:highlight_count = 12
 
@@ -36,11 +37,15 @@ function! HighlightWordsAdd() abort "{{{
   let gm   = filter(copy(getmatches()), 'v:val["pattern"][2:-3] == word')
 
   if empty(gm)
+    if get(g:, 'highlight_words_nohl', 0)
+      setlocal nohlsearch
+    endif
+
     let hid = s:get_mininum_index()
     call matchadd('HighlightWord'.hid, '\<'.word.'\>')
   endif
 
-  call feedkeys('*zvzz', 'n')
+  return
 endfunction "}}}
 
 function! HighlightWordsRemove() abort "{{{
@@ -52,6 +57,7 @@ function! HighlightWordsRemove() abort "{{{
       call matchdelete(g['id'])
     endfor
   endif
+  return
 endfunction "}}}
 
 function! HighlightWordsClear() abort "{{{

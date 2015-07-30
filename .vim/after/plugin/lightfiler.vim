@@ -11,7 +11,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-command! -nargs=? -complete=file LightFiler :call lightfiler#setup(<f-args>)
+command! -nargs=* -complete=file LightFiler :call lightfiler#setup(<f-args>)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

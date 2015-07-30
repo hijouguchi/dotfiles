@@ -30,22 +30,7 @@ function! MySmartinputEnable() abort "{{{
   endif
 
   call smartinput#define_default_rules()
-
-  call smartinput#map_to_trigger('i', '<Plug>(vimrc_cr)', '<CR>', '<CR>')
-  call smartinput#define_rule({
-        \ 'at': '^\%(.*=\)\?\s*\zs\%(begin\)\>\%(.*[^.:@$]\<end\>\)\@!.*\%#$',
-        \ 'char': '<CR>',
-        \ 'input': '<CR>end<Esc>O',
-        \ 'filetype': ['verilog', 'eruby.verilog'],
-        \ })
-
-  " call smartinput#map_to_trigger('i', '%', '%', '%')
-  " call smartinput#define_rule({
-  "       \   'at'       : '<\%#',
-  "       \   'char'     : '%',
-  "       \   'input'    : '% %><Left><Left><Left>',
-  "       \   'filetype' : ['eruby.verilog'],
-  "       \ })
+  call smartinput#map_to_trigger('i', '<Plug>(vimrc_bs)', '<BS>', '<BS>')
 
   let g:my_smartinput_loaded = 1
 endfunction "}}}
