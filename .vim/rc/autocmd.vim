@@ -133,6 +133,7 @@ augroup BinaryXXD
         \ |   set ft=xxd
         \ |   set readonly
         \ |   silent %!xxd -g 1
+  autocmd BufReadPost  *
         \ | endif
 augroup END
 

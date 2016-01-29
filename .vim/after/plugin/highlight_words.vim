@@ -42,7 +42,7 @@ function! HighlightWordsAdd() abort "{{{
     endif
 
     let hid = s:get_mininum_index()
-    call matchadd('HighlightWord'.hid, '\<'.word.'\>')
+    windo call matchadd('HighlightWord'.hid, '\<'.word.'\>')
   endif
 
   return
@@ -54,7 +54,7 @@ function! HighlightWordsRemove() abort "{{{
 
   if !empty(gm)
     for g in gm
-      call matchdelete(g['id'])
+      windo call matchdelete(g['id'])
     endfor
   endif
   return
@@ -66,7 +66,7 @@ function! HighlightWordsClear() abort "{{{
         \ 'v:val["id"]')
 
   for d in list
-    call matchdelete(d)
+    windo call matchdelete(d)
   endfor
 endfunction "}}}
 

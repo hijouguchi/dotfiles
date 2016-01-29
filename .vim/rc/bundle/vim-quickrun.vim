@@ -28,6 +28,7 @@ function! s:bundle.hooks.on_source(bundle)
         \   'cmdopt'                    : '--lint-only',
         \   'outputter/error/success'   : 'quickfix'
         \ }
+  let g:quickrun_config.tcl = {'command' : 'tclsh'}
 
   command! -nargs=* -range=0 -complete=customlist,quickrun#complete
         \ ReplaceRegion QuickRun -mode v
