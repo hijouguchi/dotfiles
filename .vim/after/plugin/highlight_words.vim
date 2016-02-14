@@ -36,25 +36,33 @@ function! HighlightWordsAdd() abort "{{{
   let word = expand('<cword>')
   let gm   = s:filter_matches('v:val["pattern"][2:-3] == a:1', word)
 
-  if empty(gm)
-    if get(g:, 'highlight_words_nohl', 0)
-      setlocal nohlsearch
-    endif
-
-    let hid = s:get_mininum_index()
-    windo call matchadd('HighlightWord'.hid, '\<'.word.'\>')
+  if !empty(gm)
+    return
   endif
 
-  return
+  if get(g:, 'highlight_words_nohl', 0)
+    setlocal nohlsearch
+  endif
+
+  let hid = s:get_mininum_index()
+
+  let wnr = winnr()
+  windo call matchadd('HighlightWord'.hid, '\<'.word.'\>')
+  execute wnr . 'wincmd w'
 endfunction "}}}
 
 function! HighlightWordsRemove() abort "{{{
   let word = expand('<cword>')
+
+  let wnr = winnr()
   windo call s:match_word_remove(word)
+  execute wnr . 'wincmd w'
 endfunction "}}}
 
 function! HighlightWordsClear() abort "{{{
+  let wnr = winnr()
   windo call s:match_highlight_remove()
+  execute wnr . 'wincmd w'
 endfunction "}}}
 
 function! s:filter_matches(str, ...) "{{{
