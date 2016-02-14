@@ -34,7 +34,7 @@ endfunction "}}}
 
 function! HighlightWordsAdd() abort "{{{
   let word = expand('<cword>')
-  let gm   = filter(copy(getmatches()), 'v:val["pattern"][2:-3] == word')
+  let gm   = s:filter_matches('v:val["pattern"][2:-3] == a:1', word)
 
   if empty(gm)
     if get(g:, 'highlight_words_nohl', 0)
@@ -50,43 +50,54 @@ endfunction "}}}
 
 function! HighlightWordsRemove() abort "{{{
   let word = expand('<cword>')
-  let gm   = filter(copy(getmatches()), 'v:val["pattern"][2:-3] == word')
-
-  if !empty(gm)
-    for g in gm
-      windo call matchdelete(g['id'])
-    endfor
-  endif
-  return
+  windo call s:match_word_remove(word)
 endfunction "}}}
 
 function! HighlightWordsClear() abort "{{{
-  let list = map(filter(copy(getmatches()),
+  windo call s:match_highlight_remove()
+endfunction "}}}
+
+function! s:filter_matches(str, ...) "{{{
+  return filter(copy(getmatches()), a:str)
+endfunction "}}}
+
+function! s:get_mininum_index() "{{{
+  let list = map(s:filter_matches(
+        \ 'v:val["group"] =~ "^HighlightWord"'),
+        \ 'str2nr(v:val["group"][13:-1])') " len('Highlightword') is 13
+
+  let cnt = -1
+  let cur = 0
+
+  for i in range(s:highlight_count)
+    let t = count(list, i)
+    if t < cnt || cnt < 0
+      let cnt = t
+      let cur = i
+    endif
+  endfor
+
+  return cur
+endfunction "}}}
+
+function! s:match_word_remove(pattern) "{{{
+  let list = map(s:filter_matches(
+        \ 'v:val["pattern"][2:-3] == a:1', a:pattern),
+        \ 'v:val["id"]')
+
+  for d in list
+    call matchdelete(d)
+  endfor
+endfunction "}}}
+
+function! s:match_highlight_remove() "{{{
+  let list = map(s:filter_matches(
         \ 'v:val["group"] =~ "^HighlightWord"'),
         \ 'v:val["id"]')
 
   for d in list
-    windo call matchdelete(d)
+    call matchdelete(d)
   endfor
-endfunction "}}}
-
-function! s:get_mininum_index() "{{{
-  let list = map(filter(copy(getmatches()),
-        \ 'v:val["group"] =~ "^HighlightWord"'),
-        \ 'str2nr(substitute(v:val["group"], "^Highlightword", "", ""))')
-
-  let it = 0
-  let im = 100
-
-  for i in range(s:highlight_count)
-    let cnt = count(list, i)
-    if cnt < im
-      let it = i
-      let im = cnt
-    endif
-  endfor
-
-  return it
 endfunction "}}}
 
 augroup HighghtWord "{{{

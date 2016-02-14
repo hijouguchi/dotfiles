@@ -63,6 +63,24 @@ function! s:get_syn_id() "{{{
   end
 endfunction "}}}
 
+function! s:my_reverse() range "{{{
+  let l:line = line('.')
+
+  let l:lines = reverse(getline(a:firstline, a:lastline))
+  let l:num   = len(l:lines)
+
+  if l:num <= 1
+    return
+  endif
+
+  call cursor(a:firstline, 0)
+  execute 'normal '.l:num.'dd'
+  call append(a:firstline-1, l:lines)
+  call cursor(l:line, 0)
+endfunction "}}}
+
+command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
