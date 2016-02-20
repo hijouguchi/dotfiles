@@ -6,9 +6,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+
 augroup VimrcAutoCmd
   autocmd!
 
+  " ファイルサイズが大きいときに、シンタックスの適応を一部に制限
+  autocmd Syntax * if 5000 < line('$') | syntax sync minlines=100 | endif
 
   autocmd BufWritePost *
         \   if getline(1) =~ "^#!"
@@ -193,6 +196,9 @@ function! s:get_autocmd_events() abort "{{{
   let @a = tmp
 
   call filter(val, 'v:val !~ "^\\(\\s\\|---\\)"')
+
+  " MEMO: require vital.vim when using flatten()
+  " return uniq(flatten(val))
   return uniq(split(join(val, ' '), '\s\+'))
 endfunction "}}}
 

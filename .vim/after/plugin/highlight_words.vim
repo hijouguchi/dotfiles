@@ -12,10 +12,8 @@ let g:highlight_words_nohl   = 0
 let s:save_cpo = &cpo
 set cpo&vim
 
-nnoremap          * :call HighlightWordsAdd()<CR>*zvzz
+nnoremap <silent> * :call HighlightWordsAdd()<CR>*zvzz
 nnoremap <silent> # :call HighlightWordsRemove()<CR>
-
-let s:highlight_count = 12
 
 function! HighlightWordsDefHighlight() abort "{{{
   highlight  HighlightWord0  ctermfg=black ctermbg=88  guifg=black guibg=#660000
@@ -30,6 +28,21 @@ function! HighlightWordsDefHighlight() abort "{{{
   highlight  HighlightWord9  ctermfg=black ctermbg=54  guifg=black guibg=#330066
   highlight  HighlightWord10 ctermfg=black ctermbg=90  guifg=black guibg=#660066
   highlight  HighlightWord11 ctermfg=black ctermbg=98  guifg=black guibg=#660033
+endfunction "}}}
+
+function! s:get_command_result(arg) abort "{{{
+  let tmp = @a
+  redir @a
+  execute 'silent' a:arg
+  redir END
+  let result = @a
+  let @a = tmp
+  return result
+endfunction "}}}
+
+function! s:get_highlight_count() abort "{{{
+  let list = s:get_command_result('highlight')
+  return len(filter(split(list), 'v:val =~ "^\\<HighlightWord\\d\\+\\>"'))
 endfunction "}}}
 
 function! HighlightWordsAdd() abort "{{{
@@ -77,7 +90,7 @@ function! s:get_mininum_index() "{{{
   let cnt = -1
   let cur = 0
 
-  for i in range(s:highlight_count)
+  for i in range(s:get_highlight_count())
     let t = count(list, i)
     if t < cnt || cnt < 0
       let cnt = t
