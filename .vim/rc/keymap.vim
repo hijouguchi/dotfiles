@@ -46,6 +46,10 @@ nnoremap N  Nzvzz
 nnoremap <Space>p :set paste!    \| :set paste?<CR>
 nnoremap <Space>h :set readonly! \| :set readonly?<CR>
 
+" See also: http://vim-jp.org/vim-users-jp/2009/08/25/Hack-62.html
+nnoremap <expr> s* ':%s/\<'.expand('<cword>').'\>/'
+nnoremap <expr> s* ':%s/\<'.expand('<cword>').'\>/'
+
 nnoremap <Space>m :marks<CR>
 nnoremap <Space>r :registers<CR>
 

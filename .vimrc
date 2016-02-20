@@ -46,6 +46,7 @@ source ~/.vim/rc/bundle/vim-quickrun.vim
 " source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
 source ~/.vim/rc/bundle/incsearch.vim
+source ~/.vim/rc/bundle/vcscommand.vim
 
 runtime macros/matchit.vim
 
@@ -61,6 +62,10 @@ source ~/.vim/rc/fileencodings.vim
 source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
+
+if filereadable('~/.vim/localrc.vim')
+  source ~/.vim/localrc.vim
+endif
 
 if !has('gui_running')
   " colorscheme desert256

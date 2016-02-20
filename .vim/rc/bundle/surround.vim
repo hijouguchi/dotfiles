@@ -1,6 +1,6 @@
 " NeoBundleLazy 'vim-scripts/surround.vim', {
-      \ 'keymaps' : ['<plug>VSurround', '<plug>VgSurround']
-      \ }
+"      \ 'keymaps' : ['<plug>VSurround', '<plug>VgSurround']
+"      \ }
 NeoBundle 'vim-scripts/surround.vim'
 
 xmap s  <Plug>VSurround
