@@ -2,7 +2,11 @@
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
 
-NeoBundle 'vcscommand.vim'
+NeoBundleLazy 'vcscommand.vim' , {
+      \   'autoload' : {
+      \     'commands' : ['VCSVimDiff']
+      \   }
+      \ }
 
 let s:save_cpo = &cpo
 set cpo&vim

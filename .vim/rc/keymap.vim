@@ -22,7 +22,8 @@ nnoremap k gk
 nnoremap ) t)
 nnoremap ( t(
 
-nnoremap <C-H> :help<Space>
+" <C-h> is defined by ~/.vim/rc/bundle/unite.vim
+silent! nnoremap <unique> <C-h> :help<Space>
 
 nnoremap Y  y$
 nnoremap dl 0d$
@@ -60,6 +61,17 @@ nmap <Space>w <C-W>
 
 nnoremap <Space>tj gt
 nnoremap <Space>tk gT
+
+nnoremap <expr> gf ':split ' . <SID>get_current_fname() . "\<CR>"
+
+function! s:get_current_fname() abort "{{{
+  let col   = col('.')
+  let line  = getline('.')
+  let lline = matchstr(strpart(line, 0, col), '\f\+$')
+  let rline = matchstr(strpart(line, col),  '^\f\+')
+  let fname = lline . rline
+  return fname
+endfunction "}}}
 
 for s:i in range(0,9)
   execute printf("nnoremap <Space>t%d %dgt", s:i, s:i+1)

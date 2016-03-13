@@ -22,12 +22,20 @@ command! Ruby silent new [ruby] | setl bt=nofile ft=ruby
 command! -nargs=* -complete=file Diff call <SID>diff_start(<f-args>)
 
 function! s:diff_start(...) abort "{{{
+  " MEMO: botright vertical にしたいから 'diffopt' の vertical
+  " オプションは使わない
   let fname = expand('%')
+
+  " make new tab page
+  tabnew
 
   if a:0 == 0
     ":help DiffOrig
+    " open curernt buffers
+    execute 'edit' fname
+
     let ft=&l:filetype
-    vertical new
+    botright vertical new
     setlocal buftype=nofile
     let &l:filetype=ft
     read ++edit #
@@ -36,15 +44,14 @@ function! s:diff_start(...) abort "{{{
     wincmd p
     diffthis
   elseif a:0 == 1
-    " tabnew
-    " execute 'edit ' . fname
+    execute 'edit' fname
     diffthis
-    execute 'vertical diffsplit ' . a:1
+    execute 'botringht vertical diffsplit' a:1
   else
     tabnew
     execute 'edit ' . a:1
     for i in range(1,a:0-1)
-      execute 'vertical diffsplit ' . a:000[i]
+      execute 'botrignt vertical diffsplit ' . a:000[i]
     endfor
   endif
 

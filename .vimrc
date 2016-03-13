@@ -30,11 +30,13 @@ if !has('win32') && !has('win32unix')
         \   }
         \ }
 endif
-NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'vim-scripts/Align'
 " NeoBundle 'vim-scripts/desert256.vim'
 NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
+
+NeoBundle 'vim-jp/vimdoc-ja.git'
+NeoBundleLazy 'thinca/vim-ft-help_fold', { 'filetypes' : 'help' }
 
 source ~/.vim/rc/bundle/surround.vim
 source ~/.vim/rc/bundle/vim-submode.vim
@@ -47,6 +49,7 @@ source ~/.vim/rc/bundle/vim-quickrun.vim
 " source ~/.vim/rc/bundle/lightline.vim
 source ~/.vim/rc/bundle/incsearch.vim
 source ~/.vim/rc/bundle/vcscommand.vim
+source ~/.vim/rc/bundle/unite.vim
 
 runtime macros/matchit.vim
 

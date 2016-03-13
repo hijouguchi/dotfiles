@@ -7,8 +7,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 NeoBundleLazy 'haya14busa/incsearch.vim', {
-      \ 'mappings' : "<Plug>(incsearch-"
-      \ }
+  \   'autoload' : {
+  \     'mappings' : "<Plug>(incsearch-"
+  \   }
+  \ }
 
 map / <Plug>(incsearch-forward)
 
