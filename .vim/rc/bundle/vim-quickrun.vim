@@ -6,6 +6,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" TODO:
+"   1. outputter に nonu と nolist を追加したい
+
 NeoBundleLazy 'thinca/vim-quickrun.git', {
       \   'depends'  : 'osyo-manga/quickrun-outputter-replace_region.git',
       \   'commands' : ['QuickRun', 'ReplaceRegion']
