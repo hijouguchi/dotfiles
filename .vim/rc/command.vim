@@ -88,6 +88,8 @@ endfunction "}}}
 
 command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
 
+command! Date echo(strftime("%Y-%m-%d"))
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

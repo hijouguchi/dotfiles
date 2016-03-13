@@ -1,7 +1,7 @@
 " .vimrc
 "
 " Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-11
+" Last Change: 2016-03-13
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -36,7 +36,7 @@ NeoBundle 'itchyny/landscape.vim'
 " NeoBundle 'https://github.com/LeafCage/foldCC.git'
 
 NeoBundle 'vim-jp/vimdoc-ja.git'
-NeoBundleLazy 'thinca/vim-ft-help_fold', { 'filetypes' : 'help' }
+"NeoBundleLazy 'thinca/vim-ft-help_fold', { 'filetypes' : 'help' }
 
 source ~/.vim/rc/bundle/surround.vim
 source ~/.vim/rc/bundle/vim-submode.vim
@@ -45,7 +45,7 @@ source ~/.vim/rc/bundle/vim-smartinput.vim
 source ~/.vim/rc/bundle/neocomplete.vim
 source ~/.vim/rc/bundle/vim-template.vim
 source ~/.vim/rc/bundle/vim-quickrun.vim
-" source ~/.vim/rc/bundle/thumbnail.vim
+source ~/.vim/rc/bundle/thumbnail.vim
 " source ~/.vim/rc/bundle/lightline.vim
 source ~/.vim/rc/bundle/incsearch.vim
 source ~/.vim/rc/bundle/vcscommand.vim

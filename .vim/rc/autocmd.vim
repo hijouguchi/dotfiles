@@ -36,9 +36,6 @@ augroup VimrcAutoCmd
         \ | setlocal omnifunc=syntaxcomplete#Complete
         \ | endif
 
-  " FIXME: cursor can't not use
-  " autocmd BufWritePre * call <SID>UpdateLastChange()
-
 
   autocmd BufWinEnter,Filetype help wincmd K
 
