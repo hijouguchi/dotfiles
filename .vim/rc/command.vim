@@ -46,12 +46,12 @@ function! s:diff_start(...) abort "{{{
   elseif a:0 == 1
     execute 'edit' fname
     diffthis
-    execute 'botringht vertical diffsplit' a:1
+    execute 'botright vertical diffsplit' a:1
   else
     tabnew
     execute 'edit ' . a:1
     for i in range(1,a:0-1)
-      execute 'botrignt vertical diffsplit ' . a:000[i]
+      execute 'botright vertical diffsplit ' . a:000[i]
     endfor
   endif
 

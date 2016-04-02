@@ -54,7 +54,6 @@ nnoremap [UNITE/VCS] <nop>
 nnoremap <silent> [UNITE/VCS]s :<C-u>UniteVersions status:!<CR>
 nnoremap <silent> [UNITE/VCS]l :<C-u>UniteVersions log:%<CR>
 
-
 augroup rc-bundle-unite
   autocmd!
   autocmd FileType unite call s:unite_my_settings()
@@ -62,8 +61,11 @@ augroup END
 
 function! s:unite_my_settings() abort "{{{
   " disable nowait
-  nmap <silent><buffer> <space> <Plug>(unite_toggle_mark_current_candidate)|
-  nmap <silent><buffer> t       <Plug>(unite_toggle_mark_current_candidate)|
+  nnoremap <silent><buffer> <space> <Plug>(unite_toggle_mark_current_candidate)
+  nnoremap <silent><buffer> t       <Plug>(unite_toggle_mark_current_candidate)
+  "nnoremap <silent><buffer> <CR>    <Plug>(unite_choose_action)
+  "inoremap <silent><buffer> <CR>    <Plug>(unite_choose_action)
+
 endfunction "}}}
 
 
