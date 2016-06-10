@@ -25,6 +25,8 @@ set cindent
 set complete=.,w,b,u,t,k
 set backspace=indent,eol,start
 
+set isfname& isfname-=,
+
 set history=1000
 
 set display=lastline

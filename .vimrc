@@ -50,6 +50,7 @@ source ~/.vim/rc/bundle/thumbnail.vim
 source ~/.vim/rc/bundle/incsearch.vim
 source ~/.vim/rc/bundle/vcscommand.vim
 source ~/.vim/rc/bundle/unite.vim
+source ~/.vim/rc/bundle/gtags.vim
 
 runtime macros/matchit.vim
 

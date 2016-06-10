@@ -62,16 +62,17 @@ nmap <Space>w <C-W>
 nnoremap <Space>tj gt
 nnoremap <Space>tk gT
 
-nnoremap <expr> gf ':split ' . <SID>get_current_fname() . "\<CR>"
+nnoremap <expr> gf ':split ' . expand("<cfile>") . "\<CR>"
+"nnoremap <expr> gf ':split ' . <SID>get_current_fname() . "\<CR>"
 
-function! s:get_current_fname() abort "{{{
-  let col   = col('.')
-  let line  = getline('.')
-  let lline = matchstr(strpart(line, 0, col), '\f\+$')
-  let rline = matchstr(strpart(line, col),  '^\f\+')
-  let fname = lline . rline
-  return fname
-endfunction "}}}
+"function! s:get_current_fname() abort "{{{
+"  let col   = col('.')
+"  let line  = getline('.')
+"  let lline = matchstr(strpart(line, 0, col), '\f\+$')
+"  let rline = matchstr(strpart(line, col),  '^\f\+')
+"  let fname = lline . rline
+"  return fname
+"endfunction "}}}
 
 for s:i in range(0,9)
   execute printf("nnoremap <Space>t%d %dgt", s:i, s:i+1)
@@ -96,6 +97,8 @@ cnoremap <C-E> <End>
 
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
+
+cnoremap <expr> <C-]> expand('<cword>')
 
 " cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
 " cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
