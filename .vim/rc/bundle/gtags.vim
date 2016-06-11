@@ -20,8 +20,19 @@ NeoBundleLazy 'vim-scripts/gtags.vim', {
 
 nnoremap <expr> <space>gt ':Gtags '   .expand('<cword>')."\<CR>"
 nnoremap <expr> <space>gr ':Gtags -r '.expand('<cword>')."\<CR>"
+nnoremap <expr> <space>gs ':Gtags -s '.expand('<cword>')."\<CR>"
 nnoremap <expr> <space>gf ':Gtags -f '.expand('<cword>')."\<CR>"
 nnoremap <expr> <space>gg ':Gtags -g '.expand('<cword>')."\<CR>"
+
+nnoremap <expr> <C-]> <SID>TagSearch()
+
+function! s:TagSearch() "{{{
+  if &l:ft != 'help' && filereadable('GPATH')
+    return ':Gtags '.expand('<cword>')."\<CR>"
+  else
+    return "\<C-]>"
+  endif
+endfunction "}}}
 
 
 let &cpo = s:save_cpo
