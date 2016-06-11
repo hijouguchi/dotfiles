@@ -14,14 +14,14 @@ set cpo&vim
 
 NeoBundleLazy 'vim-scripts/gtags.vim', {
       \   'autoload' : {
-      \     'commands' : [ 'Gtags' ]
+      \     'commands' : [ 'Gtags', 'GtagsCursor' ]
       \   }
       \ }
 
-nnoremap <expr> <space>gt ':Gtags '  .expand('<cword>')."\<CR>"
-nnoremap <expr> <space>gr ':Gtags -r'.expand('<cword>')."\<CR>"
-nnoremap <expr> <space>gf ':Gtags -f'.expand('<cword>')."\<CR>"
-nnoremap <expr> <space>gg ':Gtags -g'.expand('<cword>')."\<CR>"
+nnoremap <expr> <space>gt ':Gtags '   .expand('<cword>')."\<CR>"
+nnoremap <expr> <space>gr ':Gtags -r '.expand('<cword>')."\<CR>"
+nnoremap <expr> <space>gf ':Gtags -f '.expand('<cword>')."\<CR>"
+nnoremap <expr> <space>gg ':Gtags -g '.expand('<cword>')."\<CR>"
 
 
 let &cpo = s:save_cpo
