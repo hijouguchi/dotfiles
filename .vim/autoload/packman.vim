@@ -151,7 +151,7 @@ function! s:execute(repo) abort "{{{
 
   if has_key(elm, 'depends')
     for dep in elm['depends']
-      call s:load_repo(a:repo)
+      call s:load_repo(dep)
     endfor
   end
 
