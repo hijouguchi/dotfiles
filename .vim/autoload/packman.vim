@@ -6,6 +6,8 @@ if get(g:, 'packman_loaded', 0) == 1
 endif
 let g:packman_loaded = 1
 
+let g:packman_delay_load_time = 10
+
 
 function! packman#initialize() abort "{{{
   if !has('g:packman_directory')
@@ -13,6 +15,9 @@ function! packman#initialize() abort "{{{
   endif
 
   let s:packman_list = {}
+
+  let s:packman_timer_lazy_list = []
+  let s:packman_timer_idx       = 0
 endfunction "}}}
 function! packman#add(repo, ...) abort "{{{
 
@@ -33,9 +38,7 @@ function! packman#add_lazy(repo, ...) abort "{{{
     let elm = {}
   endif
 
-  if !has_key(elm, 'lazy')
-    let elm['lazy'] = 1
-  endif
+  let elm['lazy'] = 1
 
   let s:packman_list[a:repo] = elm
   return
@@ -68,23 +71,35 @@ function! packman#load() abort "{{{
       continue
     endif
 
-    if has_key(elm, 'timer')
-      call s:hook_timer(repo)
-      continue
-    end
+    let hook = 0
 
     if get(elm, 'insert', 0) == 1
       call s:hook_insert(repo)
+      let hook = 1
     endif
 
     if has_key(elm, 'keymaps')
       call s:hook_keymaps(repo)
+      let hook = 1
     endif
 
     if has_key(elm, 'commands')
       call s:hook_commands(repo)
+      let hook = 1
+    endif
+
+    if hook == 0
+      call add(s:packman_timer_lazy_list, repo)
     endif
   endfor
+
+
+  " set timer
+  let len = len(s:packman_timer_lazy_list)
+  if len > 0
+    call timer_start(g:packman_delay_load_time,
+          \ 'packman#hook_timer', {'repeat': len})
+  endif
 
   return
 endfunction "}}}
@@ -101,6 +116,11 @@ function! packman#hook_command(repo, cmd, bang, line1, line2, args) abort "{{{
 
   let range = (a:line1 == a:line2) ? '' : a:line1.','.a:line2
   execute range.a:cmd.a:bang a:args
+endfunction "}}}
+function! packman#hook_timer(...) abort "{{{
+  let repo = s:packman_timer_lazy_list[s:packman_timer_idx]
+  let s:packman_timer_idx += 1
+  call s:execute(repo)
 endfunction "}}}
 function! packman#show_list() abort "{{{
 
@@ -146,13 +166,11 @@ function! s:execute(repo) abort "{{{
     call elm.pre_func()
   endif
 
-  let name = substitute(a:repo, '^.*\/', '', '')
-  exec 'packadd' name
+  exec 'packadd' substitute(a:repo, '^.*\/', '', '')
 
   if has_key(elm, 'depends')
-    for dep in elm['depends']
-      let name = substitute(dep, '^.*\/', '', '')
-      exec 'packadd' name
+    for dep in map(copy(elm['depends']), 'substitute(v:val, "^.*\/", "", "")')
+      exec 'packadd' dep
     endfor
   end
 
@@ -163,7 +181,6 @@ function! s:execute(repo) abort "{{{
   return
 endfunction "}}}
 function! s:hook_insert(repo) abort "{{{
-  let elm   = s:packman_list[a:repo]
   let gname = substitute(a:repo, '^.*\/', 'packman-hook-', '')
   execute 'augroup' gname
     autocmd!
@@ -184,10 +201,6 @@ function! s:hook_commands(repo) abort "{{{
     execute 'silent! command -nargs=* -range -bang -bar' cmd
           \ 'call packman#hook_command("'.a:repo.'", "'.cmd.'", <q-bang>, <line1>, <line2>, <q-args>)'
   endfor
-endfunction "}}}
-function! s:hook_timer(repo) abort "{{{
-  let elm  = s:packman_list[a:repo]
-  call timer_start(elm['timer'], function('packman#execute_on_hook', [a:repo]))
 endfunction "}}}
 function! s:hook_clear(repo) abort "{{{
   let elm = s:packman_list[a:repo]
