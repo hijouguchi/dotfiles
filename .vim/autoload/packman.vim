@@ -9,9 +9,11 @@ let g:packman_loaded = 1
 let g:packman_delay_load_time = 10
 
 
-function! packman#initialize() abort "{{{
-  if !has('g:packman_directory')
-    let g:packman_directory = $HOME.'/.vim/pack/packman/opt'
+function! packman#begin(...) abort "{{{
+  if a:0 > 0
+    let s:packman_directory = a:1
+  else
+    let s:packman_directory = $HOME.'/.vim/pack/packman/opt'
   endif
 
   let s:packman_list = {}
@@ -19,48 +21,7 @@ function! packman#initialize() abort "{{{
   let s:packman_timer_lazy_list = []
   let s:packman_timer_idx       = 0
 endfunction "}}}
-function! packman#add(repo, ...) abort "{{{
-
-  if a:0 > 0
-    let elm = a:1
-  else
-    let elm = {}
-  endif
-
-  let s:packman_list[a:repo] = elm
-  return
-endfunction " }}}
-function! packman#add_lazy(repo, ...) abort "{{{
-
-  if a:0 > 0
-    let elm = a:1
-  else
-    let elm = {}
-  endif
-
-  let elm['lazy'] = 1
-
-  let s:packman_list[a:repo] = elm
-  return
-endfunction " }}}
-function! packman#check() abort "{{{
-
-  for elms in items(s:packman_list)
-    let repo = elms[0]
-    let elm  = elms[1]
-
-    call s:install_or_update(repo)
-
-    if has_key(elm, 'depends')
-      for dep in elm['depends']
-        call s:install_or_update(dep)
-      endfor
-    endif
-  endfor
-
-  echom '[packman] check complete'
-endfunction "}}}
-function! packman#load() abort "{{{
+function! packman#end() abort "{{{
 
   for elms in items(s:packman_list)
     let repo = elms[0]
@@ -102,6 +63,47 @@ function! packman#load() abort "{{{
   endif
 
   return
+endfunction "}}}
+function! packman#add(repo, ...) abort "{{{
+
+  if a:0 > 0
+    let elm = a:1
+  else
+    let elm = {}
+  endif
+
+  let s:packman_list[a:repo] = elm
+  return
+endfunction " }}}
+function! packman#add_lazy(repo, ...) abort "{{{
+
+  if a:0 > 0
+    let elm = a:1
+  else
+    let elm = {}
+  endif
+
+  let elm['lazy'] = 1
+
+  let s:packman_list[a:repo] = elm
+  return
+endfunction " }}}
+function! packman#check() abort "{{{
+
+  for elms in items(s:packman_list)
+    let repo = elms[0]
+    let elm  = elms[1]
+
+    call s:install_or_update(repo)
+
+    if has_key(elm, 'depends')
+      for dep in elm['depends']
+        call s:install_or_update(dep)
+      endfor
+    endif
+  endfor
+
+  echom '[packman] check complete'
 endfunction "}}}
 function! packman#execute_on_hook(repo, ...) abort "{{{
   call s:hook_clear(a:repo)
@@ -172,13 +174,13 @@ endfunction "}}}
 function! s:install_or_update(repo) abort "{{{
   echom '[packman] check' a:repo
   let url  = 'https://github.com/'.a:repo
-  let targ = g:packman_directory . '/' . substitute(a:repo, '^.*\/', '', '')
+  let targ = s:packman_directory . '/' . substitute(a:repo, '^.*\/', '', '')
 
   " TODO: 今後 job とかを使って非同期にやっておきたい
   if isdirectory(targ)
     call system('cd '.targ.' && git pull')
   else
-    call system('mkdir -p '.g:packman_directory.' && git clone --depth 1 --single-branch '.url.' '.targ)
+    call system('mkdir -p '.s:packman_directory.' && git clone --depth 1 --single-branch '.url.' '.targ)
   endif
 
   if isdirectory(targ.'/doc')
@@ -241,7 +243,6 @@ endfunction "}}}
 command! -nargs=+   PackManAdd     call packman#add(<args>)
 command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
 command!            PackManCheck   call packman#check()
-command!            PackManLoad    call packman#load()
 command!            PackManList    call packman#show_list()
 
 let &cpo = s:save_cpo

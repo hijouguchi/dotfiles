@@ -6,7 +6,7 @@ set nocompatible
 filetype plugin indent on
 syntax enable
 
-call packman#initialize()
+call packman#begin()
 
 PackManAdd     'Shougo/vimproc.vim'
 PackManAdd     'vim-jp/vimdoc-ja.git'
@@ -25,13 +25,9 @@ source ~/.vim/rc/pack/thumbnail.vim
 source ~/.vim/rc/pack/incsearch.vim
 source ~/.vim/rc/pack/gtags.vim
 
-PackManLoad
+call packman#end()
 
-function! s:load_matchit(...)
-  runtime macros/matchit.vim
-endfunction
-
-call timer_start(15, function('s:load_matchit'))
+runtime macros/matchit.vim
 
 
 source ~/.vim/rc/general.vim
