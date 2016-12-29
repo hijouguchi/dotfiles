@@ -11,7 +11,7 @@ call packman#initialize()
 PackManAdd     'Shougo/vimproc.vim'
 PackManAdd     'vim-jp/vimdoc-ja.git'
 PackManAdd     'itchyny/landscape.vim'
-PackManAdd     'kana/vim-textobj-user.git',  {'depends': ['sgur/vim-textobj-parameter.git']}
+PackManAddLazy 'kana/vim-textobj-user.git',  {'timer': 10, 'depends': ['sgur/vim-textobj-parameter.git']}
 PackManAddLazy 'vim-scripts/Align',          {'commands': ['Align']}
 PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': ['VCSVimDiff']}
 
@@ -27,7 +27,11 @@ source ~/.vim/rc/pack/gtags.vim
 
 PackManLoad
 
-runtime macros/matchit.vim
+function! s:load_matchit(...)
+  runtime macros/matchit.vim
+endfunction
+
+call timer_start(15, function('s:load_matchit'))
 
 
 source ~/.vim/rc/general.vim
