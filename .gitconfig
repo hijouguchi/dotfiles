@@ -17,3 +17,5 @@
 	s  = status
 	c  = commit
 	cm = checkout master
+[merge]
+	ff = true
