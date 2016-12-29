@@ -6,3 +6,4 @@ keymap.screenrc
 .vim/bundle
 .vim/viminfo
 start_linux.zsh
+pack
