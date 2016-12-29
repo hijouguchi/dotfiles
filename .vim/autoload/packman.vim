@@ -137,6 +137,38 @@ function! packman#show_list() abort "{{{
 
 endfunction "}}}
 
+function! s:execute(repo) abort "{{{
+  let elm = s:packman_list[a:repo]
+  let elm['loaded'] = 1
+
+  if has_key(elm, 'pre_func')
+    call elm.pre_func()
+  endif
+
+  call s:load_repo(a:repo)
+
+  if has_key(elm, 'depends')
+    for dep in elm['depends']
+      call s:load_repo(a:repo)
+    endfor
+  end
+
+  if has_key(elm, 'post_func')
+    call elm.post_func()
+  endif
+
+  return
+endfunction "}}}
+function! s:load_repo(repo) abort "{{{
+  let name = substitute(a:repo, '^.*\/', '', '')
+  try
+    exec 'packadd' name
+  catch
+    echom '[packman]' a:repo 'is not installed. try install...'
+    call s:install_or_update(a:repo)
+    exec 'packadd' name
+  endtry
+endfunction "}}}
 function! s:install_or_update(repo) abort "{{{
   echom '[packman] check' a:repo
   let url  = 'https://github.com/'.a:repo
@@ -157,28 +189,6 @@ function! s:install_or_update(repo) abort "{{{
   if a:repo == 'vimproc.vim' && !has('win32') && !has('win32unix')
     call system('cd '.targ.' && make')
   endif
-endfunction "}}}
-function! s:execute(repo) abort "{{{
-  let elm = s:packman_list[a:repo]
-  let elm['loaded'] = 1
-
-  if has_key(elm, 'pre_func')
-    call elm.pre_func()
-  endif
-
-  exec 'packadd' substitute(a:repo, '^.*\/', '', '')
-
-  if has_key(elm, 'depends')
-    for dep in map(copy(elm['depends']), 'substitute(v:val, "^.*\/", "", "")')
-      exec 'packadd' dep
-    endfor
-  end
-
-  if has_key(elm, 'post_func')
-    call elm.post_func()
-  endif
-
-  return
 endfunction "}}}
 function! s:hook_insert(repo) abort "{{{
   let gname = substitute(a:repo, '^.*\/', 'packman-hook-', '')
@@ -228,11 +238,11 @@ function! s:hook_clear(repo) abort "{{{
 endfunction "}}}
 
 
-command! -nargs=+ PackManAdd     call packman#add(<args>)
-command! -nargs=+ PackManAddLazy call packman#add_lazy(<args>)
-command!          PackManCheck   call packman#check()
-command!          PackManLoad    call packman#load()
-command!          PackManList    call packman#show_list()
+command! -nargs=+   PackManAdd     call packman#add(<args>)
+command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
+command!            PackManCheck   call packman#check()
+command!            PackManLoad    call packman#load()
+command!            PackManList    call packman#show_list()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
