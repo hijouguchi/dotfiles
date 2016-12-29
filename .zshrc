@@ -7,7 +7,7 @@
 _screen_exec() {
   screen -wipe
   if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-    exec screen -D -RR -e"^Gg"
+    exec ssh-agent screen -D -RR -e"^Gg"
   else
     exec screen -x
   fi
