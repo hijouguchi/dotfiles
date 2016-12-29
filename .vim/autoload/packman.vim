@@ -6,7 +6,10 @@ if get(g:, 'packman_loaded', 0) == 1
 endif
 let g:packman_loaded = 1
 
-let g:packman_delay_load_time = 10
+
+if !has('g:packman_delay_load_time')
+  let g:packman_delay_load_time = 10
+endif
 
 
 function! packman#begin(...) abort "{{{
@@ -28,7 +31,7 @@ function! packman#end() abort "{{{
     let elm  = elms[1]
 
     if get(elm, 'lazy', 0) == 0
-      call s:execute(repo)
+      call s:try_load(repo)
       continue
     endif
 
@@ -88,7 +91,7 @@ function! packman#add_lazy(repo, ...) abort "{{{
   let s:packman_list[a:repo] = elm
   return
 endfunction " }}}
-function! packman#check() abort "{{{
+function! packman#check_update() abort "{{{
 
   for elms in items(s:packman_list)
     let repo = elms[0]
@@ -105,16 +108,16 @@ function! packman#check() abort "{{{
 
   echom '[packman] check complete'
 endfunction "}}}
-function! packman#execute_on_hook(repo, ...) abort "{{{
+function! packman#load_on_hook(repo, ...) abort "{{{
   call s:hook_clear(a:repo)
-  call s:execute(a:repo)
+  call s:try_load(a:repo)
 endfunction "}}}
 function! packman#hook_keymap(repo, key) abort "{{{
-  call packman#execute_on_hook(a:repo)
+  call packman#load_on_hook(a:repo)
   return feedkeys(a:key)
 endfunction "}}}
 function! packman#hook_command(repo, cmd, bang, line1, line2, args) abort "{{{
-  call packman#execute_on_hook(a:repo)
+  call packman#load_on_hook(a:repo)
 
   let range = (a:line1 == a:line2) ? '' : a:line1.','.a:line2
   execute range.a:cmd.a:bang a:args
@@ -122,7 +125,7 @@ endfunction "}}}
 function! packman#hook_timer(...) abort "{{{
   let repo = s:packman_timer_lazy_list[s:packman_timer_idx]
   let s:packman_timer_idx += 1
-  call s:execute(repo)
+  call s:try_load(repo)
 endfunction "}}}
 function! packman#show_list() abort "{{{
 
@@ -132,14 +135,14 @@ function! packman#show_list() abort "{{{
 
     if has_key(elms[1], 'depends')
       for name in elms[1]['depends']
-        echo '     |->' name
+        echo '      ->' name
       endfor
     endif
   endfor
 
 endfunction "}}}
 
-function! s:execute(repo) abort "{{{
+function! s:try_load(repo) abort "{{{
   let elm = s:packman_list[a:repo]
   let elm['loaded'] = 1
 
@@ -176,7 +179,6 @@ function! s:install_or_update(repo) abort "{{{
   let url  = 'https://github.com/'.a:repo
   let targ = s:packman_directory . '/' . substitute(a:repo, '^.*\/', '', '')
 
-  " TODO: 今後 job とかを使って非同期にやっておきたい
   if isdirectory(targ)
     call system('cd '.targ.' && git pull')
   else
@@ -196,7 +198,7 @@ function! s:hook_insert(repo) abort "{{{
   let gname = substitute(a:repo, '^.*\/', 'packman-hook-', '')
   execute 'augroup' gname
     autocmd!
-    execute 'autocmd InsertEnter * call packman#execute_on_hook("'.a:repo.'")'
+    execute 'autocmd InsertEnter * call packman#load_on_hook("'.a:repo.'")'
   augroup END
 endfunction "}}}
 function! s:hook_keymaps(repo) abort "{{{
@@ -242,7 +244,7 @@ endfunction "}}}
 
 command! -nargs=+   PackManAdd     call packman#add(<args>)
 command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
-command!            PackManCheck   call packman#check()
+command!            PackManCheck   call packman#check_update()
 command!            PackManList    call packman#show_list()
 
 let &cpo = s:save_cpo
