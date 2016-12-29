@@ -37,8 +37,8 @@ function! packman#end() abort "{{{
 
     let hook = 0
 
-    if get(elm, 'insert', 0) == 1
-      call s:hook_insert(repo)
+    if has_key(elm, 'event')
+      call s:hook_event(repo)
       let hook = 1
     endif
 
@@ -144,6 +144,11 @@ endfunction "}}}
 
 function! s:try_load(repo) abort "{{{
   let elm = s:packman_list[a:repo]
+
+  " if already loaded, ignored
+  if get(elm, 'loaded', 0) == 1
+    return
+  end
   let elm['loaded'] = 1
 
   if has_key(elm, 'pre_func')
@@ -194,11 +199,15 @@ function! s:install_or_update(repo) abort "{{{
     call system('cd '.targ.' && make')
   endif
 endfunction "}}}
-function! s:hook_insert(repo) abort "{{{
+function! s:hook_event(repo) abort "{{{
   let gname = substitute(a:repo, '^.*\/', 'packman-hook-', '')
+  let elm   = s:packman_list[a:repo]
+
   execute 'augroup' gname
     autocmd!
-    execute 'autocmd InsertEnter * call packman#load_on_hook("'.a:repo.'")'
+    for eve in elm['event']
+      execute 'autocmd' eve '* call packman#load_on_hook("'.a:repo.'")'
+    endfor
   augroup END
 endfunction "}}}
 function! s:hook_keymaps(repo) abort "{{{
