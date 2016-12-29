@@ -16,7 +16,7 @@ _screen_exec() {
 case "$TERM" in
   *xterm*|rxvt|(dt|k|E|ml)term)
     #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-    [[ -x `which screen 2>/dev/null` ]] && exec screen -D -RR -e"^Gg"
+    [[ -x `which screen 2>/dev/null` ]] && exec ssh-agent screen -D -RR -e"^Gg"
     ;;
   linux)
     [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
@@ -112,7 +112,9 @@ autoload -U  compinit && compinit -d $HOME/.zsh/zcompdump
 #setopt hist_verify        # 履歴を補完時に，修正できるようにする．
 
 zstyle ':completion:*' verbose yes
-zstyle ':completion:*' completer _oldlist _expand _complete _match _prefix _approximate  _list _history
+# 何が原因で誤動作してるので削った (最低限これくらいしか使ってないし)
+#zstyle ':completion:*' completer _oldlist _expand _complete _match _prefix _approximate  _list _history
+zstyle ':completion:*' completer _complete _match _expand _approximate
 zstyle ':completion:*:messages'     format "$fg_bold[yellow]%d$reset_color"
 zstyle ':completion:*:warnings'     format "$fg_bold[blue]No match command$reset_color"
 zstyle ':completion:*:descriptions' format "$fg_bold[blue]completing %d$reset_color"
@@ -145,7 +147,7 @@ zstyle ':completion:*:*:*:*:processec' force-list always
 zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
 
-#zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
+zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
 # 補完候補で，ディレクトリを後ろに
 zstyle ':completion:*' file-patterns '*(^-/):normal\ files:normal\ files *(-/):directories:directories '
 
@@ -159,6 +161,9 @@ bindkey               '^b'   backward-char
 bindkey               '^f'   forward-char
 bindkey               '^a'   beginning-of-line
 bindkey               '^e'   end-of-line
+bindkey               '^k'   kill-line
+bindkey               '^x^b'  backward-word
+bindkey               '^x^f'  forward-word
 
 bindkey               "^i"   menu-complete
 bindkey               "^[[Z" reverse-menu-complete
