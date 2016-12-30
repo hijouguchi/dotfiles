@@ -24,6 +24,9 @@ function! highword#init#match_push() abort "{{{
         \ {idx, val -> val.group =~ '^HighWord\d\+$'})
 endfunction "}}}
 function! highword#init#match_pop() abort "{{{
+  if !has('s:match_pattern_list')
+    return
+  endif
 
   let ma = map(filter(getmatches(),
         \ {idx, val -> val.group =~ '^HighWord\d\+$'}),
