@@ -114,7 +114,8 @@ function! packman#load_on_hook(repo, ...) abort "{{{
 endfunction "}}}
 function! packman#hook_keymap(repo, key) abort "{{{
   call packman#load_on_hook(a:repo)
-  return feedkeys(a:key)
+  call feedkeys(a:key)
+  return ''
 endfunction "}}}
 function! packman#hook_command(repo, cmd, bang, line1, line2, args) abort "{{{
   call packman#load_on_hook(a:repo)
