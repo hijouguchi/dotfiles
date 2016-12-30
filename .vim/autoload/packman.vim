@@ -1,11 +1,11 @@
-let s:save_cpo = &cpo
-set cpo&vim
 
 if get(g:, 'packman_loaded', 0) == 1
   finish
 endif
 let g:packman_loaded = 1
 
+let s:save_cpo = &cpo
+set cpo&vim
 
 if !has('g:packman_delay_load_time')
   let g:packman_delay_load_time = 10

@@ -1,11 +1,7 @@
-" /Users/hijouguchi/.vim/after/plugin/highlight_words.vim
-"
-" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015/07/13
 
-" if exists("g:loaded_highlight_words")
-"   finish
-" endif
+if exists("g:loaded_highlight_words")
+  finish
+endif
 let g:loaded_highlight_words = 1
 let g:highlight_words_nohl   = 0
 
