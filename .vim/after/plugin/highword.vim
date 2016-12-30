@@ -6,17 +6,10 @@ let g:loaded_highword = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-augroup Highlightword "{{{
-  autocmd!
-  autocmd BufWinEnter,ColorScheme * call highword#init#colorscheme()
-  autocmd WinEnter                * call highword#init#match_pop()
-  autocmd WinLeave                * call highword#init#match_push()
-augroup END "}}}
+nnoremap <silent> * :call highword#add()<CR>*zvzz
+nnoremap <silent> # :call highword#del()<CR>
 
-nnoremap <silent> * :call highword#exec#add()<CR>*zvzz
-nnoremap <silent> # :call highword#exec#del()<CR>
-
-command! HighWordClear call highword#exec#clear()
+command! HighWordClear call highword#clear()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
