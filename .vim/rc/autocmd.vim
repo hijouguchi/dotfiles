@@ -1,11 +1,5 @@
-" .vim/rc/autocmd.vim
-"
-" Maintainer: hijouguchi <taka13.mac+vim@gmail.com>
-" Last Change: 2015-04-17
-
 let s:save_cpo = &cpo
 set cpo&vim
-
 
 augroup VimrcAutoCmd
   autocmd!
@@ -40,15 +34,15 @@ augroup VimrcAutoCmd
   autocmd BufWinEnter,Filetype help wincmd K
 
   autocmd BufNewFile,BufRead *.r,*.R     setfiletype r
-  autocmd BufNewFile,BufRead *.m,*.mat   setfiletype octave
-  autocmd BufNewFile,BufRead *.mdl       setfiletype spice
-  autocmd BufNewFile,BufRead *.gp        setfiletype gnuplot
+  "autocmd BufNewFile,BufRead *.m,*.mat   setfiletype octave
+  "autocmd BufNewFile,BufRead *.mdl       setfiletype spice
+  "autocmd BufNewFile,BufRead *.gp        setfiletype gnuplot
   autocmd BufNewFile,BufRead *.sv        setfiletype verilog
   autocmd BufNewFile,BufRead *.svi       setfiletype verilog
 
   autocmd BufNewFile,BufRead *.v.erb     setfiletype eruby.verilog
-  autocmd BufNewFile,BufRead *.sp.erb    setfiletype eruby.spice
-  autocmd BufNewFile,BufRead *.gp.erb    setfiletype eruby.gnuplot
+  "autocmd BufNewFile,BufRead *.sp.erb    setfiletype eruby.spice
+  "autocmd BufNewFile,BufRead *.gp.erb    setfiletype eruby.gnuplot
   autocmd BufNewFile,BufRead *.htm.erb   setfiletype eruby.html
   autocmd BufNewFile,BufRead *.html.erb  setfiletype eruby.html
 
@@ -202,5 +196,4 @@ endfunction "}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
 " vim: ts=2 sw=2 sts=2 et fdm=marker

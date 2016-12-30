@@ -1,5 +1,3 @@
-" vim: ts=2 sw=2 sts=2 et fdm=marker
-
 set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
@@ -28,7 +26,6 @@ source ~/.vim/rc/pack/gtags.vim
 call packman#end()
 
 runtime macros/matchit.vim
-
 
 source ~/.vim/rc/general.vim
 source ~/.vim/rc/fileencodings.vim
