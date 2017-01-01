@@ -1,5 +1,4 @@
-let s:save_cpo = &cpo
-set cpo&vim
+" vim: ts=2 sw=2 sts=2 et fdm=marker
 
 noremap ; :
 noremap : ;
@@ -68,8 +67,9 @@ nnoremap <expr> gf ':split ' . expand("<cfile>") . "\<CR>"
 "  return fname
 "endfunction "}}}
 
+let s:str = "nnoremap <Space>t%d %dgt"
 for s:i in range(0,9)
-  execute printf("nnoremap <Space>t%d %dgt", s:i, s:i+1)
+  execute printf(s:str, s:i, s:i+1)
 endfor
 unlet s:i
 
@@ -115,8 +115,4 @@ function! s:MyCmdLineWrapper(...) abort "{{{
   endif
 endfunction "}}}
 
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
-" vim: ts=2 sw=2 sts=2 et fdm=marker
 

@@ -1,6 +1,11 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+if g:cachedir
+  set viminfo&
+  let &viminfo .= ',n' . g:cachedir . '/.viminfo'
+endif
+
 set t_Co=256
 set visualbell
 set t_vb=

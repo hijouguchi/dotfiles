@@ -4,6 +4,12 @@ set nocompatible
 filetype plugin indent on
 syntax enable
 
+if isdirectory(expand("$HOME/.history"))
+  let g:cachedir = expand("$HOME/.history")
+else
+  let g:cachedir = 0
+endif
+
 call packman#begin()
 
 PackManAdd     'Shougo/vimproc.vim'

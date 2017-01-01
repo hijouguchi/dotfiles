@@ -10,11 +10,13 @@ let g:neocomplete#enable_auto_select = 0
 let g:neocomplete#sources#syntax#min_keyword_length = 2
 let g:neocomplete#use_vimproc        = 1
 
-if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {
-        \ 'default' : '\h\w*'
-        \ }
+if g:cachedir
+  let g:neocomplete#data_directory   = g:cachedir.'/neocomplete'
 endif
+
+let g:neocomplete#keyword_patterns = {
+      \ 'default' : '\h\w*'
+      \ }
 
 inoremap <expr> <Tab>   <SID>InsertTabWrapper()
 inoremap <expr> <CR>    <SID>InsertCRWrapper()
@@ -27,7 +29,7 @@ inoremap <expr> <C-F>   neocomplete#start_manual_complete('file')
 " <Plug>(vimrc_bs) is defined by
 " .vim/rc/bundle/vim-smartinput.vim (#map_to_triger)
 " vim-smartinput が呼ばれたときに再定義される
-inoremap <unique> <Plug>(vimrc_bs) <BS>
+silent! inoremap <unique> <Plug>(vimrc_bs) <BS>
 imap <expr> <C-H> neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
 imap <expr> <BS>  neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
 
