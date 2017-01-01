@@ -5,8 +5,9 @@ It is share any dotfiles
 .vim/
 .vimrc
 .zshrc
-install.sh
+.zshenv
+dotinstall.sh
 
 
 [not share]
-keymap.screenrc # it is set escape
+
