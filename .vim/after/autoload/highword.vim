@@ -20,7 +20,7 @@ function! highword#add() abort "{{{
 
   let hlname = s:get_hlname_minimum()
 
-  if !exists(s:autocmd_loaded)
+  if !exists('s:autocmd_loaded')
     call highword#set_autocmd()
   endif
 
