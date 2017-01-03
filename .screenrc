@@ -158,8 +158,8 @@ bind -c group_region  t eval 'group '
 
 # make default layout
 layout new 0:orig
-screen -t orig //group
-screen
+#screen -t orig //group
+#screen
 
 # END {{{1
 # vim:smarttab expandtab :
