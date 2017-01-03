@@ -51,19 +51,21 @@ bind  v split -v
 
 
 # make invalid keybind side effects for edit mode
-bind \' eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
-bind  A eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
-bind  ; eval 'bindkey -m y' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
+bind \' eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
+bind  A eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
+bind  : eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
+bind  ; eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
 
 # copy mode {{{2
-# migrated to copy mode after resister the keybind, y, ^v, of V
+# migrated to copy mode after resister the keybind, y, v, ^v, of V
 #bind ^v eval \
 #  "bindkey -m -t  y stuff Y" \
+#  "bindkey -m -t  v stuff \" \"" \
 #  "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" \
 #  "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" \
 #  'bindkey -m -t  g stuff gw^f^b' \
 #  copy
-bind ^v eval "bindkey -m -t y stuff Y" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" 'bindkey -m -t g stuff gw^f^b' copy
+bind ^v eval "bindkey -m -t  y stuff Y" "bindkey -m -t  v stuff \" \"" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" 'bindkey -m -t  g stuff gw^f^b' copy
 
 
 
@@ -94,10 +96,11 @@ bind -c window_region  K kill
 bind -c window_region  n screen //group
 bind -c window_region  = fit
 bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
+bind -c window_region ^w windowlist -b
 
 
 #resize {{{2
-bind                 ^r eval 'command -c window_resize' 'echo "resize mode"'
+bind                 ^r eval 'command -c window_resize' 'echo "resize mode [+-<>=_]"'
 bind                  r eval 'command -c window_resize' 'echo "resize mode"'
 bind                  + eval 'resize -v +1' 'command -c window_resize' 'echo "resize mode"'
 bind                  - eval 'resize -v -1' 'command -c window_resize' 'echo "resize mode"'
@@ -137,10 +140,11 @@ bind -c layout_region  8 eval  'layout select 8' 'layout show'
 bind -c layout_region  9 eval  'layout select 9' 'layout show'
 
 
-# # group
-# bind                 ^g eval 'command -c group_region' 'echo "group mode"'
-# bind -c group_region  n eval 'screen //group' 'title '
-# bind -c group_region  t eval 'group '
+# group
+bind                 ^g eval 'command -c group_region' 'echo "group mode [o:other n:new group t:group]"'
+bind -c group_region  o other
+bind -c group_region  n eval 'screen //group' 'title '
+bind -c group_region  t eval 'group '
 
 
 # other source {{{1
@@ -154,8 +158,8 @@ bind -c layout_region  9 eval  'layout select 9' 'layout show'
 
 # make default layout
 layout new 0:orig
-# screen -t orig //group
-# screen
+screen -t orig //group
+screen
 
 # END {{{1
 # vim:smarttab expandtab :
