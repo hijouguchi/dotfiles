@@ -1,8 +1,9 @@
-set encoding=utf-8
 scriptencoding utf-8
+
 set nocompatible
-filetype plugin indent on
-syntax enable
+
+source ~/.vim/rc/encoding.vim
+
 
 if isdirectory(expand("$HOME/.history"))
   let g:cachedir = expand("$HOME/.history")
@@ -33,8 +34,11 @@ call packman#end()
 
 runtime macros/matchit.vim
 
+filetype plugin indent on
+syntax enable
+
+
 source ~/.vim/rc/general.vim
-source ~/.vim/rc/fileencodings.vim
 source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
@@ -46,7 +50,6 @@ endif
 if !has('gui_running')
   " colorscheme desert256
   colorscheme landscape
-  " colorscheme mycolor
 end
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
