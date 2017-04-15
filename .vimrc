@@ -18,7 +18,9 @@ PackManAdd     'vim-jp/vimdoc-ja.git'
 PackManAdd     'itchyny/landscape.vim'
 PackManAddLazy 'kana/vim-textobj-user.git',  {'depends' : ['sgur/vim-textobj-parameter.git']}
 PackManAddLazy 'vim-scripts/Align',          {'commands': ['Align']}
-PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': ['VCSVimDiff']}
+PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': [
+      \ 'VCSCommit', 'VCSDiff',   'VCSLog',    'VCSRevert',
+      \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff'            ]}
 
 source ~/.vim/rc/pack/surround.vim
 source ~/.vim/rc/pack/vim-submode.vim
