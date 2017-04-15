@@ -13,7 +13,6 @@ function! highword#add() abort "{{{
   let ma = filter(getmatches(),
         \ {idx, val -> val.group =~ '^HighWord\d\+$' && val.pattern ==# mat })
 
-  echo ma
   if !empty(ma)
     return
   endif
@@ -25,7 +24,7 @@ function! highword#add() abort "{{{
   endif
 
   let wnr = winnr()
-  windo call matchadd(hlname, mat)
+  tabdo windo call matchadd(hlname, mat)
   execute wnr . 'wincmd w'
 
 endfunction "}}}
@@ -34,12 +33,12 @@ function! highword#del() abort "{{{
   let mat  = '\<' . word . '\>\C'
 
   let wnr = winnr()
-  windo call s:delete_highlight(mat)
+  tabdo windo call s:delete_highlight(mat)
   execute wnr . 'wincmd w'
 endfunction "}}}
 function! highword#clear() abort "{{{
   let wnr = winnr()
-  windo call s:delete_highlight()
+  tabdo windo call s:delete_highlight()
   execute wnr . 'wincmd w'
 
 endfunction "}}}
