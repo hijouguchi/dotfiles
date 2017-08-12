@@ -26,7 +26,7 @@ esac
 
 # Program settings {{{1
 export GREP_OPTIONS='--extended-regexp --ignore-case --color'
-export LESS='--ignore-case -R'
+export LESS='--ignore-case -RX'
 
 
 # Basic Settings {{{1
@@ -103,30 +103,35 @@ zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
 # completion {{{1
 autoload -U  compinit && compinit -d $HOME/.zsh/zcompdump
 
-#setopt complete_in_word   # 補完時のカーソル位置を保持
-#setopt list_packed        # 補完候補を多く表示させる
-#setopt list_types         # 補完一覧の type を表示
-#setopt correct            # typo してるかチェック
-#setopt magic_equal_subst  # --prefix=... の時に補完が効くように
-#setopt always_last_prompt # 補完時にプロンプトの位置を変えない
-#setopt hist_verify        # 履歴を補完時に，修正できるようにする．
+#setopt menu_complete
+
+setopt complete_in_word   # 補完時のカーソル位置を保持
+setopt list_packed        # 補完候補を多く表示させる
+setopt list_types         # 補完一覧の type を表示
+setopt correct            # typo してるかチェック
+setopt magic_equal_subst  # --prefix=... の時に補完が効くように
+setopt always_last_prompt # 補完時にプロンプトの位置を変えない
+setopt hist_verify        # 履歴を補完時に，修正できるようにする．
+
+setopt print_eight_bit    # 日本語ファイル名等8ビットを通す
+setopt extended_glob      # 拡張グロブで補完
+setopt globdots           # 明確なドットの指定なしで.から始まるファイルをマッチ
 
 zstyle ':completion:*' verbose yes
-# 何が原因で誤動作してるので削った (最低限これくらいしか使ってないし)
-#zstyle ':completion:*' completer _oldlist _expand _complete _match _prefix _approximate  _list _history
-zstyle ':completion:*' completer _complete _match _expand _approximate
+zstyle ':completion:*' completer _expand _complete _match _prefix _list _history _ignored
 zstyle ':completion:*:messages'     format "$fg_bold[yellow]%d$reset_color"
 zstyle ':completion:*:warnings'     format "$fg_bold[blue]No match command$reset_color"
 zstyle ':completion:*:descriptions' format "$fg_bold[blue]completing %d$reset_color"
 zstyle ':completion:*:corrections'  format "$fg_bold[blue]%d $fg_bold[red](erros: %e)$reset_color"
+#zstyle ':completion:*:options' description 'yes'
 
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path /tmp
 
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
+zstyle ':completion:*:default' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:*:*'         ignore-line true
 zstyle ':completion:*:(cp|mv):*'   ignore-line false
@@ -146,6 +151,7 @@ zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:*:*:processec' force-list always
 zstyle ':completion:*:processes' command 'ps -au$USER'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
+zstyle ':completion:*:manuals' separate-sections true
 
 zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
 # 補完候補で，ディレクトリを後ろに
@@ -197,7 +203,7 @@ alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
 alias l1='ls -h1AF --color=auto'
 alias du='du -h'
-alias scp='scp -c arcfour256'
+#alias scp='scp -c arcfour256'
 
 alias grep='grep --color'
 alias wget='wget -c'
@@ -375,6 +381,10 @@ dabbrev-complete () {
 zle -C dabbrev-complete menu-complete dabbrev-complete
 bindkey '^o' dabbrev-complete
 bindkey '^o^_' reverse-menu-complete
+
+if [[ ! `ssh-add -l | grep .ssh/id_rsa >/dev/null 2>&1` && -f ~/.ssh/id_rsa ]]; then
+  ssh-add -K ~/.ssh/id_rsa >/dev/null 2>&1
+fi
 
 # __END__ {{{1
 # vim:smarttab expandtab

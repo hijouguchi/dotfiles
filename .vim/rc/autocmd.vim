@@ -48,6 +48,7 @@ augroup VimrcAutoCmd
 
   autocmd FileType crontab setlocal nobackup
   autocmd FileType make    setlocal noexpandtab
+  autocmd FileType go      setlocal noexpandtab listchars=tab:\ \ ,trail:_,eol:.
 
   " enable QuickFix for grep
   " see also: http://qiita.com/items/0c1aff03949cb1b8fe6b

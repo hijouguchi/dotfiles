@@ -15,8 +15,11 @@ if [ -d $HOME/.history ]; then
 fi
 
 # for less color
+#export LESS='-RX'
 #export LESSOPEN='| src-hilite-lesspipe.sh %s'
 
+
+export GOPATH=$HOME/work/.go
 
 # TODO: mac 以外の場合も対応できるように
 if [ `uname -s` = 'Darwin' ]; then

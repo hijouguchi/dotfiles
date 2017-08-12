@@ -1,0 +1,3 @@
+--pager=less --ignore-case -RX
+--smart-case
+--type-set=sv:v,vh,sv,svh

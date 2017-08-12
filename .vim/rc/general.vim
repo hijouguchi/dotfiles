@@ -51,6 +51,7 @@ set incsearch
 set ignorecase
 set smartcase
 set wrapscan
+set nowrap
 
 set scrolloff=3
 
@@ -64,9 +65,9 @@ set wildmenu
 set wildchar=<tab>
 set wildmode=longest,full
 
-set tabstop=2
-set shiftwidth=2
-set softtabstop=0
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 
 set diffopt& diffopt+=iwhite
 
