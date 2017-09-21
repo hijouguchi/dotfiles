@@ -23,8 +23,10 @@ function! highword#add() abort "{{{
     call highword#set_autocmd()
   endif
 
+  let tnr = tabpagenr()
   let wnr = winnr()
   tabdo windo call matchadd(hlname, mat)
+  execute tnr . 'tabnext'
   execute wnr . 'wincmd w'
 
 endfunction "}}}
@@ -32,8 +34,10 @@ function! highword#del() abort "{{{
   let word = expand('<cword>')
   let mat  = '\<' . word . '\>\C'
 
+  let tnr = tabpagenr()
   let wnr = winnr()
   tabdo windo call s:delete_highlight(mat)
+  execute tnr . 'tabnext'
   execute wnr . 'wincmd w'
 endfunction "}}}
 function! highword#clear() abort "{{{
