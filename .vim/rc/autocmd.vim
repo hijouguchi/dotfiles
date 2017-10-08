@@ -59,33 +59,14 @@ augroup VimrcAutoCmd
   autocmd SwapExists * let v:swapchoice = 'o'
 augroup END
 
-" MEMO: VimEnter 時には expandtab が反映されていないっぽい
-function! HighlightSpaceStart(name) abort "{{{
-  if &l:expandtab
-    call matchadd(a:name, '^\s*\t\s*')
-  else
-    call matchadd(a:name, '^\s* \s*')
-  endif
-endfunction "}}}
-
 let s:space_match_config = {
       \ 'SpaceEnd'     : '\s\+$',
       \ 'TabAndSpace'  : '\s*\(\t \| \t\)\s*',
-      \ 'ZenkakuSpace' : '\s*　\s*'
+      \ 'ZenkakuSpace' : '\s*　\s*',
+      \ 'SpaceStart'   : '^\t\s*'
       \ }
       "\ 'SpaceStart'   : function('HighlightSpaceStart')
 
-augroup HighlightTrailingSpaces
-  autocmd!
-  for k in keys(s:space_match_config)
-    execute 'autocmd ColorScheme     * highlight default link '.k.' Error'
-  endfor
-
-  autocmd BufWinEnter,Syntax * call <SID>HighlightTrailingSpacesEnable()
-  autocmd WinEnter           * call <SID>HighlightTrailingSpacesEnable() " 既に開いているファイルを :sp したとき
-  autocmd InsertLeave        * call <SID>HighlightTrailingSpacesEnable('SpaceEnd')
-  autocmd InsertEnter        * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
-augroup END
 
 let s:space_no_highlight = ['help', 'diff']
 function! s:HighlightTrailingSpacesEnable(...) abort "{{{
@@ -93,20 +74,29 @@ function! s:HighlightTrailingSpacesEnable(...) abort "{{{
   " ハイライトさせたくないファイルタイプ
    if exists('b:current_syntax') &&
          \ index(s:space_no_highlight, b:current_syntax) != -1
-    call s:HighlightTrailingSpacesDisanable()
+    call <SID>HighlightTrailingSpacesDisanable()
     return
   endif
 
   let mlist = getmatches()
-  let args = (a:0 == 0) ? keys(s:space_match_config) : a:000
+
+  if a:0 == 0
+    let args = keys(s:space_match_config)
+  else
+    let args == a:000
+  endif
+
   for li in args
-    if has_key(s:space_match_config, li) &&
-          \ empty(filter(copy(mlist), 'v:val["group"] == li'))
-      if type(s:space_match_config[li]) == 1
-        call matchadd(li, s:space_match_config[li])
-      else
-        call call(s:space_match_config[li], [li])
-      endif
+    if !has_key(s:space_match_config, li)
+      echoerr li 'does not found in s:space_match_config'
+      continue
+    endif
+
+    let tp = type(s:space_match_config[li])
+    if tp == v:t_string
+      call matchadd(li, s:space_match_config[li])
+    elseif tp == v:t_func
+      call call(s:space_match_config[li], [li])
     endif
   endfor
 endfunction "}}}
@@ -120,6 +110,40 @@ function! s:HighlightTrailingSpacesDisanable(...) abort "{{{
     endfor
   endfor
 endfunction "}}}
+
+function! s:HighlightTralingSpaceStart() abort "{{{
+  augroup HighlightTrailingSpaces
+    autocmd!
+    for k in keys(s:space_match_config)
+      execute 'autocmd ColorScheme     * highlight default link '.k.' Error'
+    endfor
+
+    autocmd BufWinEnter,Syntax * call <SID>HighlightTrailingSpacesEnable()
+    autocmd WinEnter           * call <SID>HighlightTrailingSpacesEnable() " 既に開いているファイルを :sp したとき
+    autocmd InsertLeave        * call <SID>HighlightTrailingSpacesEnable('SpaceEnd')
+    autocmd InsertEnter        * call <SID>HighlightTrailingSpacesDisanable('SpaceEnd')
+  augroup END
+
+  for k in keys(s:space_match_config)
+    execute 'highlight default link '.k.' Error'
+  endfor
+
+  call <SID>HighlightTrailingSpacesEnable()
+endfunction "}}}
+
+function! s:HighlightTralingSpaceStop() abort "{{{
+  call <SID>HighlightTrailingSpacesDisanable()
+
+  augroup HighlightTrailingSpaces
+    autocmd!
+  augroup END
+endfunction "}}}
+
+command! HighlightTralingSpaceStart call <SID>HighlightTralingSpaceStart()
+command! HighlightTralingSpaceStop  call <SID>HighlightTralingSpaceStop()
+
+" call HighlightTralingSpaceStart
+HighlightTralingSpaceStart
 
 
 augroup BinaryXXD
