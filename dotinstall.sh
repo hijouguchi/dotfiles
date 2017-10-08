@@ -15,6 +15,8 @@ linkfiles=(  \
   .vim       \
   .vimrc     \
   .zshrc     \
+  .ctags     \
+  .globalrc  \
 )
 
 
