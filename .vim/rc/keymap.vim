@@ -55,7 +55,8 @@ nmap <Space>w <C-W>
 nnoremap <Space>tj gt
 nnoremap <Space>tk gT
 
-nnoremap <expr> gf ':split ' . expand("<cfile>") . "\<CR>"
+" You can use <C-W>f
+"nnoremap <expr> gf ':split ' . expand("<cfile>") . "\<CR>"
 "nnoremap <expr> gf ':split ' . <SID>get_current_fname() . "\<CR>"
 
 "function! s:get_current_fname() abort "{{{

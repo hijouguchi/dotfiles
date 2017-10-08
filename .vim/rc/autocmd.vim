@@ -83,7 +83,7 @@ function! s:HighlightTrailingSpacesEnable(...) abort "{{{
   if a:0 == 0
     let args = keys(s:space_match_config)
   else
-    let args == a:000
+    let args = a:000
   endif
 
   for li in args
