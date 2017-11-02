@@ -9,8 +9,20 @@ set cpo&vim
 setlocal commentstring=\ //\ %s
 
 let b:verilog_indent_modules = 1
+let b:systemverilog_indent_modules = 1
 let b:surround_{char2nr("b")} = "begin \r end"
-let b:match_words = '\<begin\>:\<end\>'
+let b:match_words = join([
+      \ '\<begin\>:\<end\>',
+      \ '\<module\>:\<endmodule\>',
+      \ '\<interface\>:\<endinterface\>',
+      \ '\<task\>:\<endtask\>',
+      \ '\<function\>:\<endfunction\>',
+      \ '\<case[cz]\?\>:\<endcase\>',
+      \ '`ifn\?def\>:`elseif\>:`endif\>',
+      \ '\<class\>:\<endclass\>',
+      \ '\<package\>:\<endpackage\>',
+      \ '\<covergroup\>:\<endcovergroup\>',
+      \ ], ',')
 
 
 nnoremap <buffer> <Space>a :VerilogExpandArray<CR>
@@ -28,9 +40,9 @@ function! MyFoldVerilog(lnum) "{{{
 
   let line = substitute(line, '\<\(virtual\|static\|automatic\|extern\)\>', '', 'g')
 
-  if line =~ '^\s*\<\(function\|task\|class\|module\)\>'
+  if line =~ '^\s*\<\(function\|task\|class\|module\|covergroup\)\>'
     let fl = fl + 1
-  elseif line =~ '\<end\(function\|task\|class\|module\)\>'
+  elseif line =~ '\<end\(function\|task\|class\|module\|endgroup\)\>'
     let fl = fl - 1
   elseif line =~ '^\s*\<always'
     if line =~ '\<begin\>' || getline(a:lnum+1) =~ '\<begin\>'
@@ -51,6 +63,13 @@ endfunction "}}}
 
 setl foldmethod=expr
 setl foldexpr=MyFoldVerilog(v:lnum)
+
+augroup MyVerilog
+  autocmd!
+
+  autocmd InsertEnter * setlocal foldmethod=manual
+  autocmd InsertLeave * setlocal foldmethod=expr
+augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
