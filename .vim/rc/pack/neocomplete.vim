@@ -3,6 +3,10 @@ set cpo&vim
 
 let elm = {'event': ['InsertEnter']}
 
+function! elm.post_func()
+  NeoCompleteEnable
+endfunction
+
 let g:neocomplete#enable_at_startup  = 1
 let g:neocomplete#max_keyword_width  = 30
 let g:neocomplete#enable_smart_case  = 1
@@ -33,8 +37,8 @@ silent! inoremap <unique> <Plug>(vimrc_bs) <BS>
 imap <expr> <C-H> neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
 imap <expr> <BS>  neocomplete#close_popup() . "\<Plug>(vimrc_bs)"
 
-imap    <C-K> <Plug>(neosnippet_expand_or_jump)
-smap    <C-K> <Plug>(neosnippet_expand_or_jump)
+imap  <C-K> <Plug>(neosnippet_expand_or_jump)
+smap  <C-K> <Plug>(neosnippet_expand_or_jump)
 
 "imap    <C-L> <Plug>(neosnippet_expand)
 "smap    <C-L> <Plug>(neosnippet_expand)
