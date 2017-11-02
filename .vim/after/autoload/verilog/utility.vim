@@ -16,7 +16,7 @@ function! verilog#utility#ExpandArray(line1, line2) "{{{
   echo 'here'
   " 'input reg [n] hoge [m]' の部分をマッチさせる
   let l:regexp_io  = '\%(\%(input\|output\|inout\)\s\+\)'
-  let l:regexp_wr  = '\%(\%(wire\|reg\)\s\+\)'
+  let l:regexp_wr  = '\%(\%(wire\|reg\|logic\)\s\+\)'
   let l:regexp_arr = '\%(\[\s*\([1-9]\d*\s*\)\]\)\?'
   let l:regexp_val = '\s*\h\w\+\s*'
   let l:regexp     = '^\s*\%('.l:regexp_io.l:regexp_wr.'\?\|'.l:regexp_wr.'\)'
