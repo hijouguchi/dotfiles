@@ -11,9 +11,8 @@ else
   let g:cachedir = 0
 endif
 
-call packman#begin()
+call packman#initialize()
 
-PackManAdd     'Shougo/vimproc.vim'
 PackManAdd     'vim-jp/vimdoc-ja.git'
 PackManAdd     'itchyny/landscape.vim'
 PackManAddLazy 'kana/vim-textobj-user.git',  {'depends' : ['sgur/vim-textobj-parameter.git']}
@@ -22,6 +21,7 @@ PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': [
       \ 'VCSCommit', 'VCSDiff',   'VCSLog',    'VCSRevert',
       \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff'            ]}
 
+source ~/.vim/rc/pack/vimproc.vim
 source ~/.vim/rc/pack/surround.vim
 source ~/.vim/rc/pack/vim-submode.vim
 source ~/.vim/rc/pack/vim-smartinput.vim
@@ -31,8 +31,6 @@ source ~/.vim/rc/pack/vim-quickrun.vim
 source ~/.vim/rc/pack/thumbnail.vim
 source ~/.vim/rc/pack/incsearch.vim
 source ~/.vim/rc/pack/gtags.vim
-
-call packman#end()
 
 runtime macros/matchit.vim
 
