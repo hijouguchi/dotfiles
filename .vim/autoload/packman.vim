@@ -15,6 +15,7 @@ function! packman#initialize() abort "{{{
 
   call s:initialize()
 endfunction "}}}
+
 function! packman#add(repo, ...) abort "{{{
   if a:0 > 0
     let elm = a:1
@@ -22,8 +23,9 @@ function! packman#add(repo, ...) abort "{{{
     let elm = {}
   endif
 
-  call s:add(a:repo, 0, elm)
+  call s:add(a:repo, elm)
 endfunction " }}}
+
 function! packman#add_lazy(repo, ...) abort "{{{
   if a:0 > 0
     let elm = a:1
@@ -31,8 +33,11 @@ function! packman#add_lazy(repo, ...) abort "{{{
     let elm = {}
   endif
 
-  call s:add(a:repo, 1, elm)
+  let elm['lazy'] = 1
+
+  call s:add(a:repo, elm)
 endfunction " }}}
+
 function! packman#check_update() abort "{{{
   for elms in items(s:packman_list)
     let repo = elms[0]
@@ -49,6 +54,7 @@ function! packman#check_update() abort "{{{
 
   echom '[packman] check complete'
 endfunction "}}}
+
 function! packman#show_list() abort "{{{
   for elms in items(s:packman_list)
     let loaded = get(elms[1], 'loaded', 0) == 1 ? '*' : ' '
@@ -61,6 +67,7 @@ function! packman#show_list() abort "{{{
     endif
   endfor
 endfunction "}}}
+
 function! packman#nop() "{{{
   " No Operation
 endfunction "}}}
@@ -70,22 +77,26 @@ function! packman#load_on_hook(repo) abort "{{{
   call s:remove_all_hook(a:repo)
   call s:try_load(a:repo)
 endfunction "}}}
+
 function! packman#hook_keymap(repo, key) abort "{{{
   call packman#load_on_hook(a:repo)
   call feedkeys(a:key)
   return ''
 endfunction "}}}
+
 function! packman#hook_command(repo, cmd, bang, line1, line2, args) abort "{{{
   call packman#load_on_hook(a:repo)
 
   let range = (a:line1 == a:line2) ? '' : a:line1.','.a:line2
   execute range.a:cmd.a:bang a:args
 endfunction "}}}
+
 function! packman#hook_timer(...) abort "{{{
   let repo = s:packman_timer_lazy_list[s:packman_timer_idx]
   let s:packman_timer_idx += 1
   call s:try_load(repo)
 endfunction "}}}
+
 function! packman#register_hook_timer() abort "{{{
   " set timer
   let len = len(s:packman_timer_lazy_list)
@@ -95,6 +106,34 @@ function! packman#register_hook_timer() abort "{{{
   endif
 endfunction "}}}
 
+" default repository functions
+function! packman#repository_github_load(repo) abort "{{{
+  let name = substitute(a:repo, '^.*\/', '', '')
+  try
+    exec 'packadd' name
+  catch
+    echom '[packman]' a:repo 'is not installed. try install...'
+    call s:install_or_update(a:repo)
+    exec 'packadd' name
+  endtry
+endfunction "}}}
+
+function! packman#repository_github_update(repo, dir) abort "{{{
+    call system('cd '.a:dir.' && git pull')
+endfunction "}}}
+
+function! packman#repository_github_install(repo, dir) abort "{{{
+    let url  = 'https://github.com/'.a:repo
+    call system('mkdir -p '.g:packman_default_directory.' && git clone --depth 1 --single-branch '.url.' '.a:dir)
+endfunction "}}}
+
+function! packman#repository_runtine_load(repo) abort "{{{
+  exec 'runtime' a:repo
+endfunction "}}}
+
+
+
+" internal functions
 function! s:initialize_for_nop() abort "{{{
   " addcommands
   command! -nargs=+   PackManAdd     call packman#nop()
@@ -108,8 +147,9 @@ function! s:initialize_for_nop() abort "{{{
     autocmd VimEnter * autocmd! PackManEventGroup
   augroup END
 endfunction "}}}
+
 function! s:initialize() abort "{{{
-  let s:packman_list = {}
+  let s:packman_list            = {}
   let s:packman_timer_lazy_list = []
   let s:packman_timer_idx       = 0
 
@@ -120,6 +160,8 @@ function! s:initialize() abort "{{{
   if !exists('g:packman_default_directory')
     let g:packman_default_directory = $HOME.'/.vim/pack/packman/opt'
   endif
+
+  call s:initialize_load_and_install_function()
 
   " addcommands
   command! -nargs=+   PackManAdd     call packman#add(<args>)
@@ -134,19 +176,51 @@ function! s:initialize() abort "{{{
     autocmd VimEnter * autocmd! PackManEventGroup
   augroup END
 endfunction "}}}
-function! s:add(repo, is_lazy, elm) abort "{{{
+
+function! s:initialize_load_and_install_function() abort "{{{
+  if !exists('g:packman_load_and_install_config')
+    let g:packman_load_and_install_config = {}
+  endif
+
+  if !has_key(g:packman_load_and_install_config, 'github')
+    let g:packman_load_and_install_config.github = {
+          \ 'load':    funcref('packman#repository_github_load'),
+          \ 'update':  funcref('packman#repository_github_update'),
+          \ 'install': funcref('packman#repository_github_install')
+          \ }
+  endif
+
+  if !has_key(g:packman_load_and_install_config, 'runtime')
+    let g:packman_load_and_install_config.runtime = {
+          \ 'load':    funcref('packman#repository_runtine_load'),
+          \ 'update':  funcref('packman#nop'),
+          \ 'install': funcref('packman#nop')
+          \ }
+  endif
+
+  if !has_key(g:packman_load_and_install_config, 'default')
+    let g:packman_load_and_install_config.default =
+          \ g:packman_load_and_install_config.github
+  endif
+endfunction "}}}
+
+function! s:add(repo, elm) abort "{{{
   let a:elm.dir = s:get_installed_directory(a:repo)
   let s:packman_list[a:repo] = a:elm
 
-  if !a:is_lazy
+  if get(a:elm, 'noload', 0) == 1
+    return
+  endif
+
+  if get(a:elm, 'lazy', 0) == 0
     return s:try_load(a:repo)
   endif
 
-  let hook = 0
   " register hook on each event
-  let hook = s:add_hock_event   (a:repo, a:elm) || hook
-  let hook = s:add_hock_keymap  (a:repo, a:elm) || hook
-  let hook = s:add_hock_commands(a:repo, a:elm) || hook
+  let hook = 0
+  let hook = s:add_hock_events  (a:repo) || hook
+  let hook = s:add_hock_keymaps (a:repo) || hook
+  let hook = s:add_hock_commands(a:repo) || hook
 
   " if hook does not exist (when lazy mode)
   " this repository load by timer mode
@@ -154,139 +228,160 @@ function! s:add(repo, is_lazy, elm) abort "{{{
     call add(s:packman_timer_lazy_list, a:repo)
   endif
 endfunction "}}}
-function! s:add_hock_event(repo, elm) abort "{{{
-  if !has_key(a:elm, 'event')
+
+function! s:has_element(repo, name) abort "{{{
+  return has_key(s:packman_list, a:repo) &&
+        \ has_key(s:packman_list[a:repo], a:name)
+endfunction "}}}
+
+function! s:add_hock_events(repo) abort "{{{
+  if !s:has_element(a:repo, 'events')
     return 0
   endif
 
   execute 'augroup' s:get_event_name(a:repo)
     autocmd!
-    for eve in a:elm['event']
+    for eve in s:packman_list[a:repo]['events']
       execute 'autocmd' eve '* call packman#load_on_hook("'.a:repo.'")'
     endfor
   augroup END
 
   return 1
 endfunction "}}}
-function! s:add_hock_keymap(repo, elm) abort "{{{
-  if !has_key(a:elm, 'keymaps')
+
+function! s:add_hock_keymaps(repo) abort "{{{
+  if !s:has_element(a:repo, 'keymaps')
     return 0
   endif
 
-  for key in a:elm['keymaps']
+  for key in s:packman_list[a:repo]['keymaps']
     execute 'map  <expr>' key 'packman#hook_keymap("'.a:repo.'", "\'.key.'")'
     execute 'map! <expr>' key 'packman#hook_keymap("'.a:repo.'", "\'.key.'")'
   endfor
 
   return 1
 endfunction "}}}
-function! s:add_hock_commands(repo, elm) abort "{{{
-  if !has_key(a:elm, 'commands')
+
+function! s:add_hock_commands(repo) abort "{{{
+  if !s:has_element(a:repo, 'commands')
     return 0
   endif
 
-  for cmd in a:elm['commands']
+  for cmd in s:packman_list[a:repo]['commands']
     execute 'silent! command -nargs=* -range -bang -bar' cmd
           \ 'call packman#hook_command("'.a:repo.'", "'.cmd.'", <q-bang>, <line1>, <line2>, <q-args>)'
   endfor
 
   return 1
 endfunction "}}}
-function! s:try_load(repo) abort "{{{
-  let elm = s:packman_list[a:repo]
 
+function! s:try_load(repo) abort "{{{
   " if already loaded, ignored
-  if get(elm, 'loaded', 0) == 1
+  if s:has_element(a:repo, 'loaded')
     return
   end
-  let elm['loaded'] = 1
+  let s:packman_list[a:repo]['loaded'] = 1
 
-  call s:try_call_function(elm, 'pre_load')
+  call s:try_call_function(a:repo, 'pre_load')
   call s:load_repo(a:repo)
-  call s:try_load_depends(elm)
-  call s:try_call_function(elm, 'post_load')
+  call s:try_load_depends(a:repo)
+  call s:try_call_function(a:repo, 'post_load')
 endfunction "}}}
+
 function! s:load_repo(repo) abort "{{{
-  let name = substitute(a:repo, '^.*\/', '', '')
-  try
-    exec 'packadd' name
-  catch
-    echom '[packman]' a:repo 'is not installed. try install...'
-    call s:install_or_update(a:repo)
-    exec 'packadd' name
-  endtry
+  " default is github
+  if s:has_element(a:repo, 'type')
+    let repo_type = s:packman_list[a:repo]['type']
+  else
+    let repo_type = 'default'
+  endif
+
+  let Func_ref = g:packman_load_and_install_config[repo_type]['load']
+  call Func_ref(a:repo)
 endfunction "}}}
-function! s:try_call_function(elm, func_name) abort "{{{
+
+function! s:try_call_function(repo, func_name) abort "{{{
   try
-    call Func(a:elm[a:func_name])
+    call Func(s:packman_list[a:repo][a:func_name])
   catch
     "nop
   endtry
 endfunction "}}}
-function! s:try_load_depends(elm) abort "{{{
-  if !has_key(a:elm, 'depends')
+
+function! s:try_load_depends(repo) abort "{{{
+  if !s:has_element(a:repo, 'depends')
     return
   endif
 
-  for dep in a:elm['depends']
+  for dep in s:packman_list[a:repo]['depends']
     call s:load_repo(dep)
   endfor
 endfunction "}}}
+
 function! s:install_or_update(repo) abort "{{{
   echom '[packman] check' a:repo
-  let url  = 'https://github.com/'.a:repo
-  let targ = s:get_installed_directory(a:repo)
+  let dir = s:get_installed_directory(a:repo)
 
-  if isdirectory(targ)
-    call system('cd '.targ.' && git pull')
+  if s:has_element(a:repo, 'type')
+    let repo_type = s:packman_list[a:repo]['type']
   else
-    call system('mkdir -p '.g:packman_default_directory.' && git clone --depth 1 --single-branch '.url.' '.targ)
+    let repo_type = 'default'
   endif
 
-  call s:append_helptags(targ)
+  if isdirectory(dir)
+    let Func_ref = g:packman_load_and_install_config[repo_type]['update']
+  else
+    let Func_ref = g:packman_load_and_install_config[repo_type]['install']
+  endif
+  call Func_ref(a:repo, dir)
 
-  let elm = s:packman_list[a:repo]
-  call s:try_call_function(elm, 'post_install_func')
+  call s:append_helptags(dir)
+  call s:try_call_function(a:repo, 'post_install_func')
 endfunction "}}}
+
 function! s:append_helptags(targ) abort "{{{
   if isdirectory(a:targ.'/doc')
     exec 'helptags' a:targ.'/doc'
   endif
 endfunction "}}}
-function! s:remove_all_hook(repo) abort "{{{
-  let elm = s:packman_list[a:repo]
 
-  call s:remove_event_hook  (a:repo, elm)
-  call s:remove_keymap_hook (elm)
-  call s:remove_command_hook(elm)
+function! s:remove_all_hook(repo) abort "{{{
+  call s:remove_events_hook  (a:repo)
+  call s:remove_keymaps_hook(a:repo)
+  call s:remove_command_hook(a:repo)
 endfunction "}}}
+
 function! s:get_event_name(repo) "{{{
   return substitute(a:repo, '^.*\/', 'packman-hook-', '')
 endfunction "}}}
+
 function! s:get_installed_directory(repo) abort "{{{
   return g:packman_default_directory . '/' . substitute(a:repo, '^.*\/', '', '')
 endfunction "}}}
-function! s:remove_event_hook(repo, elm) abort "{{{
-  if has_key(a:elm, 'event')
+
+function! s:remove_events_hook(repo) abort "{{{
+  if s:has_element(a:repo, 'events')
     silent! execute 'silent! autocmd!' s:get_event_name(a:repo)
   endif
 endfunction "}}}
-function! s:remove_keymap_hook(elm) abort "{{{
-  if !has_key(a:elm, 'keymaps')
+
+function! s:remove_keymaps_hook(repo) abort "{{{
+  if !s:has_element(a:repo, 'keymaps')
     return
   endif
 
-  for key in a:elm['keymaps']
+  for key in s:packman_list[a:repo]['keymaps']
     execute 'unmap'  key
     execute 'unmap!' key
   endfor
 endfunction "}}}
-function! s:remove_command_hook(elm) abort "{{{
-  if !has_key(a:elm, 'commands')
+
+function! s:remove_command_hook(repo) abort "{{{
+  if !s:has_element(a:repo, 'commands')
     return
   endif
 
-  for cmd in a:elm['commands']
+  for cmd in s:packman_list[a:repo]['commands']
     execute 'silent command!' cmd
   endfor
 endfunction "}}}

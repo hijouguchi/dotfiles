@@ -49,6 +49,15 @@ PACKMAN ADD OPTIONS                                         *PackManAdd-options*
 NOTE: This section are not completed. 
 
 
+noload                                                  *packman-options-noload*
+    does not load automatically, this option are used for depends repository.
+
+type                                                      *packman-options-type*
+    Specify repository type as github(default) or runtime.
+>
+    PackManAddLazy 'macros/matchit.vim', {'type' : 'runtime'}
+<
+
 depends                                                *packman-options-depends*
 >
     PackManAddLazy 'kana/vim-textobj-user.git',
@@ -86,9 +95,9 @@ post_install_func()                          *packman-options-post_install_func*
     PackManAdd     'Shougo/vimproc.vim', elm
 <
 
-pre_func()                                            *packman-options-pre_func*
+pre_load()                                            *packman-options-pre_laod*
 
-post_func()                                          *packman-options-post_func*
+post_load()                                          *packman-options-post_load*
 
 dir                                                         *packman-option-dir*
           Returned installed directory. Set automatically by |PackManAdd| or
@@ -114,6 +123,18 @@ g:packman_default_directory                        *g:packman_default_directory*
 g:packman_delay_load_time                            *g:packman_delay_load_time*
                 set the delay time for timer lazy mode. unit is milliseconds.
                 default is 10 (10ms).
+
+g:packman_load_and_install_config            *g:packman_load_and_install_config*
+                Specify the load, install and update function for rech
+                repositories.
+>
+   let g:packman_load_and_install_config.github = {
+          \ 'load':    funcref('packman#repository_github_load'),
+          \ 'update':  funcref('packman#repository_github_update'),
+          \ 'install': funcref('packman#repository_github_install')
+          \ }
+<
+               default are set for github and runtime.
 
 ==============================================================================
 EXAMPLES                                                  *packman-introduction*
