@@ -9,29 +9,11 @@ function! packman#initialize() abort "{{{
   endif
   let s:packman_initialized = 1
 
-  let s:packman_list = {}
-  let s:packman_timer_lazy_list = []
-  let s:packman_timer_idx       = 0
-
-  if !exists('g:packman_delay_load_time')
-    let g:packman_delay_load_time = 10
+  if version < 800
+    return s:initialize_for_nop()
   endif
 
-  if !exists('g:packman_default_directory')
-    let g:packman_default_directory = $HOME.'/.vim/pack/packman/opt'
-  endif
-
-  " addcommands
-  command! -nargs=+   PackManAdd     call packman#add(<args>)
-  command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
-  command!            PackManCheck   call packman#check_update()
-  command!            PackManList    call packman#show_list()
-
-  " add timer event to VimEnter
-  augroup PackManEventGroup
-    autocmd!
-    autocmd VimEnter * call packman#register_hook_timer()
-  augroup END
+  call s:initialize()
 endfunction "}}}
 function! packman#add(repo, ...) abort "{{{
   if a:0 > 0
@@ -79,6 +61,9 @@ function! packman#show_list() abort "{{{
     endif
   endfor
 endfunction "}}}
+function! packman#nop() "{{{
+  " No Operation
+endfunction "}}}
 
 " global functions for internal to use
 function! packman#load_on_hook(repo) abort "{{{
@@ -108,20 +93,53 @@ function! packman#register_hook_timer() abort "{{{
     call timer_start(g:packman_delay_load_time,
           \ 'packman#hook_timer', {'repeat': len})
   endif
-
-  " delete augroup
-  augroup PackManEventGroup
-    autocmd!
-  augroup END
 endfunction "}}}
 
+function! s:initialize_for_nop() abort "{{{
+  " addcommands
+  command! -nargs=+   PackManAdd     call packman#nop()
+  command! -nargs=+   PackManAddLazy call packman#nop()
+  command!            PackManCheck   call packman#nop()
+  command!            PackManList    call packman#nop()
+
+  augroup PackManEventGroup
+    autocmd!
+    autocmd VimEnter * echo "packman.vim requires Vim8.0 or lator..."
+    autocmd VimEnter * autocmd! PackManEventGroup
+  augroup END
+endfunction "}}}
+function! s:initialize() abort "{{{
+  let s:packman_list = {}
+  let s:packman_timer_lazy_list = []
+  let s:packman_timer_idx       = 0
+
+  if !exists('g:packman_delay_load_time')
+    let g:packman_delay_load_time = 10
+  endif
+
+  if !exists('g:packman_default_directory')
+    let g:packman_default_directory = $HOME.'/.vim/pack/packman/opt'
+  endif
+
+  " addcommands
+  command! -nargs=+   PackManAdd     call packman#add(<args>)
+  command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
+  command!            PackManCheck   call packman#check_update()
+  command!            PackManList    call packman#show_list()
+
+  " add timer event to VimEnter
+  augroup PackManEventGroup
+    autocmd!
+    autocmd VimEnter * call packman#register_hook_timer()
+    autocmd VimEnter * autocmd! PackManEventGroup
+  augroup END
+endfunction "}}}
 function! s:add(repo, is_lazy, elm) abort "{{{
   let a:elm.dir = s:get_installed_directory(a:repo)
   let s:packman_list[a:repo] = a:elm
 
   if !a:is_lazy
-    call s:try_load(a:repo)
-    return
+    return s:try_load(a:repo)
   endif
 
   let hook = 0
@@ -141,9 +159,7 @@ function! s:add_hock_event(repo, elm) abort "{{{
     return 0
   endif
 
-  let gname = s:create_event_name(a:repo)
-
-  execute 'augroup' gname
+  execute 'augroup' s:get_event_name(a:repo)
     autocmd!
     for eve in a:elm['event']
       execute 'autocmd' eve '* call packman#load_on_hook("'.a:repo.'")'
@@ -185,10 +201,10 @@ function! s:try_load(repo) abort "{{{
   end
   let elm['loaded'] = 1
 
-  call s:try_call_pre_load_func(elm)
+  call s:try_call_function(elm, 'pre_load')
   call s:load_repo(a:repo)
   call s:try_load_depends(elm)
-  call s:try_call_post_load_func(elm)
+  call s:try_call_function(elm, 'post_load')
 endfunction "}}}
 function! s:load_repo(repo) abort "{{{
   let name = substitute(a:repo, '^.*\/', '', '')
@@ -200,15 +216,12 @@ function! s:load_repo(repo) abort "{{{
     exec 'packadd' name
   endtry
 endfunction "}}}
-function! s:try_call_pre_load_func(elm) abort "{{{
-  if has_key(a:elm, 'pre_func')
-    call a:elm.pre_func()
-  endif
-endfunction "}}}
-function! s:try_call_post_load_func(elm) abort "{{{
-  if has_key(a:elm, 'post_func')
-    call a:elm.post_func()
-  endif
+function! s:try_call_function(elm, func_name) abort "{{{
+  try
+    call Func(a:elm[a:func_name])
+  catch
+    "nop
+  endtry
 endfunction "}}}
 function! s:try_load_depends(elm) abort "{{{
   if !has_key(a:elm, 'depends')
@@ -231,17 +244,9 @@ function! s:install_or_update(repo) abort "{{{
   endif
 
   call s:append_helptags(targ)
-  call s:try_call_post_install_func(a:repo)
-endfunction "}}}
-function! s:try_call_post_install_func(repo) abort "{{{
-  if !has_key(s:packman_list, a:repo)
-    return
-  endif
 
   let elm = s:packman_list[a:repo]
-  if has_key(elm, 'post_install_func')
-    call elm.post_install_func()
-  endif
+  call s:try_call_function(elm, 'post_install_func')
 endfunction "}}}
 function! s:append_helptags(targ) abort "{{{
   if isdirectory(a:targ.'/doc')
@@ -255,19 +260,16 @@ function! s:remove_all_hook(repo) abort "{{{
   call s:remove_keymap_hook (elm)
   call s:remove_command_hook(elm)
 endfunction "}}}
-function! s:create_event_name(repo) "{{{
+function! s:get_event_name(repo) "{{{
   return substitute(a:repo, '^.*\/', 'packman-hook-', '')
 endfunction "}}}
 function! s:get_installed_directory(repo) abort "{{{
   return g:packman_default_directory . '/' . substitute(a:repo, '^.*\/', '', '')
 endfunction "}}}
 function! s:remove_event_hook(repo, elm) abort "{{{
-  if !has_key(a:elm, 'event')
-    return
+  if has_key(a:elm, 'event')
+    silent! execute 'silent! autocmd!' s:get_event_name(a:repo)
   endif
-
-  let gname = s:create_event_name(a:repo)
-  silent! execute 'silent! autocmd!' gname
 endfunction "}}}
 function! s:remove_keymap_hook(elm) abort "{{{
   if !has_key(a:elm, 'keymaps')
