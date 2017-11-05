@@ -9,7 +9,7 @@ let elm = {
       \   'commands' : ['QuickRun', 'ReplaceRegion']
       \ }
 
-function! elm.pre_func()
+function! elm.pre_load()
   if !exists('g:quickrun_config')
     let g:quickrun_config = {}
   endif

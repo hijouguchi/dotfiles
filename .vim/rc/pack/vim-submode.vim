@@ -3,7 +3,7 @@ set cpo&vim
 
 let elm = {'keymaps': ['<C-W>'] }
 
-function! elm.post_func()
+function! elm.post_load()
   call submode#enter_with('Window', 'n', '', '<C-W>+')
   call submode#enter_with('Window', 'n', '', '<C-W>-')
   call submode#enter_with('Window', 'n', '', '<C-W>>')

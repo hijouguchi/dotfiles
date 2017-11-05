@@ -1,9 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = {'event': ['InsertEnter']}
+let elm = {'events': ['InsertEnter']}
 
-function! elm.post_func()
+function! elm.post_laod()
   NeoCompleteEnable
 endfunction
 

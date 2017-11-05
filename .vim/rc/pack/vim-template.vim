@@ -3,7 +3,7 @@ set cpo&vim
 
 let elm = {}
 
-function! elm.pre_func()
+function! elm.pre_load()
   autocmd User plugin-template-loaded
         \ silent %s/<%=\(.\{-}\)%>/\=eval(submatch(1))/ge
   autocmd User plugin-template-loaded
