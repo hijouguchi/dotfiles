@@ -9,7 +9,7 @@ function! elm.post_install_func()
   endif
 endfunction
 
-PackManAdd     'Shougo/vimproc.vim', elm
+PackManAddLazy     'Shougo/vimproc.vim', elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

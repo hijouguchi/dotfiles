@@ -13,7 +13,7 @@ function! elm.pre_func()
   autocmd User plugin-template-loaded setlocal nomodified
 endfunction
 
-PackManAdd 'thinca/vim-template', elm
+PackManAddLazy 'thinca/vim-template', elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
