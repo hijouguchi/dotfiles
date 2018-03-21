@@ -5,46 +5,39 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! highword#add() abort "{{{
-  " TODO: 大文字小文字無視する・しないを選べるようにしとくべき
-  let word = expand('<cword>')
-  let mat  = '\<' . word . '\>\C'
-
-  let ma = filter(getmatches(),
-        \ {idx, val -> val.group =~ '^HighWord\d\+$' && val.pattern ==# mat })
-
-  if !empty(ma)
-    return
+function! highword#add(...) abort "{{{
+  if(a:0 == 0)
+    let word = expand('<cword>')
+    let mat  = '\<' . word . '\>\C'
+    call s:add(mat)
+  else
+    for elm in a:000
+      call s:add(elm)
+    endfor
   endif
-
-  let hlname = s:get_hlname_minimum()
-
-  if !exists('s:autocmd_loaded')
-    call highword#set_autocmd()
-  endif
-
-  let tnr = tabpagenr()
-  let wnr = winnr()
-  tabdo windo call matchadd(hlname, mat)
-  execute tnr . 'tabnext'
-  execute wnr . 'wincmd w'
-
 endfunction "}}}
-function! highword#del() abort "{{{
-  let word = expand('<cword>')
-  let mat  = '\<' . word . '\>\C'
+function! highword#delete(...) abort "{{{
+  if(a:0 == 0)
+    let word = expand('<cword>')
+    let mat  = '\<' . word . '\>\C'
+    call s:delete(mat)
+  else
+    for elm in a:000
+      call s:delete(elm)
+    endfor
+  endif
 
-  let tnr = tabpagenr()
-  let wnr = winnr()
-  tabdo windo call s:delete_highlight(mat)
-  execute tnr . 'tabnext'
-  execute wnr . 'wincmd w'
 endfunction "}}}
 function! highword#clear() abort "{{{
   let wnr = winnr()
   tabdo windo call s:delete_highlight()
   execute wnr . 'wincmd w'
 
+endfunction "}}}
+function! highword#show_list() abort "{{{
+  echo map(filter(getmatches(),
+        \ {idx, val -> val.group =~ '^HighWord\d\+$'}),
+        \ {idx, val -> val.pattern})
 endfunction "}}}
 function! highword#set_autocmd() abort "{{{
   let s:autocmd_loaded = 1
@@ -80,6 +73,12 @@ endfunction "}}}
 function! highword#match_push() abort "{{{
   let s:match_pattern_list = filter(getmatches(),
         \ {idx, val -> val.group =~ '^HighWord\d\+$'})
+endfunction "}}}
+
+function! highword#word_complete(arglead, cmdline, cursorpos) abort "{{{
+  return map(filter(getmatches(),
+        \ {idx, val -> val.group =~ '^HighWord\d\+$'}),
+        \ {idx, val -> val.pattern})
 endfunction "}}}
 
 function! s:get_hlname_minimum() abort "{{{
@@ -131,6 +130,34 @@ function! s:colorscheme() abort "{{{
   highlight  HighWord9  ctermfg=black ctermbg=54  guifg=black guibg=#330066
   highlight  HighWord10 ctermfg=black ctermbg=90  guifg=black guibg=#660066
   highlight  HighWord11 ctermfg=black ctermbg=98  guifg=black guibg=#660033
+endfunction "}}}
+function! s:add(mat) abort "{{{
+  let ma = filter(getmatches(),
+        \ {idx, val -> val.group =~ '^HighWord\d\+$' && val.pattern ==# a:mat })
+
+  if !empty(ma)
+    return
+  endif
+
+  let hlname = s:get_hlname_minimum()
+
+  if !exists('s:autocmd_loaded')
+    call highword#set_autocmd()
+  endif
+
+  let tnr = tabpagenr()
+  let wnr = winnr()
+  tabdo windo call matchadd(hlname, a:mat)
+  execute tnr . 'tabnext'
+  execute wnr . 'wincmd w'
+
+endfunction "}}}
+function! s:delete(mat) "{{{
+  let tnr = tabpagenr()
+  let wnr = winnr()
+  tabdo windo call s:delete_highlight(a:mat)
+  execute tnr . 'tabnext'
+  execute wnr . 'wincmd w'
 endfunction "}}}
 
 let &cpo = s:save_cpo
