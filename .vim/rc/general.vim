@@ -70,7 +70,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 
-set diffopt& diffopt+=iwhite
+"set diffopt& diffopt+=iwhite
 
 set pumheight=15
 
