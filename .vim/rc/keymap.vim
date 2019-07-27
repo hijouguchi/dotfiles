@@ -117,3 +117,18 @@ function! s:MyCmdLineWrapper(...) abort "{{{
 endfunction "}}}
 
 
+tmap     <C-T>     <C-W>
+tmap     <C-W>;    <C-W>:
+
+tnoremap <C-W><C-V> <C-W>N
+
+tnoremap <Space>wh <C-W>h
+tnoremap <Space>wj <C-W>j
+tnoremap <Space>wk <C-W>k
+tnoremap <Space>wl <C-W>l
+
+tnoremap <Space>tj <C-W>:tabnext<CR>
+tnoremap <Space>tk <C-W>:tabprev<CR>
+
+tnoremap <C-W>p    <C-W>:call term_sendkeys(bufnr('%'), getreg())<CR>
+

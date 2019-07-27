@@ -22,7 +22,6 @@ set matchtime=1
 
 set autoindent
 set cindent
-set complete=.,w,b,u,t,k
 set backspace=indent,eol,start
 
 set isfname& isfname-=,
@@ -70,7 +69,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 
-set diffopt& diffopt+=iwhite
+"set diffopt& diffopt+=iwhite
 
 set pumheight=15
 
@@ -86,6 +85,7 @@ let s:mode = {
       \ "i"      : "INSERT",
       \ "R"      : "REPLACE",
       \ "c"      : "COMMAND",
+      \ "t"      : "TERMINAL",
       \ "?"      : "??????"
       \ }
 

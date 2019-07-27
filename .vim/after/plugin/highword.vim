@@ -6,8 +6,11 @@ let g:loaded_highword = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-nnoremap <silent> * :call highword#add()<CR>*zvzz
-nnoremap <silent> # :call highword#delete()<CR>
+nnoremap <silent> * :call highword#normal_add()<CR>
+nnoremap <silent> # :call highword#normal_delete()<CR>
+
+"vnoremap <silent> * :call highword#visual_add()<CR>
+"vnoremap <silent> # :call highword#visual_delete()<CR>
 
 command! HighWordClear  call highword#clear()
 command! HighWordList   call highword#show_list()

@@ -13,15 +13,15 @@ _screen_exec() {
   fi
 }
 
-case "$TERM" in
-  *xterm*|rxvt|(dt|k|E|ml)term)
-    #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-    [[ -x `which screen 2>/dev/null` ]] && exec ssh-agent screen -D -RR -e"^Gg"
-    ;;
-  linux)
-    [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
-    ;;
-esac
+#case "$TERM" in
+#  *xterm*|rxvt|(dt|k|E|ml)term)
+#    #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
+#    [[ -x `which screen 2>/dev/null` ]] && exec ssh-agent screen -D -RR -e"^Gg"
+#    ;;
+#  linux)
+#    [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
+#    ;;
+#esac
 
 
 # Program settings {{{1
@@ -197,7 +197,7 @@ bindkey -M vicmd e edit-command-line
 bindkey               '^x'    _complete_help
 
 # Alias {{{1
-alias l='ls -hF   --color=auto'
+alias  l='ls -hF   --color=auto'
 alias ls='ls -hF   --color=auto'
 alias la='ls -hAF  --color=auto'
 alias ll='ls -hlAF --color=auto'
@@ -210,8 +210,8 @@ alias wget='wget -c'
 alias quit=exit
 
 if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-  alias vim='screen vim'
-  alias vimdiff='screen vimdiff'
+  alias vim="screen vim"
+  alias vimdiff="screen vimdiff"
   alias pry='screen pry'
   alias s='screen'
   #alias emacs='screen emacs -nw'

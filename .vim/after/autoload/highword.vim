@@ -5,18 +5,30 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! highword#add(...) abort "{{{
+if !exists('g:highword_match_command')
+  let g:highword_match_command = '*zvzz'
+endif
+
+function! highword#normal_add(...) abort "{{{
   if(a:0 == 0)
     let word = expand('<cword>')
     let mat  = '\<' . word . '\>\C'
-    call s:add(mat)
+    if s:add(mat) == 1
+      if exists('g:highword_match_command') &&  mode() == 'n'
+        call feedkeys(g:highword_match_command, 'n')
+      endif
+    else
+      if exists('g:highword_not_match_command') &&  mode() == 'n'
+        call feedkeys(g:highword_not_match_command, 'n')
+      endif
+    endif
   else
     for elm in a:000
       call s:add(elm)
     endfor
   endif
 endfunction "}}}
-function! highword#delete(...) abort "{{{
+function! highword#normal_delete(...) abort "{{{
   if(a:0 == 0)
     let word = expand('<cword>')
     let mat  = '\<' . word . '\>\C'
@@ -136,7 +148,7 @@ function! s:add(mat) abort "{{{
         \ {idx, val -> val.group =~ '^HighWord\d\+$' && val.pattern ==# a:mat })
 
   if !empty(ma)
-    return
+    return 1
   endif
 
   let hlname = s:get_hlname_minimum()
@@ -151,6 +163,7 @@ function! s:add(mat) abort "{{{
   execute tnr . 'tabnext'
   execute wnr . 'wincmd w'
 
+  return 0
 endfunction "}}}
 function! s:delete(mat) "{{{
   let tnr = tabpagenr()

@@ -4,7 +4,6 @@ set nocompatible
 
 source ~/.vim/rc/encoding.vim
 
-
 if isdirectory(expand("$HOME/.history"))
   let g:cachedir = expand("$HOME/.history")
 else
@@ -25,7 +24,6 @@ source ~/.vim/rc/pack/vimproc.vim
 source ~/.vim/rc/pack/surround.vim
 source ~/.vim/rc/pack/vim-submode.vim
 source ~/.vim/rc/pack/vim-smartinput.vim
-source ~/.vim/rc/pack/neocomplete.vim
 source ~/.vim/rc/pack/vim-template.vim
 source ~/.vim/rc/pack/vim-quickrun.vim
 source ~/.vim/rc/pack/thumbnail.vim
@@ -42,13 +40,13 @@ source ~/.vim/rc/general.vim
 source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
+source ~/.vim/rc/complete.vim
 
 if filereadable('~/.vim/localrc.vim')
   source ~/.vim/localrc.vim
 endif
 
 if !has('gui_running')
-  " colorscheme desert256
   colorscheme landscape
 end
 

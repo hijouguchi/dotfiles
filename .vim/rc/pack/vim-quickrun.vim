@@ -25,6 +25,11 @@ function! elm.pre_load()
         \   'cmdopt'                    : '--lint-only',
         \   'outputter/error/success'   : 'quickfix'
         \ }
+  let g:quickrun_config['systemverilog'] = {
+        \   'command'                   : 'verilator',
+        \   'cmdopt'                    : '--lint-only --sv',
+        \   'outputter/error/success'   : 'quickfix'
+        \ }
   let g:quickrun_config.tcl = {'command' : 'tclsh'}
 
 endfunction

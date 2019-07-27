@@ -14,6 +14,9 @@ command! -bang Dos   e<bang> ++ff=dos
 
 command! Ruby silent new [ruby] | setl bt=nofile ft=ruby
 
+command! Tab2 call <SID>set_indent_style(2)
+command! Tab4 call <SID>set_indent_style(4)
+
 command! -nargs=* -complete=file Diff call <SID>diff_start(<f-args>)
 
 function! s:diff_start(...) abort "{{{
@@ -84,6 +87,21 @@ endfunction "}}}
 command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
 
 command! Date echo(strftime("%Y-%m-%d"))
+
+command! Term call <SID>MyTermCmd()
+
+function! s:set_indent_style(length) "{{{
+  setlocal expandtab
+  execute 'setlocal tabstop='     . a:length
+  execute 'setlocal shiftwidth='  . a:length
+  execute 'setlocal softtabstop=' . a:length
+
+  let str = &l:expandtab ? '  expandtab' : 'noexpandtab'
+  let str = str . ' tabstop='     . a:length
+  let str = str . ' shiftwidth='  . a:length
+  let str = str . ' softtabstop=' . a:length
+  echo str
+endfunction "}}}
 
 
 let &cpo = s:save_cpo
