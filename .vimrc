@@ -19,14 +19,15 @@ PackManAddLazy 'vim-scripts/Align',          {'commands': ['Align']}
 PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': [
       \ 'VCSCommit', 'VCSDiff',   'VCSLog',    'VCSRevert',
       \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff'            ]}
+PackManAdd     'itchyny/lightline.vim'
 
 source ~/.vim/rc/pack/vimproc.vim
 source ~/.vim/rc/pack/surround.vim
 source ~/.vim/rc/pack/vim-submode.vim
 source ~/.vim/rc/pack/vim-smartinput.vim
-source ~/.vim/rc/pack/vim-template.vim
 source ~/.vim/rc/pack/vim-quickrun.vim
-source ~/.vim/rc/pack/thumbnail.vim
+"source ~/.vim/rc/pack/vim-template.vim
+"source ~/.vim/rc/pack/thumbnail.vim
 source ~/.vim/rc/pack/incsearch.vim
 source ~/.vim/rc/pack/gtags.vim
 

@@ -16,14 +16,8 @@ augroup VimrcAutoCmd
   " from kana's vimrc http://github.com/kana/config/
   autocmd BufReadPost *
         \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
-        \ |   setlocal fileencoding=utf-8
+        \ |   setlocal fileencoding=
         \ | endif
-
-  "" if the file doesn't have used tab by space, set expandtab
-  "autocmd BufReadPost *
-  "      \   if search('^\t', 'cnw') == 0
-  "      \ |   setlocal expandtab
-  "      \ | endif
 
   autocmd FileType *
         \   if &l:omnifunc == ''
@@ -33,18 +27,9 @@ augroup VimrcAutoCmd
 
   autocmd BufWinEnter,Filetype help wincmd K
 
-  autocmd BufNewFile,BufRead *.r,*.R     setfiletype r
-  "autocmd BufNewFile,BufRead *.m,*.mat   setfiletype octave
-  "autocmd BufNewFile,BufRead *.mdl       setfiletype spice
-  "autocmd BufNewFile,BufRead *.gp        setfiletype gnuplot
-  autocmd BufNewFile,BufRead *.sv        setfiletype verilog
-  autocmd BufNewFile,BufRead *.svi       setfiletype verilog
-
-  autocmd BufNewFile,BufRead *.v.erb     setfiletype eruby.verilog
-  "autocmd BufNewFile,BufRead *.sp.erb    setfiletype eruby.spice
-  "autocmd BufNewFile,BufRead *.gp.erb    setfiletype eruby.gnuplot
-  autocmd BufNewFile,BufRead *.htm.erb   setfiletype eruby.html
-  autocmd BufNewFile,BufRead *.html.erb  setfiletype eruby.html
+  autocmd BufNewFile,BufRead *.[rR]                   setfiletype r
+  autocmd BufNewFile,BufRead *.v[^./]\\\{0,1\}        setlocal filetype=systemverilog
+  autocmd BufNewFile,BufRead *.sv[^./]\\\{0,1\}       setlocal filetype=systemverilog
 
   autocmd FileType crontab setlocal nobackup
   autocmd FileType make    setlocal noexpandtab
@@ -68,7 +53,7 @@ let s:space_match_config = {
       "\ 'SpaceStart'   : function('HighlightSpaceStart')
 
 
-let s:space_no_highlight = ['help', 'diff']
+let s:space_no_highlight = ['help', 'diff', 'make', 'go']
 function! s:HighlightTrailingSpacesEnable(...) abort "{{{
 
   " ハイライトさせたくないファイルタイプ
@@ -172,22 +157,18 @@ augroup END
 command! EventChecker call <SID>EventChecker()
 
 function! s:EventChecker() abort "{{{
+  augroup EventChecker
+    autocmd!
+  augroup END
+
   if !exists('g:event_list')
     let g:event_list = []
 
     let val = <SID>get_autocmd_events()
-    augroup EventChecker "{{{
-      autocmd!
-      for va in val
-        execute 'autocmd '.va. ' * call add(g:event_list, "'.va.'")'
-      endfor
-    augroup END "}}}
+    for va in val
+      silent execute 'autocmd EventChecker '.va. ' * call add(g:event_list, "'.va.'")'
+    endfor
   else
-    " delete augroup
-    augroup EventChecker "{{{
-      autocmd!
-    augroup END "}}}
-
     " create new buffer and paste result
     topleft new
     call append(0, g:event_list)
@@ -215,7 +196,7 @@ function! s:get_autocmd_events() abort "{{{
 
   " MEMO: require vital.vim when using flatten()
   " return uniq(flatten(val))
-  return uniq(split(join(val, ' '), '\s\+'))
+  return uniq(sort(split(join(val, ' '), '\s\+')))
 endfunction "}}}
 
 

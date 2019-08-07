@@ -22,6 +22,7 @@ set matchtime=1
 
 set autoindent
 set cindent
+set cinoptions& cinoptions+=l1,E-s,t0,(0,Ws
 set backspace=indent,eol,start
 
 set isfname& isfname-=,
@@ -74,81 +75,10 @@ set softtabstop=2
 set pumheight=15
 
 set laststatus=2
-" MEMO: 複数の引数が取れない (設定値が複数として見えてしまう)
-" FIXME: たまに表示がバグるので確認する事
 
-let s:mode = {
-      \ "n"      : "NORMAL",
-      \ "v"      : "VISUAL",
-      \ "V"      : "VISUAL LINE",
-      \ "\<C-V>" : "VISUAL BLOCK",
-      \ "i"      : "INSERT",
-      \ "R"      : "REPLACE",
-      \ "c"      : "COMMAND",
-      \ "t"      : "TERMINAL",
-      \ "?"      : "??????"
-      \ }
-
-function! MyStatusLine(arg) abort "{{{
-  let nr = bufnr('%')
-  let s = ''
-  if and(a:arg, 1) == 1
-    let s = printf(' %%{MyStatusLineMode(%d)} ', nr)
-  endif
-  let s = s . '%<%f'
-  let t = printf('%%{MyStatusLineModified(%d)}', nr)
-  if t != ''
-    let s = s . ' %1*' . t . '%* '
-  endif
-  let s = s . '%='
-  let s = s . printf(' %%{MyStatusLineFileType(%d)}', nr)
-  let s = s . ' %2cC,%l/%LL %p%%'
-
-  if and(a:arg, 2) == 2
-    let &l:statusline = s
-  endif
-  return s
-endfunction "}}}
-
-function! MyStatusLineMode(nr) "{{{
-  let s = get(s:mode, mode(), s:mode['?'])
-  if getbufvar(a:nr, '&paste') | let s = s . ',PASTE' | endif
-  return s
-endfunction "}}}
-
-function! MyStatusLineFileType(nr) "{{{
-  let ft   = getbufvar(a:nr, '&l:filetype')
-  let fenc = getbufvar(a:nr, '&l:fileencoding')
-  let ff   = getbufvar(a:nr, '&l:fileformat')
-
-  let s = '['
-  if ft != '' | let s = s . ft . ',' | endif
-  let s = s . (fenc != '' ? fenc : &encoding) . ','
-  let s = s . ff . ']'
-  return s
-endfunction "}}}
-
-function! MyStatusLineModified(nr) "{{{
-  let l = []
-  if  getbufvar(a:nr, "&readonly")   | call add(l, 'RO') | endif
-  if !getbufvar(a:nr, "&modifiable") | call add(l, '-')  | endif
-  if  getbufvar(a:nr, "&modified")   | call add(l, '+')  | endif
-
-  if empty(l)
-    return ''
-  else
-    return '[' . join(l, ',') . ']'
-  endif
-endfunction "}}}
-
-augroup MyStatusLine "{{{
-  autocmd!
-
-  autocmd! BufWinEnter,WinEnter * call MyStatusLine(3)
-  autocmd! WinLeave             * call MyStatusLine(2)
-  autocmd! ColorScheme          * hi def link User1 Error
-augroup END "}}}
-
+if executable('ag')
+  set grepprg=ag\ --vimgrep
+endif
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

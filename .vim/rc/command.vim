@@ -19,6 +19,12 @@ command! Tab4 call <SID>set_indent_style(4)
 
 command! -nargs=* -complete=file Diff call <SID>diff_start(<f-args>)
 
+command! HighlightName call <SID>get_syn_id()
+
+command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
+
+command! -nargs=* -complete=file Grep silent grep<bang> <args>
+
 function! s:diff_start(...) abort "{{{
   " MEMO: botright vertical にしたいから 'diffopt' の vertical
   " オプションは使わない
@@ -55,10 +61,6 @@ function! s:diff_start(...) abort "{{{
 
   return
 endfunction "}}}
-
-" カーソル下のハイライトグループを表示する
-command! HighlightName call <SID>get_syn_id()
-
 function! s:get_syn_id() "{{{
   let l:id    = synID(line("."), col("."), 1)
   let l:trans = synIDtrans(l:id)
@@ -67,7 +69,6 @@ function! s:get_syn_id() "{{{
     execute 'highlight ' . synIDattr(l:trans, 'name')
   end
 endfunction "}}}
-
 function! s:my_reverse() range "{{{
   let l:line = line('.')
 
@@ -83,13 +84,6 @@ function! s:my_reverse() range "{{{
   call append(a:firstline-1, l:lines)
   call cursor(l:line, 0)
 endfunction "}}}
-
-command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
-
-command! Date echo(strftime("%Y-%m-%d"))
-
-command! Term call <SID>MyTermCmd()
-
 function! s:set_indent_style(length) "{{{
   setlocal expandtab
   execute 'setlocal tabstop='     . a:length
@@ -102,7 +96,6 @@ function! s:set_indent_style(length) "{{{
   let str = str . ' softtabstop=' . a:length
   echo str
 endfunction "}}}
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

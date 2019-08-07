@@ -1,23 +1,26 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = {'keymaps': ['<C-W>'] }
 
-function! elm.post_load()
-  call submode#enter_with('Window', 'n', '', '<C-W>+')
-  call submode#enter_with('Window', 'n', '', '<C-W>-')
-  call submode#enter_with('Window', 'n', '', '<C-W>>')
-  call submode#enter_with('Window', 'n', '', '<C-W><')
-  call submode#leave_with('Window', 'n', '', '<Esc>')
-  call submode#map('Window', 'n', '', '-', '<C-W>-')
-  call submode#map('Window', 'n', '', '=', '<C-W>+')
-  call submode#map('Window', 'n', '', '+', '<C-W>+')
-  call submode#map('Window', 'n', '', '<', '<C-W><')
-  call submode#map('Window', 'n', '', '>', '<C-W>>')
-endfunction
+let g:submode_always_show_submode = 1
 
+PackManAdd 'kana/vim-submode.git'
 
-PackManAddLazy 'kana/vim-submode.git', elm
+call submode#enter_with('Window', 'n', '', '<C-W>+')
+call submode#enter_with('Window', 'n', '', '<C-W>-')
+call submode#enter_with('Window', 'n', '', '<C-W>>')
+call submode#enter_with('Window', 'n', '', '<C-W><')
+call submode#leave_with('Window', 'n', '', '<Esc>')
+call submode#map('Window', 'n', '', '-', '<C-W>-')
+call submode#map('Window', 'n', '', '=', '<C-W>+')
+call submode#map('Window', 'n', '', '+', '<C-W>+')
+call submode#map('Window', 'n', '', '<', '<C-W><')
+call submode#map('Window', 'n', '', '>', '<C-W>>')
+
+call submode#enter_with('QuickFix', 'n', '', '<Space>qj', ':<C-U>cn<CR>')
+call submode#enter_with('QuickFix', 'n', '', '<Space>qk', ':<C-U>cp<CR>')
+call submode#map('QuickFix', 'n', '', 'j', ':<C-U>cn<CR>')
+call submode#map('QuickFix', 'n', '', 'k', ':<C-U>cp<CR>')
 
 
 let &cpo = s:save_cpo

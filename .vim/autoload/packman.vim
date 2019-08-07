@@ -301,6 +301,10 @@ function! s:load_repo(repo) abort "{{{
 endfunction "}}}
 
 function! s:try_call_function(repo, func_name) abort "{{{
+  if !s:has_element(a:repo, a:func_name)
+    return
+  end
+
   try
     call Func(s:packman_list[a:repo][a:func_name])
   catch

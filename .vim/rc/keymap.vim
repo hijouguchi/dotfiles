@@ -16,6 +16,9 @@ nnoremap k gk
 nnoremap ) t)
 nnoremap ( t(
 
+noremap qo :<C-U>copen<CR>
+noremap qq :<C-U>cclose<CR>
+
 " <C-h> is defined by ~/.vim/rc/bundle/unite.vim
 silent! nnoremap <unique> <C-h> :help<Space>
 
@@ -42,31 +45,12 @@ nnoremap <Space>p :set paste!    \| :set paste?<CR>
 nnoremap <Space>h :set readonly! \| :set readonly?<CR>
 
 " See also: http://vim-jp.org/vim-users-jp/2009/08/25/Hack-62.html
-nnoremap <expr> s* ':%s/\<'.expand('<cword>').'\>/'
+"nnoremap <expr> s* ':%s/\<'.expand('<cword>').'\>/'
 
 nnoremap <Space>m :marks<CR>
 nnoremap <Space>r :registers<CR>
 
-" nnoremap <C-C> "+y
-" nnoremap <C-V> "+p
-
 nmap <Space>w <C-W>
-
-nnoremap <Space>tj gt
-nnoremap <Space>tk gT
-
-" You can use <C-W>f
-"nnoremap <expr> gf ':split ' . expand("<cfile>") . "\<CR>"
-"nnoremap <expr> gf ':split ' . <SID>get_current_fname() . "\<CR>"
-
-"function! s:get_current_fname() abort "{{{
-"  let col   = col('.')
-"  let line  = getline('.')
-"  let lline = matchstr(strpart(line, 0, col), '\f\+$')
-"  let rline = matchstr(strpart(line, col),  '^\f\+')
-"  let fname = lline . rline
-"  return fname
-"endfunction "}}}
 
 let s:str = "nnoremap <Space>t%d %dgt"
 for s:i in range(0,9)
@@ -99,11 +83,11 @@ cnoremap <expr> <C-]> expand('<cword>')
 " cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
 " cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
 " cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
-cnoremap <expr> / <SID>MyCmdLineWrapper('/', '\/', '/')
-cnoremap <expr> \ <SID>MyCmdLineWrapper('\', '\\', '\\')
-cnoremap <expr> [ <SID>MyCmdLineWrapper('[', '\[', '\[')
-cnoremap <expr> < <SID>MyCmdLineWrapper('<', '\<', '\<')
-cnoremap <expr> > <SID>MyCmdLineWrapper('>', '\>', '\>')
+"cnoremap <expr> / <SID>MyCmdLineWrapper('/', '\/', '/')
+"cnoremap <expr> \ <SID>MyCmdLineWrapper('\', '\\', '\\')
+"cnoremap <expr> [ <SID>MyCmdLineWrapper('[', '\[', '\[')
+"cnoremap <expr> < <SID>MyCmdLineWrapper('<', '\<', '\<')
+"cnoremap <expr> > <SID>MyCmdLineWrapper('>', '\>', '\>')
 cnoremap <expr> <CR> <SID>MyCmdLineWrapper("\<CR>", "\<CR>zvzz", "\<CR>")
 
 function! s:MyCmdLineWrapper(...) abort "{{{
