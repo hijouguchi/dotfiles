@@ -68,6 +68,34 @@ function! packman#show_list() abort "{{{
   endfor
 endfunction "}}}
 
+function! packman#cleanup() abort "{{{
+  let dir_list = map(
+        \ split(glob(g:packman_default_directory.'/*'), "\<NL>"),
+        \ {_, v -> expand(v)})
+
+  let rep_list = map(
+        \ values(s:packman_list),
+        \ {_, v -> expand(v.dir)})
+
+  for elm in dir_list
+    " filter でうまくやりたいが。。。
+    let found = 0
+    for rep in rep_list
+      if elm == rep
+        let found = 1
+        break
+      endif
+    endfor
+
+    if !found
+      echo '[packman] cleanup '.elm
+      call delete(elm, 'rf')
+    endif
+  endfor
+
+  echo '[packman] cleanup completed'
+endfunction "}}}
+
 function! packman#nop() "{{{
   " No Operation
 endfunction "}}}
@@ -140,6 +168,7 @@ function! s:initialize_for_nop() abort "{{{
   command! -nargs=+   PackManAddLazy call packman#nop()
   command!            PackManCheck   call packman#nop()
   command!            PackManList    call packman#nop()
+  command!            PackManCleanup call packman#nop()
 
   augroup PackManEventGroup
     autocmd!
@@ -168,6 +197,7 @@ function! s:initialize() abort "{{{
   command! -nargs=+   PackManAddLazy call packman#add_lazy(<args>)
   command!            PackManCheck   call packman#check_update()
   command!            PackManList    call packman#show_list()
+  command!            PackManCleanup call packman#cleanup()
 
   " add timer event to VimEnter
   augroup PackManEventGroup
