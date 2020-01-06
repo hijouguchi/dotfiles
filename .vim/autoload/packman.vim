@@ -52,7 +52,7 @@ function! packman#check_update() abort "{{{
     endif
   endfor
 
-  echom '[packman] check complete'
+  call s:echo('[packman] check complete')
 endfunction "}}}
 
 function! packman#show_list() abort "{{{
@@ -112,7 +112,7 @@ function! packman#repository_github_load(repo) abort "{{{
   try
     exec 'packadd' name
   catch
-    echom '[packman]' a:repo 'is not installed. try install...'
+    call s:echo('[packman]'.a:repo.'is not installed. try install...')
     call s:install_or_update(a:repo)
     exec 'packadd' name
   endtry
@@ -323,7 +323,7 @@ function! s:try_load_depends(repo) abort "{{{
 endfunction "}}}
 
 function! s:install_or_update(repo) abort "{{{
-  echom '[packman] check' a:repo
+  call s:echo('[packman] check'.a:repo)
   let dir = s:get_installed_directory(a:repo)
 
   if s:has_element(a:repo, 'type')
@@ -388,6 +388,11 @@ function! s:remove_command_hook(repo) abort "{{{
   for cmd in s:packman_list[a:repo]['commands']
     execute 'silent command!' cmd
   endfor
+endfunction "}}}
+
+function! s:echo(msg) abort "{{{
+  redraw
+  echom a:msg
 endfunction "}}}
 
 let &cpo = s:save_cpo
