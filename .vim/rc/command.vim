@@ -30,10 +30,8 @@ function! s:diff_start(...) abort "{{{
   " オプションは使わない
   let fname = expand('%')
 
-  " make new tab page
-  tabnew
-
   if a:0 == 0
+    tabnew
     ":help DiffOrig
     " open curernt buffers
     execute 'edit' fname
@@ -48,6 +46,7 @@ function! s:diff_start(...) abort "{{{
     wincmd p
     diffthis
   elseif a:0 == 1
+    tabnew
     execute 'edit' fname
     diffthis
     execute 'botright vertical diffsplit' a:1

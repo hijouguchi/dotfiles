@@ -137,13 +137,14 @@ endfunction "}}}
 " default repository functions
 function! packman#repository_github_load(repo) abort "{{{
   let name = substitute(a:repo, '^.*\/', '', '')
-  try
-    exec 'packadd' name
-  catch
+  let dir  = s:get_installed_directory(a:repo)
+
+  if !isdirectory(dir)
     call s:echo('[packman]'.a:repo.'is not installed. try install...')
     call s:install_or_update(a:repo)
-    exec 'packadd' name
-  endtry
+  endif
+
+  exec 'packadd' name
 endfunction "}}}
 
 function! packman#repository_github_update(repo, dir) abort "{{{
@@ -335,11 +336,8 @@ function! s:try_call_function(repo, func_name) abort "{{{
     return
   end
 
-  try
-    call Func(s:packman_list[a:repo][a:func_name])
-  catch
-    "nop
-  endtry
+  let Fn = s:packman_list[a:repo][a:func_name]
+  call Fn()
 endfunction "}}}
 
 function! s:try_load_depends(repo) abort "{{{

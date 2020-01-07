@@ -16,6 +16,9 @@ nnoremap k gk
 nnoremap ) t)
 nnoremap ( t(
 
+nnoremap <Space>tj <C-W>:tabnext<CR>
+nnoremap <Space>tk <C-W>:tabprev<CR>
+
 noremap qo :<C-U>copen<CR>
 noremap qq :<C-U>cclose<CR>
 

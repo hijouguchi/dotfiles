@@ -9,6 +9,10 @@ if !exists('g:highword_match_command')
   let g:highword_match_command = '*zvzz'
 endif
 
+if !exists('g:highword_not_match_command')
+  let g:highword_not_match_command = '*N'
+endif
+
 function! highword#normal_add(...) abort "{{{
   if(a:0 == 0)
     let word = expand('<cword>')
