@@ -30,8 +30,9 @@ source ~/.vim/rc/pack/vim-quickrun.vim
 "source ~/.vim/rc/pack/thumbnail.vim
 source ~/.vim/rc/pack/incsearch.vim
 source ~/.vim/rc/pack/gtags.vim
+source ~/.vim/rc/pack/complete.vim
 
-runtime macros/matchit.vim
+PackManAdd 'macros/matchit.vim', #{type: 'runtime'}
 
 filetype plugin indent on
 syntax enable
