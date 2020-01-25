@@ -61,8 +61,8 @@ function! MyFoldVerilog(lnum) "{{{
   endif
 endfunction "}}}
 
-setl foldmethod=expr
-setl foldexpr=MyFoldVerilog(v:lnum)
+"setl foldmethod=expr
+"setl foldexpr=MyFoldVerilog(v:lnum)
 
 augroup MyVerilog
   autocmd!

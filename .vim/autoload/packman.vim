@@ -68,6 +68,18 @@ function! packman#show_list() abort "{{{
   endfor
 endfunction "}}}
 
+function! packman#repo_list(ArgLead, CmdLine, CursorPos) abort "{{{
+  let unloaded_list = filter(copy(s:packman_list),
+        \ {_,v -> get(v, 'loaded', 0) == 0})
+  let repo_name = keys(unloaded_list)
+
+  "echom a:ArgLead
+  "echom a:CmdLine
+  "echom a:CursorPos
+
+  return repo_name
+endfunction "}}}
+
 function! packman#cleanup() abort "{{{
   let dir_list = map(
         \ split(glob(g:packman_default_directory.'/*'), "\<NL>"),
@@ -102,7 +114,6 @@ endfunction "}}}
 
 " global functions for internal to use
 function! packman#load_on_hook(repo) abort "{{{
-  call s:remove_all_hook(a:repo)
   call s:try_load(a:repo)
 endfunction "}}}
 
@@ -165,11 +176,12 @@ endfunction "}}}
 " internal functions
 function! s:initialize_for_nop() abort "{{{
   " addcommands
-  command! -nargs=+   PackManAdd     call packman#nop()
-  command! -nargs=+   PackManAddLazy call packman#nop()
+  command! -nargs=*   PackManAdd     call packman#nop()
+  command! -nargs=*   PackManAddLazy call packman#nop()
   command!            PackManCheck   call packman#nop()
   command!            PackManList    call packman#nop()
   command!            PackManCleanup call packman#nop()
+  command! -nargs=*   PackManEnable  call packman#nop()
 
   augroup PackManEventGroup
     autocmd!
@@ -199,6 +211,8 @@ function! s:initialize() abort "{{{
   command!            PackManCheck   call packman#check_update()
   command!            PackManList    call packman#show_list()
   command!            PackManCleanup call packman#cleanup()
+  command! -nargs=1 -complete=customlist,packman#repo_list
+        \             PackManEnable call packman#load_on_hook(<q-args>)
 
   " add timer event to VimEnter
   augroup PackManEventGroup
@@ -312,6 +326,8 @@ function! s:try_load(repo) abort "{{{
     return
   end
   let s:packman_list[a:repo]['loaded'] = 1
+
+  call s:remove_all_hook(a:repo)
 
   call s:try_call_function(a:repo, 'pre_load')
   call s:load_repo(a:repo)
