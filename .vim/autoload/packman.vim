@@ -96,7 +96,7 @@ function! packman#cleanup() abort "{{{
   echo '[packman] cleanup completed'
 endfunction "}}}
 
-function! packman#nop() "{{{
+function! packman#nop(...) "{{{
   " No Operation
 endfunction "}}}
 
@@ -419,7 +419,10 @@ function! s:remove_command_hook(repo) abort "{{{
 endfunction "}}}
 
 function! s:echo(msg) abort "{{{
-  redraw
+  if !v:vim_did_enter
+    redraw
+  endif
+
   echom a:msg
 endfunction "}}}
 
