@@ -36,6 +36,8 @@ if !exists('g:systemverilog_indent_debug_echo')
   let g:systemverilog_indent_debug_echo = 1
 endif
 
+let s:sv_operator = '+'
+
 let s:bracketpair = [
       \   #{start:'('                              , middle: ''                   , end:')'                            } ,
       \   #{start:'['                              , middle: ''                   , end:']'                            } ,
@@ -43,6 +45,8 @@ let s:bracketpair = [
       \   #{start:'\<begin\>'                      , middle: ''                   , end:'\<end\>'                      } ,
       \ ]
 
+" FIXME: if - else をココから削除して
+"        専用の関数を作る
 let s:xxx = [
       \   #{start:'\<if\>'                         , middle: '\<else\>'           , end:''                             } ,
       \   #{start:'\<case[xz]\?\>'                 , middle: ''                   , end:'\<endcase\>'                  } ,
@@ -96,7 +100,9 @@ function! SystemVerilogIndent() "{{{
   let callbacks = [
         \ 's:OneLineFunction',
         \ 's:BracketBlock',
-        \ 's:ClosingBracket'
+        \ 's:ClosingBracket',
+        \ 's:PreviousContenuedExpr',
+        \ 's:AfterContenuedExpr'
         \ ]
   for callback in callbacks
     SVIEcho 'try ' . callback . '()'
@@ -269,9 +275,9 @@ function! s:ClosingBracket(info) "{{{
   " を探して、その行に function などのキーワードがいるかをみる
   SVIEcho '('. info.plnum . ') ' . info.pline
   " label もいる可能性があるので引っ掛けておく
-  let col = s:Match(info.plnum, ')' . s:sv_label)
+  let match = s:Match(info.plnum, ')' . s:sv_label)
 
-  if col == 0
+  if match[1] == -1
     SVIEcho 'not found )'
     return v:false
   endif
@@ -279,7 +285,7 @@ function! s:ClosingBracket(info) "{{{
   SVIEcho 'found )'
 
   " 見つかった ) に対応する ( を探す
-  call s:cursor(info.plnum, col)
+  call s:cursor(info.plnum, match[1])
   let jump = s:searchpair('(', '', ')', 'bW', s:skip_expr)
 
   if jump == 0
@@ -295,20 +301,21 @@ function! s:ClosingBracket(info) "{{{
   " それを見つけたら parameter の行に飛ぶ
   " XXX: ひとまず同じ行に ) がいないかを探す
   let lnum = line('.')
-  let col = s:Match(lnum, ')')
+  let match = s:Match(lnum, ')')
 
   "SVIEcho 'Current cursor = ' . lnum . ', ' . col
 
-  if col != 0
+  if match[1] != -1
     SVIEcho 'found more )'
-    call s:cursor(lnum, col)
+    call s:cursor(lnum, match[1])
     let jump = s:searchpair('(', '', ')', 'bW', s:skip_expr)
   endif
 
   " 見つけた ( と同じ行に function とかがいるはず
   let lnum = line('.')
   for item in s:xxx
-    if s:Match(lnum, item.start)
+    let match = s:Match(lnum, item.start)
+    if match[1] != -1
       SVIEcho 'Match ' . item.start
 
       let info.indent = indent(lnum) + info.sw
@@ -317,6 +324,51 @@ function! s:ClosingBracket(info) "{{{
   endfor
 
   return v:false
+endfunction "}}}
+function! s:PreviousContenuedExpr(info) "{{{
+  let info = a:info
+
+  " Example:
+  " foo = a +
+  "   b --> here
+
+  let lnum = prevnonblank(info.plnum)
+  SVIEcho '('. lnum . ') ' . getline(lnum)
+
+  let expr_plnum = s:GetExprLine(lnum)
+  SVIEcho '('. expr_plnum . ') ' . getline(expr_plnum)
+
+  if expr_plnum < lnum
+    SVIEcho 'found expr'
+    let info.indent = indent(expr_plnum) + info.sw
+    return v:true
+  else
+    SVIEcho 'not found expr'
+    return v:false
+  endif
+endfunction "}}}
+function! s:AfterContenuedExpr(info) "{{{
+  let info = a:info
+
+  " Example:
+  " foo = a +
+  "   b;
+  " hoge = 3; --> here
+
+  let lnum = prevnonblank(info.plnum-1)
+  SVIEcho '('. lnum . ') ' . getline(lnum)
+
+  let expr_plnum = s:GetExprLine(lnum)
+  SVIEcho '('. expr_plnum . ') ' . getline(expr_plnum)
+
+  if expr_plnum < lnum
+    SVIEcho 'found expr'
+    let info.indent = indent(expr_plnum)
+    return v:true
+  else
+    SVIEcho 'not found expr'
+    return v:false
+  endif
 endfunction "}}}
 
 function! s:SynNameMatch(lnum, col, ...) "{{{
@@ -328,24 +380,36 @@ function! s:SynNameMatch(lnum, col, ...) "{{{
   return found_list->len() > 0
 endfunction "}}}
 
-" その行で最後に match した位置を返す (見つからなければ 0)
-" ただし、コメント位置は検索対象から除外する
-function! s:Match(lnum, regexp) "{{{
-  let line   = getline(a:lnum)
-  "SVIEcho 's:Match: lnum = ' . a:lnum . ', line = ' . line
-  let offset = match(line, a:regexp)
-  let col    = offset + 1
 
-  while offset > -1 && s:SynNameMatch(a:lnum, col, 'Comment')
-    let offset = match(line, a:regexp, offset + 1)
-    let col    = offset + 1
+" コメントをスキップした matchstrpos
+function! s:Match(lnum, regexp) "{{{
+  let line = getline(a:lnum)
+  let ma   = matchstrpos(line, a:regexp)
+
+  while ma[1] != -1 && s:SynNameMatch(a:lnum, ma[1], 'Comment')
+    let ma = matchstrpos(line, a:regexp, ma[2])
   endwhile
 
-  if offset > -1
-    return col
-  else
-    return 0
-  endif
+  return ma
+endfunction "}}}
+
+" コメントをスキップした matchstrpos で、一番最後にヒットした箇所を返す
+function! s:MatchLast(lnum, regexp) "{{{
+  let line = getline(a:lnum)
+  let ma   = matchstrpos(line, a:regexp)
+  let ml   = ['', -1, -1]
+
+  while ma[1] != -1
+    " ヒット位置がコメントじゃないなら返す値候補を更新
+    if !s:SynNameMatch(a:lnum, ma[1], 'Comment')
+      let ml = ma
+    endif
+
+    " 次の候補を検索
+    let ma = matchstrpos(line, a:regexp, ma[2])
+  endwhile
+
+  return ml
 endfunction "}}}
 
 function! s:cursor(lnum, col) "{{{
@@ -375,6 +439,34 @@ function! s:searchpair(start, middle, end, ...) "{{{
 
   SVIEcho 'jamp to cursor(' . a:lnum . ',' . a:col . ')'
   return v:true
+endfunction "}}}
+
+function! s:GetExprLine(lnum) "{{{
+  let lnum  = a:lnum
+  let match = s:MatchLast(lnum, s:sv_operator)
+
+
+  while match[1] != -1
+    " operator は見つかったけど、行末なのかは不明
+    " なので確認する
+    let line = getline(lnum)[match[2]:-1]
+
+    " コメントがあれば全部削除
+    let line = substitute(line, '//.*$',       '', '') " // ...
+    let line = substitute(line, '/\*.\{-}\*/', '', '') " /* ... */
+    let line = substitute(line, '/\*.*$',      '', '') " /* ... (コメントが継続)
+
+    " スペースしかないはず
+    if line =~ '\S'
+      return lnum+1
+    endif
+
+    " 継続してる行なので上の行を見る
+    let lnum = prevnonblank(lnum-1)
+    let match = s:Match(lnum, s:sv_operator)
+  endwhile
+
+  return lnum+1
 endfunction "}}}
 
 let &cpo = s:cpo_save
