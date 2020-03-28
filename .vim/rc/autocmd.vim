@@ -30,6 +30,7 @@ augroup VimrcAutoCmd
   autocmd BufNewFile,BufRead *.[rR]                   setfiletype r
   autocmd BufNewFile,BufRead *.v[^./]\\\{0,1\}        setlocal filetype=systemverilog
   autocmd BufNewFile,BufRead *.sv[^./]\\\{0,1\}       setlocal filetype=systemverilog
+  autocmd BufNewFile,BufRead todo.txt                 setlocal filetype=todo
 
   autocmd FileType crontab setlocal nobackup
   autocmd FileType make    setlocal noexpandtab
