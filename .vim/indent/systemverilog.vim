@@ -9,10 +9,10 @@ endif
 let b:did_indent = 1
 
 setlocal indentexpr=SystemVerilogIndent()
-setlocal indentkeys=!^F,o,O,0),0}
+setlocal indentkeys=0},0),:,!^F,o,O,e
 
 setlocal indentkeys+==begin,=end
-setlocal indentkeys+==else,=endcase
+setlocal indentkeys+==endcase
 setlocal indentkeys+==join,=join_any,=join_none
 setlocal indentkeys+==endmodule,=endclass,=endpackage,=endinterface,=endgroup
 setlocal indentkeys+==endfunction,=endtask
@@ -84,7 +84,8 @@ function! SystemVerilogIndent() "{{{
   let callbacks = [
         \ 's:InComment',
         \ 's:SigleBegin',
-        \ 's:DeIndentBlock'
+        \ 's:DeIndentBlock',
+        \ 's:CaseCondition'
         \ ]
   for callback in callbacks
     SVIEcho 'try ' . callback.'()'
@@ -101,6 +102,8 @@ function! SystemVerilogIndent() "{{{
         \ 's:OneLineFunction',
         \ 's:BracketBlock',
         \ 's:ClosingBracket',
+        \ 's:SingleLinePropertyExpr',
+        \ 's:PreviousCaseCondition',
         \ 's:PreviousContenuedExpr',
         \ 's:AfterContenuedExpr',
         \ 's:TwoLineIfStatement'
@@ -212,6 +215,32 @@ function! s:DeIndentBlock(info) "{{{
   endfor
 
   return v:false
+endfunction "}}}
+function! s:CaseCondition(info) "{{{
+  let info = a:info
+
+  " Example:
+  " case(hoge)
+  "   foo0: bar0; --> here
+  "   foo1: bar1; --> here
+  " endcase
+
+  let line = s:RemoveComment(info.cline)
+
+  " : があること前提
+  if line !~ ':'
+    return v:false
+  endif
+
+  SVIEcho 'found :'
+
+  if s:searchpair('\<case[xz]\?\>', '', '\<endcase\>', 'bW', s:skip_expr)
+    let lnum = line('.')
+    let info.indent = indent(lnum) + info.sw
+    return v:true
+  else
+    return v:false
+  endif
 endfunction "}}}
 
 function! s:OneLineFunction(info) "{{{
@@ -347,6 +376,54 @@ function! s:ClosingBracket(info) "{{{
 
   return v:false
 endfunction "}}}
+function! s:SingleLinePropertyExpr(info) "{{{
+  let info = a:info
+
+  " Example:
+  " initial /* ... */
+  "   foo;
+
+  let line = s:RemoveComment(info.pline)
+
+  if line =~ '^\s*' . '\<initial\|always\|forever\|foreach\>'
+    SVIEcho 'found property'
+    let info.indent = indent(info.plnum) + info.sw
+    return v:true
+  else
+    SVIEcho 'not found property'
+    return v:false
+  endif
+endfunction "}}}
+function! s:PreviousCaseCondition(info) "{{{
+  let info = a:info
+
+  " Example:
+  " case(hoge)
+  "   foo0:
+  "     foo; --> here
+  "   foo1: bar1; --> here
+  " endcase
+
+  let line = s:RemoveComment(info.pline)
+  SVIEcho 'line = "' . line '"'
+
+  " : があること前提
+  if line !~ ':'
+    return v:false
+  endif
+
+  SVIEcho 'found :'
+
+  let lnum = line('.')
+
+  if s:searchpair('\<case[xz]\?\>', '', '\<endcase\>', 'bW', s:skip_expr)
+    " : が見つかった場所からひとつインデントを深くする
+    let info.indent = indent(lnum) + info.sw
+    return v:true
+  else
+    return v:false
+  endif
+endfunction "}}}
 function! s:PreviousContenuedExpr(info) "{{{
   let info = a:info
 
@@ -429,6 +506,10 @@ function! s:TwoLineIfStatement(info) "{{{
   "if line =~ '^\s*\<if\|else\>'
   if line =~ '^\s*\%(\<if\|else\>\s*\)\{1,2}'
     SVIEcho 'found if, else or elseif'
+    let info.indent = indent(expr_plnum2)
+    return v:true
+  elseif line =~ '^\s*' . '\<initial\|always\|forever\|foreach\>'
+    SVIEcho 'found initial, always and so on...'
     let info.indent = indent(expr_plnum2)
     return v:true
   else
