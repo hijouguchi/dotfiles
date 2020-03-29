@@ -102,7 +102,8 @@ function! SystemVerilogIndent() "{{{
         \ 's:BracketBlock',
         \ 's:ClosingBracket',
         \ 's:PreviousContenuedExpr',
-        \ 's:AfterContenuedExpr'
+        \ 's:AfterContenuedExpr',
+        \ 's:TwoLineIfStatement'
         \ ]
   for callback in callbacks
     SVIEcho 'try ' . callback . '()'
@@ -389,6 +390,40 @@ function! s:AfterContenuedExpr(info) "{{{
     return v:true
   else
     SVIEcho 'not found expr'
+    return v:false
+  endif
+endfunction "}}}
+function! s:TwoLineIfStatement(info) "{{{
+  let info = a:info
+
+  " Example:
+  " if(foo)
+  "   bar
+  " <X> --> here
+
+  " 2行上のステートメントを探す
+
+  let lnum = info.plnum
+  SVIEcho '1 ('. lnum . ') ' . getline(lnum)
+  let expr_plnum = s:GetExprLine(lnum)
+  let expr_plnum = min([lnum, expr_plnum])
+  SVIEcho '2 ('. expr_plnum . ') ' . getline(expr_plnum)
+
+  let lnum = prevnonblank(expr_plnum-1)
+  let expr_plnum2 = s:GetExprLine(lnum)
+  let expr_plnum2 = min([lnum, expr_plnum2])
+  SVIEcho '3 ('. expr_plnum2 . ') ' . getline(expr_plnum2)
+
+  " この行に if か else がいるはず
+  " FIXME: if(xxx) の部分が複数行になっている場合に対応できていない
+
+  let line = getline(expr_plnum2)
+  if line =~ '^\s*\<if\|else\|elsif\>'
+    SVIEcho 'found if, else or elseif'
+    let info.indent = indent(expr_plnum2)
+    return v:true
+  else
+    SVIEcho 'not found if, else or elseif'
     return v:false
   endif
 endfunction "}}}
