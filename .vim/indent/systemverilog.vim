@@ -273,9 +273,31 @@ function! s:ClosingBracket(info) "{{{
   "   buz<- here
   " 直前の行が ) で終わってるとき、対応する (
   " を探して、その行に function などのキーワードがいるかをみる
-  SVIEcho '('. info.plnum . ') ' . info.pline
-  " label もいる可能性があるので引っ掛けておく
-  let match = s:Match(info.plnum, ')' . s:sv_label)
+  SVIEcho '('. info.plnum . ') "' . info.pline . '"'
+  "let match = s:MatchLast(info.plnum, ')')
+  " ) 以降は ";" か ": label" だけ許す
+  let match = s:Match(info.plnum, ')' . '\s*\%(;\|:\s*\<\k\+\>\)\?')
+
+  " ) 以降は ";" か ": label" だけ許すので、そうなってるか確認する
+  let line = info.pline[match[2]:-1]
+  SVIEcho match
+  SVIEcho 'Checkpoint 0 "' . line . '"'
+  " コメントがあれば全部削除
+  let line = substitute(line, '//.*$',       '',  '')  " // ...
+  let line = substitute(line, '/\*.\{-}\*/', '',  'g') " /* ... */
+  let line = substitute(line, '/\*.*$',      '',  '')  " /* ... (コメントが継続)
+  SVIEcho 'Checkpoint 1 "' . line . '"'
+
+  " ";" と ": label" があれば削除
+  let line = substitute(line, ';',            '', 'g')
+  let line = substitute(line, ':\s*\<\k\+\>', '', '')
+  SVIEcho 'Checkpoint 2 "' . line . '"'
+
+  " コメントと ";", ": label" を削除したら空っぽになってるはず
+  if line !~ '^\s*$'
+    SVIEcho 'line "' . line . '" is not empty line'
+    return v:false
+  endif
 
   if match[1] == -1
     SVIEcho 'not found )'
@@ -443,9 +465,9 @@ function! s:GetExprLine(lnum) "{{{
     let line = getline(lnum)[match[2]:-1]
 
     " コメントがあれば全部削除
-    let line = substitute(line, '//.*$',       '', '') " // ...
-    let line = substitute(line, '/\*.\{-}\*/', '', '') " /* ... */
-    let line = substitute(line, '/\*.*$',      '', '') " /* ... (コメントが継続)
+    let line = substitute(line, '//.*$',       '', '')  " // ...
+    let line = substitute(line, '/\*.\{-}\*/', '', 'g') " /* ... */
+    let line = substitute(line, '/\*.*$',      '', '')  " /* ... (コメントが継続)
 
     " スペースしかないはず
     if line =~ '\S'
