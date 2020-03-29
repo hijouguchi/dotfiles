@@ -420,17 +420,8 @@ function! s:cursor(lnum, col) "{{{
 endfunction "}}}
 
 function! s:searchpair(start, middle, end, ...) "{{{
-  if a:0 == 0
-    let jump = searchpair(a:start, a:middle, a:end)
-  elseif a:0 == 1
-    let jump = searchpair(a:start, a:middle, a:end, a:1)
-  elseif a:0 == 2
-    let jump = searchpair(a:start, a:middle, a:end, a:1, a:2)
-  elseif a:0 == 3
-    let jump = searchpair(a:start, a:middle, a:end, a:1, a:2, a:3)
-  elseif a:0 == 4
-    let jump = searchpair(a:start, a:middle, a:end, a:1, a:2, a:3, a:4)
-  endif
+  let args = [a:start, a:middle, a:end] + a:000
+  let jump = call('searchpair', args)
 
   if jump == 0 || jump == -1
     SVIEcho 'cursor stay(' . line('.') . ',' . col('.') . ')'
