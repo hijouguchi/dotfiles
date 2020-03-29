@@ -38,15 +38,15 @@ endif
 
 let s:sv_operator = '+'
 
+" FIXME: if - else が bracketpair と xxx にいるので気持ち悪い
 let s:bracketpair = [
       \   #{start:'('                              , middle: ''                   , end:')'                            } ,
       \   #{start:'['                              , middle: ''                   , end:']'                            } ,
       \   #{start:'{'                              , middle: ''                   , end:'}'                            } ,
       \   #{start:'\<begin\>'                      , middle: ''                   , end:'\<end\>'                      } ,
+      \   #{start:'\<if\>'                         , middle: '\<else\>'           , end:''                             }
       \ ]
 
-" FIXME: if - else をココから削除して
-"        専用の関数を作る
 let s:xxx = [
       \   #{start:'\<if\>'                         , middle: '\<else\>'           , end:''                             } ,
       \   #{start:'\<case[xz]\?\>'                 , middle: ''                   , end:'\<endcase\>'                  } ,
@@ -247,19 +247,21 @@ function! s:BracketBlock(info) "{{{
   "   bar <- here
   " )
   for item in s:bracketpair
-    " FXIME: /* ... */ のコメントを無視するようにする
-    let pat = item.start . '\s*\%(:\s*\k\+\s*\)\?$'
-    let match = matchstrpos(info.pline, pat)
+    for elm in [item.start, item.middle]
+      " FXIME: /* ... */ のコメントを無視するようにする
+      let pat = elm . '\s*\%(:\s*\k\+\s*\)\?$'
+      let match = matchstrpos(info.pline, pat)
 
-    if match[0] == ""
-      SVIEcho 'Not found' item.start
-      continue
-    endif
+      if match[0] == ""
+        SVIEcho 'Not found' elm
+        continue
+      endif
 
-    SVIEcho 'Found keyword ' . match
+      SVIEcho 'Found keyword ' match
 
-    let info.indent = indent(info.plnum) + info.sw
-    return v:true
+      let info.indent = indent(info.plnum) + info.sw
+      return v:true
+    endfor
   endfor
 
   return v:false
@@ -339,7 +341,7 @@ function! s:ClosingBracket(info) "{{{
   for item in s:xxx
     let match = s:Match(lnum, item.start)
     if match[1] != -1
-      SVIEcho 'Match ' . item.start
+      SVIEcho 'Match ' . item
 
       let info.indent = indent(lnum) + info.sw
       return v:true
@@ -418,7 +420,8 @@ function! s:TwoLineIfStatement(info) "{{{
   " FIXME: if(xxx) の部分が複数行になっている場合に対応できていない
 
   let line = getline(expr_plnum2)
-  if line =~ '^\s*\<if\|else\|elsif\>'
+  "if line =~ '^\s*\<if\|else\>'
+  if line =~ '^\s*\%(\<if\|else\>\s*\)\{1,2}'
     SVIEcho 'found if, else or elseif'
     let info.indent = indent(expr_plnum2)
     return v:true
