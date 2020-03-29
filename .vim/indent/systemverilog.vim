@@ -285,10 +285,7 @@ function! s:ClosingBracket(info) "{{{
   let line = info.pline[match[2]:-1]
   SVIEcho match
   SVIEcho 'Checkpoint 0 "' . line . '"'
-  " コメントがあれば全部削除
-  let line = substitute(line, '//.*$',       '',  '')  " // ...
-  let line = substitute(line, '/\*.\{-}\*/', '',  'g') " /* ... */
-  let line = substitute(line, '/\*.*$',      '',  '')  " /* ... (コメントが継続)
+  let line = s:RemoveComment(line)
   SVIEcho 'Checkpoint 1 "' . line . '"'
 
   " ";" と ": label" があれば削除
@@ -411,6 +408,15 @@ function! s:TwoLineIfStatement(info) "{{{
   let expr_plnum = min([lnum, expr_plnum])
   SVIEcho '2 ('. expr_plnum . ') ' . getline(expr_plnum)
 
+  " この行は statement のはず。(行末が ; で終わるはず)
+  " `uvm_info() などの macro は除外する
+  let line = getline(expr_plnum)
+  let line = s:RemoveComment(line)
+  if line !~ ';\s*$' " 行末は ; で終わってる
+    SVIEcho '"' . getline(expr_plnum) . '" is not end of statement'
+    return v:false
+  endif
+
   let lnum = prevnonblank(expr_plnum-1)
   let expr_plnum2 = s:GetExprLine(lnum)
   let expr_plnum2 = min([lnum, expr_plnum2])
@@ -452,7 +458,6 @@ function! s:Match(lnum, regexp) "{{{
 
   return ma
 endfunction "}}}
-
 " コメントをスキップした matchstrpos で、一番最後にヒットした箇所を返す
 function! s:MatchLast(lnum, regexp) "{{{
   let line = getline(a:lnum)
@@ -471,14 +476,12 @@ function! s:MatchLast(lnum, regexp) "{{{
 
   return ml
 endfunction "}}}
-
 function! s:cursor(lnum, col) "{{{
   let col = max([1, a:col]) " col が 0 だと良くないので
 
   SVIEcho 'jamp to cursor(' . a:lnum . ',' . col . ')'
   call cursor(a:lnum, col)
 endfunction "}}}
-
 function! s:searchpair(start, middle, end, ...) "{{{
   let args = [a:start, a:middle, a:end] + a:000
   let jump = call('searchpair', args)
@@ -491,7 +494,6 @@ function! s:searchpair(start, middle, end, ...) "{{{
   SVIEcho 'jamp to cursor(' . a:lnum . ',' . a:col . ')'
   return v:true
 endfunction "}}}
-
 function! s:GetExprLine(lnum) "{{{
   let lnum  = a:lnum
   let match = s:MatchLast(lnum, s:sv_operator)
@@ -501,11 +503,7 @@ function! s:GetExprLine(lnum) "{{{
     " operator は見つかったけど、行末なのかは不明
     " なので確認する
     let line = getline(lnum)[match[2]:-1]
-
-    " コメントがあれば全部削除
-    let line = substitute(line, '//.*$',       '', '')  " // ...
-    let line = substitute(line, '/\*.\{-}\*/', '', 'g') " /* ... */
-    let line = substitute(line, '/\*.*$',      '', '')  " /* ... (コメントが継続)
+    let line = s:RemoveComment(line)
 
     " スペースしかないはず
     if line =~ '\S'
@@ -518,6 +516,16 @@ function! s:GetExprLine(lnum) "{{{
   endwhile
 
   return lnum+1
+endfunction "}}}
+
+function! s:RemoveComment(line) "{{{
+  let line = a:line
+  " コメントがあれば全部削除
+  let line = substitute(line, '//.*$',       '', '')  " // ...
+  let line = substitute(line, '/\*.\{-}\*/', '', 'g') " /* ... */
+  let line = substitute(line, '/\*.*$',      '', '')  " /* ... (コメントが継続)
+
+  return line
 endfunction "}}}
 
 let &cpo = s:cpo_save
