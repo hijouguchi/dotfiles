@@ -85,7 +85,8 @@ function! SystemVerilogIndent() "{{{
         \ 's:InComment',
         \ 's:SigleBegin',
         \ 's:DeIndentBlock',
-        \ 's:CaseCondition'
+        \ 's:CaseCondition',
+        \ 's:PreviousContenuedExpr'
         \ ]
   for callback in callbacks
     SVIEcho 'try ' . callback.'()'
@@ -104,7 +105,6 @@ function! SystemVerilogIndent() "{{{
         \ 's:ClosingBracket',
         \ 's:SingleLinePropertyExpr',
         \ 's:PreviousCaseCondition',
-        \ 's:PreviousContenuedExpr',
         \ 's:AfterContenuedExpr',
         \ 's:TwoLineIfStatement'
         \ ]
@@ -242,6 +242,25 @@ function! s:CaseCondition(info) "{{{
     return v:false
   endif
 endfunction "}}}
+function! s:PreviousContenuedExpr(info) "{{{
+  let info = a:info
+
+  " Example:
+  " foo = a +
+  "   b --> here
+
+  let lnum = s:GetExprLine(info.clnum)
+  SVIEcho '('. lnum . ') ' . getline(lnum)
+
+  if lnum != info.clnum
+    SVIEcho 'found expr'
+    let info.indent = indent(lnum) + info.sw
+    return v:true
+  else
+    SVIEcho 'not found expr'
+    return v:false
+  endif
+endfunction "}}}
 
 function! s:OneLineFunction(info) "{{{
   let info = a:info
@@ -336,7 +355,7 @@ function! s:ClosingBracket(info) "{{{
   SVIEcho 'found )'
 
   " 見つかった ) に対応する ( を探す
-  call s:cursor(info.plnum, match[1])
+  call s:cursor(info.plnum, match[1]+1)
   let jump = s:searchpair('(', '', ')', 'bW', s:skip_expr)
 
   if jump == 0
@@ -358,7 +377,7 @@ function! s:ClosingBracket(info) "{{{
 
   if match[1] != -1
     SVIEcho 'found more )'
-    call s:cursor(lnum, match[1])
+    call s:cursor(lnum, match[1]+1)
     let jump = s:searchpair('(', '', ')', 'bW', s:skip_expr)
   endif
 
@@ -424,28 +443,6 @@ function! s:PreviousCaseCondition(info) "{{{
     return v:false
   endif
 endfunction "}}}
-function! s:PreviousContenuedExpr(info) "{{{
-  let info = a:info
-
-  " Example:
-  " foo = a +
-  "   b --> here
-
-  let lnum = prevnonblank(info.plnum)
-  SVIEcho '('. lnum . ') ' . getline(lnum)
-
-  let expr_plnum = s:GetExprLine(lnum)
-  SVIEcho '('. expr_plnum . ') ' . getline(expr_plnum)
-
-  if expr_plnum < lnum
-    SVIEcho 'found expr'
-    let info.indent = indent(expr_plnum) + info.sw
-    return v:true
-  else
-    SVIEcho 'not found expr'
-    return v:false
-  endif
-endfunction "}}}
 function! s:AfterContenuedExpr(info) "{{{
   let info = a:info
 
@@ -454,18 +451,15 @@ function! s:AfterContenuedExpr(info) "{{{
   "   b;
   " hoge = 3; --> here
 
-  let lnum = prevnonblank(info.plnum-1)
+  let lnum = s:GetExprLine(info.plnum)
   SVIEcho '('. lnum . ') ' . getline(lnum)
 
-  let expr_plnum = s:GetExprLine(lnum)
-  SVIEcho '('. expr_plnum . ') ' . getline(expr_plnum)
-
-  if expr_plnum < lnum
-    SVIEcho 'found expr'
-    let info.indent = indent(expr_plnum)
+  if lnum != info.plnum
+    SVIEcho 'found previous expr'
+    let info.indent = indent(lnum)
     return v:true
   else
-    SVIEcho 'not found expr'
+    SVIEcho 'not found previous expr'
     return v:false
   endif
 endfunction "}}}
@@ -479,38 +473,32 @@ function! s:TwoLineIfStatement(info) "{{{
 
   " 2行上のステートメントを探す
 
-  let lnum = info.plnum
+  let lnum = s:GetExprLine(info.plnum) " ひとつ上
   SVIEcho '1 ('. lnum . ') ' . getline(lnum)
-  let expr_plnum = s:GetExprLine(lnum)
-  let expr_plnum = min([lnum, expr_plnum])
-  SVIEcho '2 ('. expr_plnum . ') ' . getline(expr_plnum)
-
-  " この行は statement のはず。(行末が ; で終わるはず)
-  " `uvm_info() などの macro は除外する
-  let line = getline(expr_plnum)
-  let line = s:RemoveComment(line)
-  if line !~ ';\s*$' " 行末は ; で終わってる
-    SVIEcho '"' . getline(expr_plnum) . '" is not end of statement'
-    return v:false
-  endif
-
-  let lnum = prevnonblank(expr_plnum-1)
-  let expr_plnum2 = s:GetExprLine(lnum)
-  let expr_plnum2 = min([lnum, expr_plnum2])
-  SVIEcho '3 ('. expr_plnum2 . ') ' . getline(expr_plnum2)
+  let lnum = s:GetExprLine(lnum-1) " もうひとつ上
+  SVIEcho '2 ('. lnum . ') ' . getline(prevnonblank(lnum))
 
   " この行に if か else がいるはず
   " FIXME: if(xxx) の部分が複数行になっている場合に対応できていない
 
-  let line = getline(expr_plnum2)
+  " begin がいたら無視する
+
+  let match = s:Match(lnum, '\<begin\>')
+  if match[1] != -1
+    SVIEcho 'found begin statement keep current indent'
+    let info.indent = -1
+    return v:true
+  endif
+
+  let line = getline(lnum)
   "if line =~ '^\s*\<if\|else\>'
   if line =~ '^\s*\%(\<if\|else\>\s*\)\{1,2}'
     SVIEcho 'found if, else or elseif'
-    let info.indent = indent(expr_plnum2)
+    let info.indent = indent(lnum)
     return v:true
   elseif line =~ '^\s*' . '\<initial\|always\|forever\|foreach\>'
     SVIEcho 'found initial, always and so on...'
-    let info.indent = indent(expr_plnum2)
+    let info.indent = indent(lnum)
     return v:true
   else
     SVIEcho 'not found if, else or elseif'
@@ -576,27 +564,41 @@ function! s:searchpair(start, middle, end, ...) "{{{
   return v:true
 endfunction "}}}
 function! s:GetExprLine(lnum) "{{{
-  let lnum  = a:lnum
+  " 前の行が継続してるかを見る
+  let lnum  = prevnonblank(a:lnum-1)
   let match = s:MatchLast(lnum, s:sv_operator)
+  let rnum = a:lnum " 返却する行番号 (見つからないときは 自分自身を返す)
 
+  SVIEcho 'called s:GetExprLine'
+  SVIEcho match
 
   while match[1] != -1
     " operator は見つかったけど、行末なのかは不明
     " なので確認する
     let line = getline(lnum)[match[2]:-1]
     let line = s:RemoveComment(line)
+    SVIEcho '(' .lnum . ') "' . getline(lnum) . '" (' . string(match) . ') -> "' . line . '"'
 
     " スペースしかないはず
     if line =~ '\S'
-      return lnum+1
+      SVIEcho 's:GEtExprLine(' . a:lnum . ') return line: ' . lnum . ' "' . getline(lnum) . '"'
+      return lnum
     endif
 
     " 継続してる行なので上の行を見る
+    let rnum = lnum
     let lnum = prevnonblank(lnum-1)
     let match = s:Match(lnum, s:sv_operator)
   endwhile
 
-  return lnum+1
+  " この行には operator がいないので、rnum を返す
+  if rnum != 0
+    SVIEcho 's:GetExprLine(' . a:lnum . ') returns line: ' . rnum . ' "' . getline(rnum) . '"'
+  else
+    SVIEcho 's:GetExprLine(' . a:lnum. ') does not found any operators'
+  endif
+
+  return rnum
 endfunction "}}}
 
 function! s:RemoveComment(line) "{{{
