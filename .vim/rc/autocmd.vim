@@ -165,7 +165,41 @@ function! s:EventChecker() abort "{{{
   if !exists('g:event_list')
     let g:event_list = []
 
-    let val = <SID>get_autocmd_events()
+    "let val = <SID>get_autocmd_events()
+    let val = [
+          \ 'BufNewFile'       , 'BufReadPre'           , 'BufRead'          , 'BufReadPost'     , 'BufReadCmd'     ,
+          \ 'FileReadPre'      , 'FileReadPost'         , 'FileReadCmd'      , 'FilterReadPre'   , 'FilterReadPost' ,
+          \ 'StdinReadPre'     , 'StdinReadPost'        , 
+          \ 'BufWrite'         , 'BufWritePre'          , 'BufWritePost'     , 'BufWriteCmd'     , 
+          \ 'FileWritePre'     , 'FileWritePost'        , 'FileWriteCmd'     , 'FileAppendPre'   , 
+          \ 'FileAppendPost'   , 'FileAppendCmd'        , 
+          \ 'FilterWritePre'   , 'FilterWritePost'      , 
+          \ 'BufAdd'           , 'BufCreate'            , 'BufDelete'        , 'BufWipeout'      , 'BufFilePre'     , 
+          \ 'BufFilePost'      , 'BufEnter'             , 'BufLeave'         , 
+          \ 'BufWinEnter'      , 'BufWinLeave'          , 
+          \ 'BufUnload'        , 'BufHidden'            , 'BufNew'           , 
+          \ 'SwapExists'       , 'FileType'             , 'Syntax'           , 'EncodingChanged' , 
+          \ 'TermChanged'      , 'OptionSet'            , 'VimEnter'         , 'GUIEnter'        , 
+          \ 'GUIFailed'        , 'TermResponse'         , 'QuitPre'          , 'ExitPre'         , 
+          \ 'VimLeavePre'      , 'VimLeave'             , 
+          \ 'TerminalOpen'     , 'TerminalWinOpen'      , 
+          \ 'FileChangedShell' , 'FileChangedShellPost' , 'FileChangedRO'    , 
+          \ 'DiffUpdated'      , 'DirChanged'           , 'ShellCmdPost'     , 'ShellFilterPost' , 
+          \ 'CmdUndefined'     , 'FuncUndefined'        , 'SpellFileMissing' , 
+          \ 'SourcePre'        , 'SourcePost'           , 'SourceCmd'        , 'VimResized'      , 
+          \ 'FocusGained'      , 'FocusLost'            , 
+          \ 'CursorHold'       , 'CursorHoldI'          , 'CursorMoved'      , 'CursorMovedI'    , 
+          \ 'WinNew'           , 'TabNew'               , 'TabClosed'        , 
+          \ 'WinEnter'         , 'WinLeave'             , 'TabEnter'         , 'TabLeave'        , 
+          \ 'CmdwinEnter'      , 'CmdwinLeave'          , 'CmdlineChanged'   , 'CmdlineEnter'    , 'CmdlineLeave'   , 
+          \ 'InsertEnter'      , 'InsertChange'         , 'InsertLeave'      , 'InsertCharPre'   , 
+          \ 'TextChanged'      , 'TextChangedI'         , 'TextChangedP'     , 
+          \ 'TextYankPost'     , 
+          \ 'ColorSchemePre'   , 'ColorScheme'          , 'RemoteReply'      , 
+          \ 'QuickFixCmdPre'   , 'QuickFixCmdPost'      , 
+          \ 'SessionLoadPost'  , 'MenuPopup'            , 
+          \ 'CompleteChanged'  , 'CompleteDone'         , 'User'
+          \ ]
     for va in val
       silent execute 'autocmd EventChecker '.va. ' * call add(g:event_list, "'.va.'")'
     endfor
