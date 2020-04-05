@@ -17,6 +17,7 @@ set listchars=tab:._,trail:_,eol:.
 set completeopt=menuone,preview
 set matchpairs& matchpairs+=<:>
 set clipboard=unnamed
+set incsearch
 
 set showmatch
 set matchtime=1

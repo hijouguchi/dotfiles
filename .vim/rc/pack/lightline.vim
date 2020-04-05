@@ -18,8 +18,7 @@ let g:lightline = #{
       \ }
       \ }
 
-PackManAdd     'itchyny/lightline.vim'
-
+call packman#config#github#new('itchyny/lightline.vim')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

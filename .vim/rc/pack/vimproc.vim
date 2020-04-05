@@ -1,15 +1,13 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = {}
+let e = packman#config#github#new('Shougo/vimproc.vim')
 
-function! elm.post_install_func()
+function! e.post_install_func()
   if !has('win32') && !has('win32unix')
     call system('cd '.self.dir.' && make')
   endif
 endfunction
-
-PackManAddLazy     'Shougo/vimproc.vim', elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

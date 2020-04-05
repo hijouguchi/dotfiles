@@ -4,12 +4,13 @@ set cpo&vim
 " TODO:
 "   1. outputter に nonu と nolist を追加したい
 
-let elm = {
-      \   'depends'  : ['osyo-manga/quickrun-outputter-replace_region.git'],
-      \   'commands' : ['QuickRun', 'ReplaceRegion']
-      \ }
+let e = packman#config#github#new('thinca/vim-quickrun.git')
+call e.add_depends(
+      \ packman#config#github#new('osyo-manga/quickrun-outputter-replace_region.git')
+      \ )
+call e.add_hook_commands('QuickRun', 'ReplaceRegion')
 
-function! elm.pre_load()
+function! e.pre_load()
   if !exists('g:quickrun_config')
     let g:quickrun_config = {}
   endif
@@ -31,10 +32,8 @@ function! elm.pre_load()
         \   'outputter/error/success'   : 'quickfix'
         \ }
   let g:quickrun_config.tcl = {'command' : 'tclsh'}
-
 endfunction
 
-PackManAddLazy 'thinca/vim-quickrun.git', elm
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
       \ ReplaceRegion QuickRun -mode v

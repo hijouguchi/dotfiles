@@ -10,15 +10,26 @@ else
   let g:cachedir = 0
 endif
 
-call packman#initialize()
+call packman#begin()
+call packman#config#github#new('vim-jp/vimdoc-ja.git')
+call packman#config#github#new('itchyny/landscape.vim')
 
-PackManAdd     'vim-jp/vimdoc-ja.git'
-PackManAdd     'itchyny/landscape.vim'
-PackManAddLazy 'kana/vim-textobj-user.git',  {'depends' : ['sgur/vim-textobj-parameter.git']}
-PackManAddLazy 'vim-scripts/Align',          {'commands': ['Align']}
-PackManAddLazy 'vim-scripts/vcscommand.vim', {'commands': [
+let e = packman#config#github#new('kana/vim-textobj-user.git')
+call e.set_lazy(v:true)
+call e.add_depends(
+      \ packman#config#github#new('sgur/vim-textobj-parameter.git')
+      \ )
+
+
+let e = packman#config#github#new('vim-scripts/Align')
+call e.add_hook_commands('Align')
+
+let e = packman#config#github#new( 'vim-scripts/vcscommand.vim')
+call e.add_hook_commands(
       \ 'VCSCommit', 'VCSDiff',   'VCSLog',    'VCSRevert',
-      \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff'            ]}
+      \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff')
+
+call packman#config#runtime#new('macros/matchit.vim')
 
 source ~/.vim/rc/pack/vimproc.vim
 source ~/.vim/rc/pack/lightline.vim
@@ -28,11 +39,10 @@ source ~/.vim/rc/pack/vim-smartinput.vim
 source ~/.vim/rc/pack/vim-quickrun.vim
 "source ~/.vim/rc/pack/vim-template.vim
 "source ~/.vim/rc/pack/thumbnail.vim
-source ~/.vim/rc/pack/incsearch.vim
 source ~/.vim/rc/pack/gtags.vim
 source ~/.vim/rc/pack/complete.vim
 
-PackManAdd 'macros/matchit.vim', #{type: 'runtime'}
+call packman#end()
 
 filetype plugin indent on
 syntax enable

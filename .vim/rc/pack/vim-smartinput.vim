@@ -1,13 +1,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = {'events': ['InsertEnter']}
 
-function! elm.post_load()
+let e = packman#config#github#new( 'kana/vim-smartinput.git')
+
+call e.add_hook_events('InsertEnter')
+
+function! e.post_load()
   call smartinput#map_to_trigger('i', '<Plug>(vimrc_bs)', '<BS>', '<BS>')
 endfunction
-
-PackManAddLazy 'kana/vim-smartinput.git',elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

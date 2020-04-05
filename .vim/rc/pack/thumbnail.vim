@@ -2,7 +2,8 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-PackManAddLazy 'itchyny/thumbnail.vim', {'commands': ['Thumbnail']}
+let e = packman#config#github#new('itchyny/thumbnail.vim')
+call e.add_hook_commands('Thumbnail')
 
 nnoremap <Space>b :Thumbnail -here<CR>
 

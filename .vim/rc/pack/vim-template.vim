@@ -1,9 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = {}
+let e = packman#config#github#new('thinca/vim-template')
 
-function! elm.pre_load()
+function! e.pre_load()
   autocmd User plugin-template-loaded
         \ silent %s/<%=\(.\{-}\)%>/\=eval(submatch(1))/ge
   autocmd User plugin-template-loaded
@@ -12,8 +12,6 @@ function! elm.pre_load()
         \  | endif
   autocmd User plugin-template-loaded setlocal nomodified
 endfunction
-
-PackManAddLazy 'thinca/vim-template', elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

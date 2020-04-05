@@ -1,15 +1,15 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let elm = #{
-      \ depends: [
-      \   'prabirshrestha/async.vim',
-      \   'prabirshrestha/asyncomplete.vim',
-      \   'prabirshrestha/asyncomplete-lsp.vim'
-      \ ]
-      \ }
+let e = packman#config#github#new('prabirshrestha/vim-lsp')
+call e.add_hook_events('InsertEnter')
+call e.add_depends(
+      \   packman#config#github#new('prabirshrestha/async.vim'),
+      \   packman#config#github#new('prabirshrestha/asyncomplete.vim'),
+      \   packman#config#github#new('prabirshrestha/asyncomplete-lsp.vim')
+      \)
 
-function! elm.pre_load()
+function! e.pre_load()
   let g:lsp_diagnostics_enabled = 0
   "let g:lsp_log_verbose = 1
   "let g:lsp_log_file = expand('~/vim-lsp.log')
@@ -34,7 +34,6 @@ function! elm.pre_load()
   endif
 endfunction
 
-PackManAdd 'prabirshrestha/vim-lsp', elm
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

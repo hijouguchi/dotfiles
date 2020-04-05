@@ -1,7 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-PackManAddLazy 'vim-scripts/gtags.vim', {'commands': ['Gtags', 'GtagsCursor']}
+let e = packman#config#github#new('vim-scripts/gtags.vim')
+call e.add_hook_commands('Gtags', 'GtagsCursor')
 
 nnoremap <expr> <space>gt ':Gtags '   .expand('<cword>')."\<CR>"
 nnoremap <expr> <space>gr ':Gtags -r '.expand('<cword>')."\<CR>"
