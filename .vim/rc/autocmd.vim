@@ -191,7 +191,7 @@ function! s:EventChecker() abort "{{{
           \ 'CursorHold'       , 'CursorHoldI'          , 'CursorMoved'      , 'CursorMovedI'    , 
           \ 'WinNew'           , 'TabNew'               , 'TabClosed'        , 
           \ 'WinEnter'         , 'WinLeave'             , 'TabEnter'         , 'TabLeave'        , 
-          \ 'CmdwinEnter'      , 'CmdwinLeave'          , 'CmdlineChanged'   , 'CmdlineEnter'    , 'CmdlineLeave'   , 
+          \ 'CmdwinEnter'      , 'CmdwinLeave'          , 'CmdlineEnter'     , 'CmdlineLeave'    , 
           \ 'InsertEnter'      , 'InsertChange'         , 'InsertLeave'      , 'InsertCharPre'   , 
           \ 'TextChanged'      , 'TextChangedI'         , 'TextChangedP'     , 
           \ 'TextYankPost'     , 

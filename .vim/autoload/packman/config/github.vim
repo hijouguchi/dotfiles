@@ -13,7 +13,7 @@ endfunction "}}}
 
 " github リポジトリを update する
 function! packman#config#github#update_impl() dict "{{{
-  let dir = self.directory()
+  let dir = s:directory(self)
   call packman#mics#echo('updating ' . self.cfg.repo . '...')
   call system('cd ' . dir . ' && git pull')
 endfunction "}}}

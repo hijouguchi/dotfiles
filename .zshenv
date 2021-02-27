@@ -2,7 +2,8 @@
 typeset -U path cdpath fpath manpath
 export FPATH=$HOME/dotfiles/zfunctions:$FPATH
 path=( \
-  /opt/*/bin(N-/) \
+  /opt/packages/*/bin(N-/) \
+  /usr/local/opt/coreutils/libexec/gnubin \
   /usr/local/bin \
   /usr/local/sbin \
   $path)

@@ -5,15 +5,12 @@
 	branch      = auto
 	interactive = auto
 	grep        = auto
-[user]
-	name = hijouguchi
-	email = 
 [core]
 	editor = vim
 	pager  = lv -c
-	excludesfile = /home/hijouguchi/.gitignore
+	excludesfile = $HOME/.gitignore
 [alias]
-	l  = log --pretty=format:\"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset\" --graph
+	l  = log --pretty=format:\"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset\" --graph --all
 	s  = status
 	c  = commit
 	cm = checkout master

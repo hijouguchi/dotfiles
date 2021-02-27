@@ -1,185 +1,88 @@
-# NOTE {{{1
+# General Settings {{{1
 
+[ ! -v MY_ZSH_LOG_DIR  ] && MY_ZSH_LOG_DIR=$HOME/.zsh
+[ ! -d $MY_ZSH_LOG_DIR ] && mkdir $MY_ZSH_LOG_DIR
 
+# for $LS_COLORS
+eval `dircolors -b`
 
-# exec screen {{{1
-# FIXME: ssh-agentが二重に起動されないように設定する
-_screen_exec() {
-  screen -wipe
-  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-    exec ssh-agent screen -D -RR -e"^Gg"
-  else
-    exec screen -x
-  fi
-}
-
-#case "$TERM" in
-#  *xterm*|rxvt|(dt|k|E|ml)term)
-#    #exec screen -D -RR -e"^Gg" -c dotfiles/layout.screenrc
-#    [[ -x `which screen 2>/dev/null` ]] && exec ssh-agent screen -D -RR -e"^Gg"
-#    ;;
-#  linux)
-#    [[ -f $HOME/dotfiles/start_linux.zsh ]] && source  $HOME/dotfiles/start_linux.zsh
-#    ;;
-#esac
-
-
-# Program settings {{{1
 export GREP_OPTIONS='--extended-regexp --ignore-case --color'
 export LESS='--ignore-case -RX'
 
-
-# Basic Settings {{{1
-
-# minimum function
-[[ -x `which gdircolors 2>/dev/null` ]] && function dircolors() { gdircolors $* }
-[[ -x `which gls        2>/dev/null` ]] && function ls() { gls $* }
-
-#export LANG=ja_JP.UTF-8
-export EDITOR=vim
-
-
-[[ -x `which dircolors 2>/dev/null` ]] && eval `dircolors -b`
-
-disable r           # r で R が起動できるように
-setopt prompt_subst # $(...) によるの変数を prompt に表示
-setopt no_beep      # ビープをならさない
-
-REPORTTIME=30
-TIMEFMT="\
-The name of this job.             :%J
-CPU seconds spent in user mode.   :%U
-CPU seconds spent in kernel mode. :%S
-Elapsed time in seconds.          :%E
-The  CPU percentage.              :%P"
-
-# for directory
-setopt auto_cd
-setopt auto_pushd
-setopt pushd_ignore_dups
-setopt auto_remove_slash
-setopt auto_name_dirs
-
-cdpath=($HOME $HOME/work)
-
-
-# for history
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zhistory
-setopt hist_ignore_all_dups
-setopt inc_append_history
-setopt share_history
-
-
-# color
-autoload -Uz colors; colors
-
-
-# prompt
-PROMPT='%{[0;1m%}%(?||[%{[31;1m%}error%{[0;1m%}] )%1v%3v%n@%m%# %{[0m%}'
-PROMPT2="%_ > "
-RPROMPT='$(vi_mode_prompt_info)%2(v|%2v|:%4(~|%-1~/.../%2~|%~))'
-
-# zmv
 autoload -Uz zmv
 alias zmv='noglob zmv -W'
 
-autoload -U add-zsh-hook
+# 16 Options {{{1
 
-# vcs_info
-autoload -Uz vcs_info
+setopt NO_BEEP
 
-zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' max-exports 4
-zstyle ':vcs_info:*' stagedstr   'index' # インデックスに追加された場合に表示される文字列
-zstyle ':vcs_info:*' unstagedstr 'work'  # 作業コピーに変更があった場合に表示される文字列
-zstyle ':vcs_info:*' formats       '[%b] '    '[%s:%r]:%S' '%u' '%c'
-zstyle ':vcs_info:*' actionformats '[%b|%a] ' '[%s:%r]:%S' '%u' '%c'
+# 16.2.1 Chanding Directories {{{2
+setopt AUTO_CD           # ディレクトリ名指定で cd する
+setopt AUTO_PUSHD        # ディレクトリを移動したら pushd に積む
+setopt CHASE_DOTS        # cd hoge/.. みたいなことをしたときのパスをいい感じにする
+setopt PUSHD_IGNORE_DUPS # pushd したディレクトリがかぶってたら pushd しない
 
+# 16.2.4 History {{{2
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zhistory
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
 
+# Alias {{{1
+# Basic Aliasies {{{2
+alias  l='ls -hF   --color=auto'
+alias ls='ls -hF   --color=auto'
+alias la='ls -hAF  --color=auto'
+alias ll='ls -hlAF --color=auto'
+alias l1='ls -h1AF --color=auto'
 
-# completion {{{1
-autoload -U  compinit && compinit -d $HOME/.zsh/zcompdump
+alias du='du -h'
+alias grep='grep --color'
+alias quit=exit
 
-#setopt menu_complete
+# Piped Aliasies {{{2
+alias -g G='| grep'
+alias -g T='| tee'
+alias -g L='| less'
+alias -g X='| xargs'
+alias -g G2='2>&1 | grep'
+alias -g T2='2>&1 | tee'
+alias -g L2='2>&1 | less'
 
-setopt complete_in_word   # 補完時のカーソル位置を保持
-setopt list_packed        # 補完候補を多く表示させる
-setopt list_types         # 補完一覧の type を表示
-setopt correct            # typo してるかチェック
-setopt magic_equal_subst  # --prefix=... の時に補完が効くように
-setopt always_last_prompt # 補完時にプロンプトの位置を変えない
-setopt hist_verify        # 履歴を補完時に，修正できるようにする．
+# for GNU SCREEN {{{2
+# FIXME: 別の端末でscreenを開いていると、自分が screen に属していないにも関わらず screen 判定されてしまう
+if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+  alias vim="screen vim"
+  alias vimdiff="screen vimdiff"
+  alias pry='screen pry'
+  alias s='screen'
+fi
 
-setopt print_eight_bit    # 日本語ファイル名等8ビットを通す
-setopt extended_glob      # 拡張グロブで補完
-setopt globdots           # 明確なドットの指定なしで.から始まるファイルをマッチ
-
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' completer _expand _complete _match _prefix _list _history _ignored
-zstyle ':completion:*:messages'     format "$fg_bold[yellow]%d$reset_color"
-zstyle ':completion:*:warnings'     format "$fg_bold[blue]No match command$reset_color"
-zstyle ':completion:*:descriptions' format "$fg_bold[blue]completing %d$reset_color"
-zstyle ':completion:*:corrections'  format "$fg_bold[blue]%d $fg_bold[red](erros: %e)$reset_color"
-#zstyle ':completion:*:options' description 'yes'
-
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path /tmp
-
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:default' menu select=2
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-zstyle ':completion:*:*:*'         ignore-line true
-zstyle ':completion:*:(cp|mv):*'   ignore-line false
-zstyle ':completion:*:*:gnuplot:*' ignored-patterns '^*.gp'
-zstyle ':completion:*:*:ruby:*'    ignored-patterns '^*.rb'
-zstyle ':completion:*:*:hspice:*'  ignored-patterns '^*.sp'
-zstyle ':completion:*:*:vim:*'     ignored-patterns \
-  '*.jpg' '*.png' '*.gif' \
-  '*.aux' '*.bbl' '*.dvi' '*.pdf' '*.blg' \
-  '*.o' \
-  '*~'
-
-zstyle ':completion:*:match:*' original only
-zstyle ':completion:*' ignore-parents parent pwd ..
-
-zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:*:*:*:processec' force-list always
-zstyle ':completion:*:processes' command 'ps -au$USER'
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
-zstyle ':completion:*:manuals' separate-sections true
-
-zstyle ':completion::complete:*:argument-rest:' list-dirs-first true
-# 補完候補で，ディレクトリを後ろに
-zstyle ':completion:*' file-patterns '*(^-/):normal\ files:normal\ files *(-/):directories:directories '
-
-
-# Keymappings {{{1
+#  20.5 Bindable Commands {{{1
+# vi like keybind {{{2
 bindkey -v
-
+# Reverse the order of history (for my vim settings)
 bindkey               '^p'   history-beginning-search-backward
 bindkey               '^n'   history-beginning-search-forward
-bindkey               '^b'   backward-char
-bindkey               '^f'   forward-char
-bindkey               '^a'   beginning-of-line
-bindkey               '^e'   end-of-line
-bindkey               '^k'   kill-line
-bindkey               '^x^b'  backward-word
-bindkey               '^x^f'  forward-word
-
 bindkey               "^i"   menu-complete
 bindkey               "^[[Z" reverse-menu-complete
-
-bindkey               '^]'   push-line
-
 bindkey -M vicmd      'u'    undo
 bindkey -M vicmd      '^r'   redo
 
-# for use hjkl in menuselect
+# poted some convinient emacs key binds {{{2
+bindkey               '^b'    backward-char
+bindkey               '^f'    forward-char
+bindkey               '^a'    beginning-of-line
+bindkey               '^e'    end-of-line
+bindkey               '^k'    kill-line
+bindkey               '^x^b'  backward-word
+bindkey               '^x^f'  forward-word
+
+# for hjkl in menuselect {{{2
 zmodload -i zsh/complist
 bindkey -M menuselect '^h'    backward-char
 bindkey -M menuselect '^j'    down-line-or-history
@@ -189,203 +92,137 @@ bindkey -M menuselect '^n'    down-line-or-history
 bindkey -M menuselect '^p'    up-line-or-history
 bindkey -M menuselect '^m'    self-insert
 
+# 20 Completion {{{1
+# 20.2 Initialization {{{2
+autoload -U compinit
+compinit -d $MY_ZSH_LOG_DIR/zcompdump
 
-autoload -U  edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd e edit-command-line
+# zstyle settings {{{2
+# see 20.3.2 Standard Tags and 20.3.3 Standard Styles
+zstyle ':completion:*' verbose yes
 
-bindkey               '^x'    _complete_help
+# see also 20.4 Control Functions
+#zstyle ':completion:*' completer _complete _ignored
 
-# Alias {{{1
-alias  l='ls -hF   --color=auto'
-alias ls='ls -hF   --color=auto'
-alias la='ls -hAF  --color=auto'
-alias ll='ls -hlAF --color=auto'
-alias l1='ls -h1AF --color=auto'
-alias du='du -h'
-#alias scp='scp -c arcfour256'
+zstyle ':completion:*:warnings'     format "%B%F{yellow}--- Not Found ---%f%b"
+zstyle ':completion:*:descriptions' format "%B%F{blue}--- Completing %d ---%f%b"
+zstyle ':completion:*:corrections'  format "%B%F{blue}--- %d%f %F{red}(erros: %e)%f %F{blue} ---%f%b"
 
-alias grep='grep --color'
-alias wget='wget -c'
-alias quit=exit
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-  alias vim="screen vim"
-  alias vimdiff="screen vimdiff"
-  alias pry='screen pry'
-  alias s='screen'
-  #alias emacs='screen emacs -nw'
-fi
-#case "$TERM" in
-#  screen*) ;;
-#  *) ;;
-#esac
+zstyle ':completion:*' file-patterns '*(^-/):files:files' '*(-/):directories:directories'
 
+# 13 Prompt {{{1
+setopt PROMPT_SUBST # $(...) によるの変数を prompt に表示
+PROMPT='%B%(?,,%F{red}[error]%f )%n@%m%#%b '
+#PROMPT='%B%(?,,%F{red}[error]%f )USER@HOST%#%b '
+PROMPT2="%_ > "
+RPROMPT='%B%1v%(2v,%F{yellow}%2v%f ,)%b:%4(~|%-1~/.../%2~|%~)'
 
-alias -g G='| grep'
-alias -g T='| tee'
-alias -g L='| less'
-alias -g X='| xargs'
-alias -g G2='2>&1 | grep'
-alias -g T2='2>&1 | tee'
-alias -g L2='2>&1 | less'
-
-
-alias webrick="ruby -rwebrick -e 'WEBrick::HTTPServer.new({:DocumentRoot => \"./\", :Port => 10080}).start'"
-
-
-# Tiny function {{{1
-# for preexec, precmd, and chpwd {{{2
-
-# for vcs_info
-_make_psvar() {
-  vcs_info
-  local state
-  if [[ -n "$vcs_info_msg_2_" && -n "$vcs_info_msg_3_" ]]; then
-    state="[$vcs_info_msg_2_|$vcs_info_msg_3_] "
-  elif [[ -n "$vcs_info_msg_2_" || -n "$vcs_info_msg_3_" ]]; then
-    state="[$vcs_info_msg_2_$vcs_info_msg_3_] "
-  fi
-  psvar=($vcs_info_msg_0_ $vcs_info_msg_1_ $state)
-}
-
-# echo number of files if last command is type of ls
-_echo_pwd() echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
-_type_ls() { [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _echo_pwd }
-
-
-# here add pre***_functions
-autoload -Uz is-at-least
-preexec_functions=(_type_ls)
-is-at-least 5.0.0 && precmd_functions=(_make_psvar)
-chpwd_functions=(_echo_pwd)
-
-
-# for screen title {{{2
-# see also: http://d.hatena.ne.jp/tarao/20100223/1266958660
-
-# titleを自動で設定，あるいは自動で設定するためのコマンド
-export SCREEN_TITLE_NAME=
-title() {
-  SCREEN_TITLE_NAME="$1"
-  if [[ -n "$SCREEN_TITLE_NAME" ]]; then
-    screen -X title "$SCREEN_TITLE_NAME"
+# Functions {{{2
+function vi_mode_prompt_info() {
+  if [[ $KEYMAP == 'vicmd' ]]; then
+    echo '%B%F{green}[NORMAL]%f%b '
+  else
+    echo ""
   fi
 }
 
-# titleを設定するコマンド
-_set_screen_title() {
-  [[ -n "$SCREEN_TITLE_NAME" ]] && return
-  # 実際に設定する
-  local command_name title_name
-  command_name=${${1##sudo[[:blank:]]}%%[[:blank:]]*}
-
-  case "$command_name" in
-  ls|cd|*sh|vim|emacs|git|..) ;;
-  less|tail|man) title_name="$1" ;;
-  *) title_name="$command_name" ;;
-  esac
-  [[ -n "$title_name" ]] && [[ -x `which screen 2>/dev/null` ]] && screen -X title "$title_name"
-}
-
-
-if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
-  preexec_functions+=_set_screen_title
-fi
-
-
-
-# for screen hock functions {{{2
-
-
-_ssh_new_screen() screen -U -t "${@[-1]}" ssh $*
-
-_ssh_screen() screen -U -t "${@[-1]}" ssh $* -t screen -D -RR
-
-
-_screen_new_window_split() {
-  screen -X split
-  screen -X focus
-  screen $*
-}
-
-
-_screen_new_window_split_v() {
-  screen -X split -v
-  screen -X focus
-  screen $*
-}
-
-
-_screen_name_manual_update() {
-  screen -X title "$*"
-  echo "screen title is changed to '$*'"
-}
-
-
-# all_window_cd {{{2
-# MEMO: windowがshellじゃなかったらどうする？
-_all_window_cd() {
-  for list in $(screen -Q eval '@windows'); do
-    num=$(echo $list | sed -e 's/[^0-9].*$//g')
-    if [ -n "$num" ]; then
-      screen -X "at $num stuff cd $0"
-    fi
-  done
-}
-
-# display nomal mode {{{2
-# see also:
-# https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/vi-mode/vi-mode.plugin.zsh
 function zle-line-init zle-keymap-select {
   zle reset-prompt
 }
-
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-function vi_mode_prompt_info() {
-  [[ $KEYMAP == 'vicmd' ]] && echo "%{[33;1m%}NORMAL%{[0m%} "
+# vcs info {{{1
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' max-exports 5
+
+zstyle ':vcs_info:*' stagedstr   'index' # %c の文字列
+zstyle ':vcs_info:*' unstagedstr 'work'  # %u の文字列
+
+zstyle ':vcs_info:*' formats       '[%r:%b] ' '%a' '%u' '%c' '%m'
+zstyle ':vcs_info:*' actionformats '[%r:%b] ' '%a' '%u' '%c' '%m'
+zstyle ':vcs_info:git+set-message:*' hooks git-push-status
+
+function +vi-git-push-status() {
+  # max-exports の回数だけ叩かれるので、%m の時だけ動くようにする
+  [[ "$1" != "4" ]] && return 0
+
+  local git_status=`git status`
+
+  # push/pull
+  if [[ `echo ${git_status} | grep 'use "git pull" to merge'` ]]; then
+    hook_com[misc]="pull-push"
+  fi
+
+  # pull
+  if [[ `echo ${git_status} | grep 'use "git pull" to update'` ]]; then
+    hook_com[misc]="pull"
+  fi
+
+  # push
+  if [[ `echo ${git_status} | grep 'use "git push" to publish'` ]]; then
+    hook_com[misc]="push"
+  fi
+
+
 }
 
+# zsh hook {{{1
+autoload -Uz add-zsh-hook
 
-# other functions {{{2
-r_help() {
-  R --vanilla --slave <<EOF
-  help($1)
-EOF
+# for psvar hook {{{2
+function _my_hook_psvar() {
+  psvar=()
+
+  vcs_info
+
+  # branch name to psvar[1]
+  psvar[1]=$vcs_info_msg_0_ || ""
+
+  # branch status to psvar[2]
+  messages=($vcs_info_msg_2_ $vcs_info_msg_3_ $vcs_info_msg_4_ $vcs_info_msg_5_)
+  if [[ $#messages -gt 0 ]]; then
+    psvar[2]="[${(j:|:)messages}]"
+  else
+    psvar[2]=""
+  fi
+
+  # msg_1 to psvar[3]
+  psvar[3]=$vcs_info_msg_1_ || ""
 }
 
-calc() {
-  zmodload zsh/mathfunc
-  echo $(( $* ))
+add-zsh-hook precmd _my_hook_psvar
+
+# for chenge directory hook {{{2
+_my_hook_show_chdir() {
+  #echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
+  local fcount=${$(timeout 1 ls -A1 | wc -l)##*[[:blank:]]}
+  echo -e "\e[31m ${fcount} files in \e[32m`pwd`\e[m"
 }
-alias e='noglob calc'
-
-
-
-# others {{{1
-
-# dabbrev
-# see also: http://secondlife.hatenablog.jp/entry/20060108/1136650653
-HARDCOPYFILE=$HOME/.history/screen-hardcopy
-touch $HARDCOPYFILE
-
-dabbrev-complete () {
-        local reply lines=80 # 80行分
-        screen -X eval "hardcopy -h $HARDCOPYFILE"
-        reply=($(sed '/^$/d' $HARDCOPYFILE | sed '$ d' | tail -$lines))
-        compadd - "${reply[@]%[*/=@|]}"
+_my_hook_precmd_ls() {
+  [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _my_hook_show_chdir
 }
+add-zsh-hook chpwd   _my_hook_show_chdir
+add-zsh-hook preexec _my_hook_precmd_ls
 
-zle -C dabbrev-complete menu-complete dabbrev-complete
-bindkey '^o' dabbrev-complete
-bindkey '^o^_' reverse-menu-complete
-
-if [[ ! `ssh-add -l | grep .ssh/id_rsa >/dev/null 2>&1` && -f ~/.ssh/id_rsa ]]; then
-  ssh-add -K ~/.ssh/id_rsa >/dev/null 2>&1
-fi
-
+# Other function {{{1
+_screen_exec() {
+  screen -wipe
+  if [[ -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+    exec ssh-agent screen -D -RR -e"^Gg"
+  else
+    exec screen -x
+  fi
+}
 # __END__ {{{1
 # vim:smarttab expandtab
+# vim:tabstop=2 shiftwidth=2 softtabstop=2
 # vim:foldmethod=marker
