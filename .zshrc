@@ -154,6 +154,8 @@ zstyle ':vcs_info:git+set-message:*' hooks git-push-status
 function +vi-git-push-status() {
   # max-exports の回数だけ叩かれるので、%m の時だけ動くようにする
   [[ "$1" != "4" ]] && return 0
+  # .git 以下のディレクトリだと怒られるのでここでは無視する
+  [[ `pwd | grep '\.git'` ]] && return 0
 
   local git_status=`git status`
 
