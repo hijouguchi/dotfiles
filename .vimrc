@@ -13,6 +13,7 @@ endif
 call packman#begin()
 call packman#config#github#new('vim-jp/vimdoc-ja.git')
 call packman#config#github#new('itchyny/landscape.vim')
+call packman#config#github#new('itchyny/vim-cursorword.git')
 
 let e = packman#config#github#new('kana/vim-textobj-user.git')
 call e.set_lazy(v:true)
@@ -30,6 +31,7 @@ call e.add_hook_commands(
       \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff')
 
 call packman#config#runtime#new('macros/matchit.vim')
+
 
 "source ~/.vim/rc/poorline.vim
 
