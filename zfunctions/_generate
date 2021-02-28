@@ -1,5 +1,0 @@
-#compdef generate
-# vim: et: ft=zsh
-
-_arguments : \
-  '1:argument:(controller model scaffold)'
