@@ -16,8 +16,7 @@ function! e.pre_load()
   endif
 
   let g:quickrun_config['_'] = {
-        \   'runner'                          : 'vimproc',
-        \   'runner/vimproc/updatetime'       : 10,
+        \   'runner'                          : 'job',
         \   'outputter/buffer/split'          : ':topleft 10',
         \   'outputter/buffer/close_on_empty' : 1
         \ }

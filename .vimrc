@@ -35,7 +35,6 @@ call packman#config#runtime#new('macros/matchit.vim')
 
 "source ~/.vim/rc/poorline.vim
 
-source ~/.vim/rc/pack/vimproc.vim
 source ~/.vim/rc/pack/lightline.vim
 source ~/.vim/rc/pack/surround.vim
 source ~/.vim/rc/pack/vim-submode.vim
