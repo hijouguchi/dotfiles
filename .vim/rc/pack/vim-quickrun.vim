@@ -1,9 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" TODO:
-"   1. outputter に nonu と nolist を追加したい
-
 let e = packman#config#github#new('thinca/vim-quickrun.git')
 call e.add_depends(
       \ packman#config#github#new('osyo-manga/quickrun-outputter-replace_region.git')
@@ -20,17 +17,24 @@ function! e.pre_load()
         \   'outputter/buffer/split'          : ':topleft 10',
         \   'outputter/buffer/close_on_empty' : 1
         \ }
-  let g:quickrun_config['verilog'] = {
-        \   'command'                   : 'verilator',
-        \   'cmdopt'                    : '--lint-only',
-        \   'outputter/error/success'   : 'quickfix'
+  let g:quickrun_config.verilog = {
+        \   'command'                         : 'verilator',
+        \   'cmdopt'                          : '--lint-only --sv',
+        \   'outputter'                       : 'quickfix',
+        \   'outputter/quickfix/errorformat'  : join([
+        \     '%E%%Error-%#%[A-Z0-9_]%#: %f:%l:%c: %m',
+        \     '%W%%Warning-%#%[A-Z0-9_]%#: %f:%l:%c: %m',
+        \     '%E%%Error: %m',
+        \     '%C %#:%m',
+        \     '%-G%.%#'
+        \     ], ',')
         \ }
-  let g:quickrun_config['systemverilog'] = {
-        \   'command'                   : 'verilator',
-        \   'cmdopt'                    : '--lint-only --sv',
-        \   'outputter/error/success'   : 'quickfix'
+  let g:quickrun_config.systemverilog = g:quickrun_config.verilog
+
+  let g:quickrun_config.yaml = {
+        \   'command'                   : 'ruby',
+        \   'cmdopt'                    : '-r yaml -e "pp YAML::load_file ARGV.shift"'
         \ }
-  let g:quickrun_config.tcl = {'command' : 'tclsh'}
 endfunction
 
 
