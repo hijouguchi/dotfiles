@@ -7,6 +7,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 setlocal commentstring=\ //\ %s
+setlocal expandtab
+setlocal tabstop=4
+setlocal shiftwidth=4
+setlocal softtabstop=4
 
 let b:verilog_indent_modules = 1
 let b:systemverilog_indent_modules = 1
