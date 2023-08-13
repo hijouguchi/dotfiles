@@ -1,75 +1,46 @@
-# NOTE {{{1
+# NOTE: escape key was changed by command line argument
+#       DO NOT SET BY SCREENRC FILE
+#       'screen -D -RR -e"^Gg"'
 
-
-# OPTION {{{1
-#defkanji        utf-8
-#defencoding     utf-8
-#encoding        utf-8 utf-8
-
-autodetach      on
-bell_msg        "^G"
+autodetach on
 startup_message off
-vbell           off
-defscrollback   10000
-altscreen       on
-#defmonitor      on
-hardcopydir     "%HOME/.history"
-hardcopy        "%HOME/.history/screen-hardcopy"
+term xterm-256color
 
-termcapinfo xterm* 'Co#256:pa#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm:' # for 256 color
-termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l' # for resize
-attrcolor b ".I"
-defbce "on"
+################################################################################
+# Status Line
+################################################################################
+setenv _s "%{=}"
+setenv _s "${_s}%?%F%{BW}%:%{Kw}%?"
+setenv _s "${_s}%?%P%{GW}[COPY]%?"
+setenv _s "${_s}%?%E%{CW}[ESCAPE]%?"
+setenv _s "${_s}%n %t"
+setenv _s "${_s}%="
+setenv _s "${_s}%{-}"
+caption always "$_s"
 
+setenv _s ""
+setenv _s "$_s%-w"
+setenv _s "${_s}%50>"
+setenv _s "$_s%{= BW}%n %t%{-}"
+setenv _s "$_s%+w"
+setenv _s "${_s}%-40<%="
+setenv _s "${_s}[%H:%l][%m/%d %c:%s]"
+hardstatus alwayslastline "$_s"
 
-# WINDOW {{{1
-rendition bell    "=U"  "rk"
 rendition monitor "=b"  "RW"
-rendition so      "=b"  "wk"
-# FIXME: -- SCREEN -- は カレントだけに表示したい
-#        %? がネストできないので不可能？
-caption     always         "%?%F%{= bw}%?%?%P%{= rw}%?%n %t%?%P -- COPY MODE --%?%?%E -- SCREEN --%?%=%{-}"
-hardstatus  alwayslastline "%-w%{bu bw}%50>%n %t%{-}%+w%<%=[%H:%l][%Y/%m/%d %c:%s]"
 
-windowlist title  '%{u .g}Num Flags Title%='
-windowlist string '%{.g}%3n %{.y}%f%09=%{-} %t %='
+################################################################################
+# key binds
+################################################################################
+bind  ; colon
 
-
-# KEY MAP {{{1
-
-
-bind ^[
+# new screen, split
 bind  n screen
-bind  p paste .
 bind  q remove
-bind ^k eval '@kill'
-bind ^m monitor
-
 bind  s split
 bind  v split -v
 
-
-
-# make invalid keybind side effects for edit mode
-bind \' eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' 'screen //group' 'title '
-bind  A eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' title
-bind  : eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
-bind  ; eval 'bindkey -m y' 'bindkey -m v' 'bindkey -m V' 'bindkey -m ^v' 'bindkey -m g' colon
-
-# copy mode {{{2
-# migrated to copy mode after resister the keybind, y, v, ^v, of V
-#bind ^v eval \
-#  "bindkey -m -t  y stuff Y" \
-#  "bindkey -m -t  v stuff \" \"" \
-#  "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" \
-#  "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" \
-#  'bindkey -m -t  g stuff gw^f^b' \
-#  copy
-bind ^v eval "bindkey -m -t  y stuff Y" "bindkey -m -t  v stuff \" \"" "bindkey -m -t ^v eval 'stuff \"c \"'  'bindkey -m -t y stuff \"C \"'" "bindkey -m -t  V eval 'stuff \"0 $\"' 'bindkey -m -t y stuff \"$ \"'" 'bindkey -m -t  g stuff gw^f^b' copy
-
-
-
-# window focus {{{2
+# move findow forcus
 bind ^n next
 bind ^p prev
 bind  h focus left
@@ -77,31 +48,24 @@ bind  j focus down
 bind  k focus up
 bind  l focus right
 
+bind ^k eval '@kill'
+bind ^m monitor
 
-# for window region {{{2
-bind                  ^w eval 'command -c window_region' 'echo "region window"'
-bind                   w eval 'command -c window_region' 'echo "region window"'
-bind -c window_region ^n eval next          'command -c window_region'
-bind -c window_region ^p eval prev          'command -c window_region'
-bind -c window_region  s eval split         'command -c window_region'
-bind -c window_region  v eval 'split -v'    'command -c window_region'
-bind -c window_region  h eval 'focus left'  'command -c window_region'
-bind -c window_region  j eval 'focus down'  'command -c window_region'
-bind -c window_region  k eval 'focus up'    'command -c window_region'
-bind -c window_region  l eval 'focus right' 'command -c window_region'
-bind -c window_region ^l windowlist -b
-bind -c window_region  q remove
-bind -c window_region  Q only
-bind -c window_region  K kill
-bind -c window_region  n screen //group
-bind -c window_region  = fit
-bind -c window_region  r eval 'command -c window_resize' 'echo "resize mode"'
-bind -c window_region ^w windowlist -b
+unsetenv _s
 
 
-#resize {{{2
-bind                 ^r eval 'command -c window_resize' 'echo "resize mode [+-<>=_]"'
-bind                  r eval 'command -c window_resize' 'echo "resize mode"'
+################################################################################
+# key binds
+################################################################################
+
+bind ^[ # old bind is copy
+bind ^v copy
+
+### TODO: vi 風の keybind を定義する？
+# clip board でもできるようにしてるので
+# paste とか含めてあまり考えなくても佳いかもしれない
+
+bind                  r eval                'command -c window_resize' 'echo "resize mode"'
 bind                  + eval 'resize -v +1' 'command -c window_resize' 'echo "resize mode"'
 bind                  - eval 'resize -v -1' 'command -c window_resize' 'echo "resize mode"'
 bind                  > eval 'resize -h +1' 'command -c window_resize' 'echo "resize mode"'
@@ -114,55 +78,4 @@ bind -c window_resize > eval 'resize -h +1' 'command -c window_resize' 'echo "re
 bind -c window_resize < eval 'resize -h -1' 'command -c window_resize' 'echo "resize mode"'
 bind -c window_resize = eval 'resize ='     'command -c window_resize' 'echo "resize mode"'
 bind -c window_resize _ eval 'resize max'   'command -c window_resize' 'echo "resize mode"'
-bind -c window_resize w eval 'command -c window_region' 'echo "region window"'
-
-
-# layout {{{2
-bind                  ^l eval  'command -c layout_region' 'echo "layout mode [\^l:list n:new \^n:next \^p:prev \^k:kill s:select]"'
-bind -c layout_region ^l eval  'command -c layout_region' 'layout show'
-bind -c layout_region  n eval  'layout new'    'layout show'
-bind -c layout_region ^n eval  'layout next'   'command -c layout_region' 'layout show'
-bind -c layout_region ^p eval  'layout prev'   'command -c layout_region' 'layout show'
-bind -c layout_region ^k eval  'layout remove' 'command -c layout_region' 'layout show'
-bind -c layout_region  A colon 'layout title '
-bind -c layout_region  q eval  'layout remove'   'layout show'
-bind -c layout_region  k eval  'layout remove'   'layout show'
-bind -c layout_region  s eval  'layout show'     'layout select'
-bind -c layout_region  0 eval  'layout select 0' 'layout show'
-bind -c layout_region  1 eval  'layout select 1' 'layout show'
-bind -c layout_region  2 eval  'layout select 2' 'layout show'
-bind -c layout_region  3 eval  'layout select 3' 'layout show'
-bind -c layout_region  4 eval  'layout select 4' 'layout show'
-bind -c layout_region  5 eval  'layout select 5' 'layout show'
-bind -c layout_region  6 eval  'layout select 6' 'layout show'
-bind -c layout_region  7 eval  'layout select 7' 'layout show'
-bind -c layout_region  8 eval  'layout select 8' 'layout show'
-bind -c layout_region  9 eval  'layout select 9' 'layout show'
-
-
-# group
-bind                 ^g eval 'command -c group_region' 'echo "group mode [o:other n:new group t:group]"'
-bind -c group_region  o other
-bind -c group_region  n eval 'screen //group' 'title '
-bind -c group_region  t eval 'group '
-
-
-# other source {{{1
-
-# scpace code
-# MEMO: do not setting escape from .screenrc
-#       I will set escape from command line optoinns
-#       also % screen -e"^Gt"
-# source $HOME/dotfiles/keymap.screenrc
-# TEST OPTIONS {{{1
-
-# make default layout
-layout new 0:orig
-#screen -t orig //group
-#screen
-
-# END {{{1
-# vim:smarttab expandtab :
-# vim:foldmethod=marker :
-
 
