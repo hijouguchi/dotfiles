@@ -4,6 +4,7 @@
 
 autodetach on
 startup_message off
+defscrollback 10000
 term xterm-256color
 
 ################################################################################
@@ -11,10 +12,12 @@ term xterm-256color
 ################################################################################
 setenv _s "%{=}"
 setenv _s "${_s}%?%F%{BW}%:%{Kw}%?"
-setenv _s "${_s}%?%P%{GW}[COPY]%?"
-setenv _s "${_s}%?%E%{CW}[ESCAPE]%?"
+setenv _s "${_s}%?%E%{CW}%?"
+setenv _s "${_s}%?%P%{GW}%?"
 setenv _s "${_s}%n %t"
 setenv _s "${_s}%="
+setenv _s "${_s}%?%P[COPY]%?"
+setenv _s "${_s}%?%E[SCREEN]%?"
 setenv _s "${_s}%{-}"
 caption always "$_s"
 
