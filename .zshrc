@@ -1,15 +1,19 @@
 
+# for $LS_COLORS
+eval `dircolors -b`
+
 ## Changing Directories
 setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt CHASE_DOTS
 setopt PUSHD_IGNORE_DUPS
 
-HISTFILE=~/.zhistory
 HISTSIZE=10000
 SAVEHIST=10000
+HISTFILE=~/.zhistory
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
@@ -17,11 +21,12 @@ setopt SHARE_HISTORY
 ################################################################################
 # alias
 ################################################################################
-alias  l='exa -hF'
-alias ls='exa -hF'
-alias la='exa -haF'
-alias ll='exa -hlaF'
-alias l1='exa -h1aF'
+alias ls='ls -hF --color=auto'
+alias la='ls -a'
+alias ll='ls -la'
+alias l1='ls -1'
+alias la1='ls -1a'
+alias l=ls
 
 alias du='du -h'
 alias grep='grep --color'
@@ -44,60 +49,63 @@ if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
   alias title='screen -X title'
 fi
 
-##  20.5 Bindable Commands {{{1
-## vi like keybind {{{2
-#bindkey -v
-## Reverse the order of history (for my vim settings)
-#bindkey               '^p'   history-beginning-search-backward
-#bindkey               '^n'   history-beginning-search-forward
-#bindkey               "^i"   menu-complete
-#bindkey               "^[[Z" reverse-menu-complete
-#bindkey -M vicmd      'u'    undo
-#bindkey -M vicmd      '^r'   redo
-#
-## poted some convinient emacs key binds {{{2
-#bindkey               '^b'    backward-char
-#bindkey               '^f'    forward-char
-#bindkey               '^a'    beginning-of-line
-#bindkey               '^e'    end-of-line
-#bindkey               '^k'    kill-line
-#bindkey               '^x^b'  backward-word
-#bindkey               '^x^f'  forward-word
-#
-## for hjkl in menuselect {{{2
-#zmodload -i zsh/complist
-#bindkey -M menuselect '^h'    backward-char
-#bindkey -M menuselect '^j'    down-line-or-history
-#bindkey -M menuselect '^k'    up-line-or-history
-#bindkey -M menuselect '^l'    forward-char
-#bindkey -M menuselect '^n'    down-line-or-history
-#bindkey -M menuselect '^p'    up-line-or-history
-#bindkey -M menuselect '^m'    self-insert
-#
-## 20 Completion {{{1
-## 20.2 Initialization {{{2
-#autoload -U compinit
-#compinit -d $MY_ZSH_LOG_DIR/zcompdump
-#
-## zstyle settings {{{2
-## see 20.3.2 Standard Tags and 20.3.3 Standard Styles
-#zstyle ':completion:*' verbose yes
-#
-## see also 20.4 Control Functions
-##zstyle ':completion:*' completer _complete _ignored
-#
-#zstyle ':completion:*:warnings'     format "%B%F{yellow}--- Not Found ---%f%b"
-#zstyle ':completion:*:descriptions' format "%B%F{blue}--- Completing %d ---%f%b"
-#zstyle ':completion:*:corrections'  format "%B%F{blue}--- %d%f %F{red}(erros: %e)%f %F{blue} ---%f%b"
-#
-#zstyle ':completion:*' group-name ''
-#zstyle ':completion:*' menu select=2
-#zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'
-#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-#
-#zstyle ':completion:*' file-patterns '*(^-/):files:files' '*(-/):directories:directories'
-#
-#
+################################################################################
+# key binds
+################################################################################
+bindkey -v
+zmodload -i zsh/complist
+bindkey '^p'   history-beginning-search-backward
+bindkey '^n'   history-beginning-search-forward
+bindkey '^i'   menu-complete
+bindkey '^[[Z' reverse-menu-complete
+
+bindkey '^b'    backward-char
+bindkey '^f'    forward-char
+bindkey '^a'    beginning-of-line
+bindkey '^e'    end-of-line
+bindkey '^k'    kill-line
+bindkey '^x^b'  backward-word
+bindkey '^x^f'  forward-word
+
+bindkey -M vicmd 'u'  undo
+bindkey -M vicmd '^r' redo
+
+bindkey -M menuselect '^h' backward-char
+bindkey -M menuselect '^j' down-line-or-history
+bindkey -M menuselect '^k' up-line-or-history
+bindkey -M menuselect '^l' forward-char
+bindkey -M menuselect '^n' down-line-or-history
+bindkey -M menuselect '^p' up-line-or-history
+bindkey -M menuselect '^m' self-insert
+
+
+################################################################################
+# Completion
+################################################################################
+autoload -U compinit
+compinit
+
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' menu true
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z} r:|[-_.]=**'
+zstyle ':completion:*' completer _extensions _expand _complete _match _prefix _approximate
+
+zstyle ':completion:*' file-patterns \
+  '*(^-/):files:files' \
+  '*(-/):directories:directories'
+
+zstyle ':completion:*' ignore-parents parent pwd ..
+
+zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o'
+
+zstyle ':completion:*'              group-name ''
+zstyle ':completion:*'              list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:descriptions' format "%B%F{blue}--- Completing %d ---%f%b"
+zstyle ':completion:*:corrections'  format "%B%F{blue}--- %d%f %F{red}(erros: %e)%f %F{blue} ---%f%b"
+zstyle ':completion:*:warnings'     format "%B%F{yellow}--- Not Found ---%f%b"
+zstyle ':completion:*:options'      description yes
+
 ################################################################################
 # Prompt
 ################################################################################
@@ -165,7 +173,6 @@ function _hook_precmd_vcs_info() {
 
   vcs_info
 }
-
 add-zsh-hook precmd _hook_precmd_vcs_info
 
 PROMPT=""
@@ -179,36 +186,45 @@ PROMPT="%B${PROMPT}%b "
 
 PROMPT2="%_ > "
 
-RPROMPT='%B${vcs_info_msg_0_}%b'
+RPROMPT=''
+RPROMPT+='$(vi_mode_prompt_info)'
+RPROMPT+='%B${vcs_info_msg_0_}%b'
 RPROMPT+=':%4(~|%-1~/.../%2~|%~)'
 
-## Functions {{{2
-#function vi_mode_prompt_info() {
-#  if [[ $KEYMAP == 'vicmd' ]]; then
-#    echo '%B%F{green}[NORMAL]%f%b '
-#  else
-#    echo ""
-#  fi
-#}
-#
-#function zle-line-init zle-keymap-select {
-#  zle reset-prompt
-#}
-#zle -N zle-line-init
-#zle -N zle-keymap-select
-#
-#
-## for chenge directory hook {{{2
-#_my_hook_show_chdir() {
-#  #echo "$fg[red]${$(ls -A1 | wc -l)##*[[:blank:]]} files$reset_color in $fg[green]`pwd`$reset_color"
-#  local fcount=${$(timeout 1 ls -A1 | wc -l)##*[[:blank:]]}
-#  echo -e "\e[31m ${fcount} files in \e[32m`pwd`\e[m"
-#}
-#_my_hook_precmd_ls() {
-#  [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _my_hook_show_chdir
-#}
-#add-zsh-hook chpwd   _my_hook_show_chdir
-#add-zsh-hook preexec _my_hook_precmd_ls
+function vi_mode_prompt_info() {
+  if [[ $KEYMAP == 'vicmd' ]]; then
+    echo '%B%F{green}[NORMAL]%f%b'
+  else
+    echo ""
+  fi
+}
+
+# keymap を変えた時 (normal <-> insert) でこれが呼ばれる
+function zle-line-init zle-keymap-select {
+  # prompt を再描画 (して、vi_mode_prompt_info を再評価)
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+
+function _my_hook_show_chdir() {
+  if [[ $# == 0 ]]; then
+    local _target=$PWD
+  else
+    local _target=$1
+  fi
+
+  local fcount=${$(timeout 1 ls ${_target} -A1 | wc -l)##*[[:blank:]]}
+  echo -e "\e[31m ${fcount} files in \e[32m${_target}\e[m"
+}
+
+function _my_hook_precmd_ls() {
+  ## FIXME: ディレクトリ指定での ls ではそのディレクトリごとに表示したい
+  [[ "${2%%[[:blank:]]*}" == 'ls' ]] && _my_hook_show_chdir
+}
+add-zsh-hook chpwd   _my_hook_show_chdir
+add-zsh-hook preexec _my_hook_precmd_ls
 #
 ## __END__ {{{1
 ## vim:smarttab expandtab

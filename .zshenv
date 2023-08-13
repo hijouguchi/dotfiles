@@ -5,6 +5,7 @@ export LANG=ja_JP.UTF-8
 path=( \
   /opt/packages/*/bin(N-/) \
   /usr/local/opt/coreutils/libexec/gnubin \
+  /usr/local/opt/ruby/bin \
   /usr/local/bin \
   /usr/local/sbin \
   $path \
