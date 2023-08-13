@@ -1,0 +1,29 @@
+env:
+  TERM: xterm-256color
+
+window:
+  dimensions:
+    columns: 100
+    lines:    30
+  opacity: 0.95
+
+scrolling:
+  history: 0
+
+font:
+  size: 16.0
+
+
+selection:
+  save_to_clipboard: true
+
+shell:
+  program: zsh
+  args:
+    - -l
+    - -c
+    - 'screen -D -RR -e"^Gg"'
+
+key_bindings:
+  - { key: Return, mods: Command, action: ToggleFullscreen }
+
