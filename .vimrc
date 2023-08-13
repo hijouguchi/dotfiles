@@ -27,8 +27,8 @@ call e.add_hook_commands('Align')
 
 let e = packman#config#github#new( 'vim-scripts/vcscommand.vim')
 call e.add_hook_commands(
-      \ 'VCSCommit', 'VCSDiff',   'VCSLog',    'VCSRevert',
-      \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff')
+      \ 'VCSCommit', 'VCSDiff',   'VCSLog',     'VCSRevert',
+      \ 'VCSStatus', 'VCSUpdate', 'VCSVimDiff', 'VSCBlame')
 
 call packman#config#runtime#new('macros/matchit.vim')
 

@@ -27,10 +27,13 @@ augroup VimrcAutoCmd
 
   autocmd BufWinEnter,Filetype help wincmd K
 
-  autocmd BufNewFile,BufRead *.[rR]                   setfiletype r
+  autocmd BufNewFile,BufRead *.[rR]                   setlocal filetype=r
   autocmd BufNewFile,BufRead *.v[^./]\\\{0,1\}        setlocal filetype=systemverilog
   autocmd BufNewFile,BufRead *.sv[^./]\\\{0,1\}       setlocal filetype=systemverilog
+  autocmd BufNewFile,BufRead *.f                      setlocal filetype=
   autocmd BufNewFile,BufRead todo.txt                 setlocal filetype=todo
+
+  autocmd BufWritePost       .screenrc  call system('screen -X source ' . expand('%'))
 
   autocmd FileType crontab setlocal nobackup
   autocmd FileType make    setlocal noexpandtab
