@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+"FIXME: netrw を開くと status line が壊れる
+
 function! LightlineFilename() abort "{{{
   let file_path = bufname()
   let len_fpath = len(file_path)
@@ -82,6 +84,10 @@ function! LightlineGitStatus(arg) abort "{{{
 endfunction "}}}
 
 function! s:GitBranchCallbackJob(target) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status[a:target]
     let job.last_changed = localtime()
     let job.job          = v:false
@@ -90,6 +96,10 @@ function! s:GitBranchCallbackJob(target) abort "{{{
 endfunction "}}}
 
 function! s:GitBranchCallbackResult(target, text) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status[a:target]
 
     if job.result != a:text
@@ -113,6 +123,10 @@ function! LightlineGitBranchCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitUnstageCallback(ch, msg) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status.unstaged
     let job.last_changed = localtime()
     let job.job          = v:false
@@ -126,6 +140,10 @@ function! LightlineGitUnstageCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitStageCallback(ch, msg) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status.staged
     let job.last_changed = localtime()
     let job.job          = v:false
@@ -139,6 +157,10 @@ function! LightlineGitStageCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitBehindCallback(ch, msg) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status.behind
     let job.last_changed = localtime()
     let job.job          = v:false
@@ -152,6 +174,10 @@ function! LightlineGitBehindCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitAheadCallback(ch, msg) abort "{{{
+    if !exists('b:lightline_git_status')
+      call s:create_lightline_git_status()
+    endif
+
     let job = b:lightline_git_status.ahead
     let job.last_changed = localtime()
     let job.job          = v:false

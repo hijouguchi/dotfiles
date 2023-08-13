@@ -149,14 +149,6 @@ function! s:binary_write() "{{{
   endif
 endfunction "}}}
 
-augroup MyColor
-  autocmd!
-  autocmd ColorScheme *
-        \   if g:colors_name == 'landscape'
-        \ |   highlight! default link NonText Comment
-        \ | endif
-augroup END
-
 " イベントチェック用
 command! EventChecker call <SID>EventChecker()
 

@@ -3,7 +3,6 @@ set cpo&vim
 
 
 let e = packman#config#github#new( 'kana/vim-smartinput.git')
-
 call e.add_hook_events('InsertEnter')
 
 function! e.post_load()

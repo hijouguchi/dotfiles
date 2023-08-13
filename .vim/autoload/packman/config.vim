@@ -19,6 +19,8 @@ let s:object = #{
 " @param [in] true 遅延読み込みを無効にする
 function! s:object.set_lazy(flag) abort "{{{
   let self.cfg.lazy = a:flag
+
+  return self
 endfunction "}}}
 
 " obj.cfg.loaded を返す
@@ -99,6 +101,8 @@ function! s:object.add_depends(...) abort "{{{
   endfor
 
   call extend(self.cfg.depends, a:000)
+
+  return self
 endfunction "}}}
 
 " obj.cfg.hook_keymaps を追加する
@@ -109,6 +113,8 @@ function! s:object.add_hook_keymaps(...) abort "{{{
   endif
 
   call extend(self.cfg.hook_keymaps, a:000)
+
+  return self
 endfunction "}}}
 
 " obj.cfg.hook_commands を追加する
@@ -119,6 +125,8 @@ function! s:object.add_hook_commands(...) abort "{{{
   endif
 
   call extend(self.cfg.hook_commands, a:000)
+
+  return self
 endfunction "}}}
 
 " obj.cfg.hook_events を追加する
@@ -129,6 +137,8 @@ function! s:object.add_hook_events(...) abort "{{{
   endif
 
   call extend(self.cfg.hook_events, a:000)
+
+  return self
 endfunction "}}}
 
 " オブジェクトを作る

@@ -47,9 +47,6 @@ nnoremap N  Nzvzz
 nnoremap <Space>p :set paste!    \| :set paste?<CR>
 nnoremap <Space>h :set readonly! \| :set readonly?<CR>
 
-" See also: http://vim-jp.org/vim-users-jp/2009/08/25/Hack-62.html
-"nnoremap <expr> s* ':%s/\<'.expand('<cword>').'\>/'
-
 nnoremap <Space>m :marks<CR>
 nnoremap <Space>r :registers<CR>
 
@@ -62,35 +59,17 @@ endfor
 unlet s:i
 
 
-" NOTE: text object を殺してしまう
-" vnoremap i I
-" vnoremap a A
-
 " emacs like keybind for cmdline
 cnoremap <C-B> <Left>
 cnoremap <C-F> <Right>
 cnoremap <C-A> <Home>
 cnoremap <C-E> <End>
 
-" NOTE: <Esc> を使わないキーバインドにしたい
-" cnoremap <C-[><C-B> <S-Left>
-" cnoremap <C-[><C-F> <S-Right>
-" cnoremap <C-[><C-[> <Esc>
-
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
 cnoremap <expr> <C-]> expand('<cword>')
 
-" cnoremap <expr> /     getcmdtype() == '/' ? '\/' : '/'
-" cnoremap <expr> \     getcmdtype() == '/' ? '\\' : '\'
-" cnoremap <expr> [     getcmdtype() == '/' ? '\[' : '['
-" cnoremap <expr> <CR>  getcmdtype() == '/' ? "\<CR>zvzz" : "\<CR>"
-"cnoremap <expr> / <SID>MyCmdLineWrapper('/', '\/', '/')
-"cnoremap <expr> \ <SID>MyCmdLineWrapper('\', '\\', '\\')
-"cnoremap <expr> [ <SID>MyCmdLineWrapper('[', '\[', '\[')
-"cnoremap <expr> < <SID>MyCmdLineWrapper('<', '\<', '\<')
-"cnoremap <expr> > <SID>MyCmdLineWrapper('>', '\>', '\>')
 cnoremap <expr> <CR> <SID>MyCmdLineWrapper("\<CR>", "\<CR>zvzz", "\<CR>")
 
 function! s:MyCmdLineWrapper(...) abort "{{{

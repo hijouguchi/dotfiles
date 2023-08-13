@@ -3,7 +3,7 @@ set cpo&vim
 
 let e = packman#config#github#new('thinca/vim-quickrun.git')
 call e.add_depends(
-      \ packman#config#github#new('osyo-manga/quickrun-outputter-replace_region.git')
+      \   packman#config#github#new('osyo-manga/quickrun-outputter-replace_region.git')
       \ )
 call e.add_hook_commands('QuickRun', 'ReplaceRegion')
 
