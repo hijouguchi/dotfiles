@@ -76,7 +76,7 @@ set softtabstop=2
 
 set pumheight=15
 
-set laststatus=2
+"set laststatus=2 " set by rc/pack/lightline.vim
 
 if executable('ag')
   set grepprg=ag\ --vimgrep

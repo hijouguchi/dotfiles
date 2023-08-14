@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-"FIXME: netrw を開くと status line が壊れる
+set laststatus=2
 
 function! LightlineFilename() abort "{{{
   let file_path = bufname()
@@ -25,7 +25,11 @@ function! s:dir() abort "{{{
   endif
 endfunction "}}}
 
-function! s:create_lightline_git_status() abort "{{{
+function! s:try_create_lightline_git_status() abort "{{{
+  if exists('b:lightline_git_status')
+    return
+  endif
+
   let b:lightline_git_status = #{
         \   branch:   #{
         \     result:       '',
@@ -66,9 +70,7 @@ function! s:create_lightline_git_status() abort "{{{
 endfunction "}}}
 
 function! LightlineGitStatus(arg) abort "{{{
-  if !exists('b:lightline_git_status')
-    call s:create_lightline_git_status()
-  endif
+  call s:try_create_lightline_git_status()
 
 
   let ltime = localtime()
@@ -84,9 +86,7 @@ function! LightlineGitStatus(arg) abort "{{{
 endfunction "}}}
 
 function! s:GitBranchCallbackJob(target) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status[a:target]
     let job.last_changed = localtime()
@@ -96,9 +96,7 @@ function! s:GitBranchCallbackJob(target) abort "{{{
 endfunction "}}}
 
 function! s:GitBranchCallbackResult(target, text) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status[a:target]
 
@@ -123,9 +121,7 @@ function! LightlineGitBranchCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitUnstageCallback(ch, msg) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status.unstaged
     let job.last_changed = localtime()
@@ -140,9 +136,7 @@ function! LightlineGitUnstageCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitStageCallback(ch, msg) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status.staged
     let job.last_changed = localtime()
@@ -157,9 +151,7 @@ function! LightlineGitStageCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitBehindCallback(ch, msg) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status.behind
     let job.last_changed = localtime()
@@ -174,9 +166,7 @@ function! LightlineGitBehindCallback(ch, msg) abort "{{{
 endfunction "}}}
 
 function! LightlineGitAheadCallback(ch, msg) abort "{{{
-    if !exists('b:lightline_git_status')
-      call s:create_lightline_git_status()
-    endif
+    call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status.ahead
     let job.last_changed = localtime()
@@ -228,6 +218,11 @@ let g:lightline = #{
       \ }
 
 call packman#config#github#new('itchyny/lightline.vim')
+
+augroup LightLineForNetrw
+  autocmd!
+  autocmd FileType * if &filetype == 'netrw' | call lightline#update() | end
+augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

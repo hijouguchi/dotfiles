@@ -1,11 +1,13 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-call packman#config#github#new('itchyny/landscape.vim')
+let e = packman#config#github#new('itchyny/landscape.vim')
 
-if !has('gui_running')
-  colorscheme landscape
-end
+function! e.post_load()
+  if !has('gui_running')
+    colorscheme landscape
+  end
+endfunction
 
 augroup MyColorSchemeLandScape
   autocmd!
@@ -14,7 +16,6 @@ augroup MyColorSchemeLandScape
         \ |   highlight! default link NonText Comment
         \ | endif
 augroup END
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
