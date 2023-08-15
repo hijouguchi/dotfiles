@@ -1,5 +1,5 @@
 
-if [[ "$TERM" != "screen.xterm-256color" ]]; then
+if [[ -z "$STY"  ]]; then
   exec screen -D -RR -e"^Gg"
 fi
 
