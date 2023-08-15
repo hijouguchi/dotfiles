@@ -1,4 +1,8 @@
 
+if [[ "$TERM" != "screen.xterm-256color" ]]; then
+  exec screen -D -RR -e"^Gg"
+fi
+
 # for $LS_COLORS
 eval `dircolors -b`
 
