@@ -1,9 +1,7 @@
-keymap.screenrc
 .DS_Store
 *.swp
-.vim/info/ku/history
 .vim/.netrwhist
-.vim/bundle
 .vim/viminfo
 start_linux.zsh
 .vim/pack/packman
+zfunctions/async

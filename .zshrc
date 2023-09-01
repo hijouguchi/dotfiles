@@ -114,104 +114,144 @@ zstyle ':completion:*:options'      description yes
 # Prompt
 ################################################################################
 setopt PROMPT_SUBST
-autoload -Uz vcs_info
 autoload -Uz add-zsh-hook
 
-zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' max-exports 5
+# see also: https://github.com/mafredri/zsh-async
+# ここの async.zsh を $fpath/async としてコピーすると使える
+autoload -Uz async && async
 
-zstyle ':vcs_info:*' stagedstr   '[stage]' # %c の文字列
-zstyle ':vcs_info:*' unstagedstr '[unstage]' # %u の文字列
-
-zstyle ':vcs_info:*' formats       '[%r:%b]' '%u' '%c' '%m'
-zstyle ':vcs_info:*' actionformats '[%r:%b]' '%u' '%c' '%m' '%a'
-zstyle ':vcs_info:git+set-message:*' hooks \
-  git-hook-begin \
-  git-status-untracked \
-  git-status-push
-
-function +vi-git-hook-begin() {
-  if [[ $(command git rev-parse --is-inside-work-tree 2> /dev/null) != 'true' ]]; then
-    # 0以外を返すとそれ以降のフック関数は呼び出されない
-    return 1
-  fi
-
-  return 0
-}
-
-function +vi-git-status-untracked() {
-  # called only 2nd hook (for %u)
-  if [[ "$1" != "1" ]]; then
-    return 0
-  fi
-
-  if command git status --porcelain 2> /dev/null \
-      | awk '{print $1}' \
-      | command grep -F '??' > /dev/null 2>&1 ; then
-
-      # unstaged (%u) に追加
-      hook_com[unstaged]="[untrack]${hook_com[unstaged]}"
-  fi
-}
-
-function +vi-git-status-push() {
-  # called only 4th hook (for %m)
-  if [[ "$1" != "3" ]]; then
-    return 0
-  fi
-
-  local ahead
-  ahead=$(command git rev-list origin/${hook_com[branch]}..${hook_com[branch]} 2>/dev/null \
-    | wc -l \
-    | tr -d ' ')
-
-  if [[ "$ahead" -gt 0 ]]; then
-    # misc (%m) に追加
-    hook_com[misc]+="[ahead]"
-  fi
-}
-
-function _hook_precmd_vcs_info() {
-  psvar=()
-
-  vcs_info
-}
-add-zsh-hook precmd _hook_precmd_vcs_info
+typeset -A __prompt_async_data__
 
 PROMPT=""
-PROMPT+="%(?,,%F{red}[error]%f)"
-PROMPT+='%B%F{red}${vcs_info_msg_1_}%f%b'
-PROMPT+='%B%F{green}${vcs_info_msg_2_}%f%b'
-PROMPT+='%B%F{blue}${vcs_info_msg_3_}%f%b'
-PROMPT+='%B%F{red}${vcs_info_msg_4_}%f%b'
-PROMPT+="%n@%m%#"
-PROMPT="%B${PROMPT}%b "
+PROMPT+="%(?,,%F{red}[error]%f )"
+PROMPT+="%B%n@%m%#%b "
 
 PROMPT2="%_ > "
 
 RPROMPT=''
-RPROMPT+='$(vi_mode_prompt_info)'
-RPROMPT+='%B${vcs_info_msg_0_}%b'
+RPROMPT+='${__prompt_keymap__}'
+RPROMPT+='${__prompt_async_data__[git-status]}'
+RPROMPT+='${__prompt_async_data__[git-ahead]}'
+RPROMPT+='${__prompt_async_data__[git-branch]}'
 RPROMPT+=':%4(~|%-1~/.../%2~|%~)'
 
-function vi_mode_prompt_info() {
-  if [[ $KEYMAP == 'vicmd' ]]; then
-    echo '%B%F{green}[NORMAL]%f%b'
-  else
-    echo ""
+# -----------------------------------------------------------------------------
+function prompt_async::job::git-branch() {
+  if [[ $(command git rev-parse --is-inside-work-tree 2> /dev/null) != 'true' ]]; then
+    return
+  fi
+
+  local branch=`git branch --contains | cut -d " " -f 2`
+  local repo=`basename $(git rev-parse --show-toplevel)`
+
+  echo "%B[${repo}:${branch}]%b"
+}
+
+function prompt_async::callback::git-branch() {
+  __prompt_async_data__[git-branch]="$3"
+  zle .reset-prompt
+}
+
+function prompt_async::setup::git-branch() {
+  async_stop_worker       worker::git-branch
+  async_start_worker      worker::git-branch -n
+  async_register_callback worker::git-branch prompt_async::callback::git-branch
+  async_job               worker::git-branch prompt_async::job::git-branch
+}
+
+# -----------------------------------------------------------------------------
+function prompt_async::job::git-status() {
+  if [[ $(command git rev-parse --is-inside-work-tree 2> /dev/null) != 'true' ]]; then
+    return
+  fi
+
+  local result=''
+  local git_status=`git status --porcelain`
+
+  # untrack
+  if [[ $(echo ${git_status} | cut -c 1-2 | grep '\?') ]]; then
+    result+="%B%F{red}[untrack]%f%b"
+  fi
+
+  # 2 文字目は working tree
+  if [[ $(echo ${git_status} | cut -c 2 | grep '^[^? ]') ]]; then
+    result+="%B%F{red}[unstage]%f%b"
+  fi
+
+  # 1 文字目は index
+  if [[ $(echo ${git_status} | cut -c 1 | grep '^[^? ]') ]]; then
+    result+="%B%F{green}[stage]%f%b"
+  fi
+
+  echo "${result}"
+}
+
+function prompt_async::callback::git-status() {
+  __prompt_async_data__[git-status]="$3"
+  zle .reset-prompt
+}
+
+function prompt_async::setup::git-status() {
+  async_stop_worker       worker::git-status
+  async_start_worker      worker::git-status -n
+  async_register_callback worker::git-status prompt_async::callback::git-status
+  async_job               worker::git-status prompt_async::job::git-status
+}
+
+# -----------------------------------------------------------------------------
+function prompt_async::job::git-ahead() {
+  if [[ $(command git rev-parse --is-inside-work-tree 2> /dev/null) != 'true' ]]; then
+    return
+  fi
+
+  local branch=`git branch --contains | cut -d " " -f 2`
+  local ahead=$(command git rev-list origin/${branch}..${branch} 2>/dev/null \
+    | wc -l \
+    | tr -d ' ')
+
+  if [[ "$ahead" -gt 0 ]]; then
+    echo "%B%F{blue}[ahead]%b%f"
   fi
 }
 
-# keymap を変えた時 (normal <-> insert) でこれが呼ばれる
+function prompt_async::callback::git-ahead() {
+  __prompt_async_data__[git-ahead]="$3"
+  zle .reset-prompt
+}
+
+function prompt_async::setup::git-ahead() {
+  async_stop_worker       worker::git-ahead
+  async_start_worker      worker::git-ahead -n
+  async_register_callback worker::git-ahead prompt_async::callback::git-ahead
+  async_job               worker::git-ahead prompt_async::job::git-ahead
+}
+
+# -----------------------------------------------------------------------------
+function __prompt_hook_precmd() {
+  __prompt_async_data__=()
+  prompt_async::setup::git-branch
+  prompt_async::setup::git-status
+  prompt_async::setup::git-ahead
+}
+add-zsh-hook precmd __prompt_hook_precmd
+
+# -----------------------------------------------------------------------------
 function zle-line-init zle-keymap-select {
-  # prompt を再描画 (して、vi_mode_prompt_info を再評価)
+  # keymap を変えた時 (normal <-> insert) でこれが呼ばれる
+  # prompt を再描画
+
+  if [[ $KEYMAP == 'vicmd' ]]; then
+    __prompt_keymap__='%B%F{green}[NORMAL]%f%b'
+  else
+    __prompt_keymap__=''
+  fi
+
   zle reset-prompt
 }
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-
+# -----------------------------------------------------------------------------
 function _my_hook_show_chdir() {
   if [[ $# == 0 ]]; then
     local _target=$PWD
@@ -229,8 +269,4 @@ function _my_hook_precmd_ls() {
 }
 add-zsh-hook chpwd   _my_hook_show_chdir
 add-zsh-hook preexec _my_hook_precmd_ls
-#
-## __END__ {{{1
-## vim:smarttab expandtab
-## vim:tabstop=2 shiftwidth=2 softtabstop=2
-## vim:foldmethod=marker
+
