@@ -3,6 +3,11 @@ if [[ -z "$STY"  ]]; then
   exec screen -D -RR -e"^Gg"
 fi
 
+# ここに zhistory, zcompdump を作る
+if [[ ! -e ~/.zsh ]]; then
+  mkdir ~/.zsh
+fi
+
 # for $LS_COLORS
 eval `dircolors -b`
 
@@ -14,7 +19,7 @@ setopt PUSHD_IGNORE_DUPS
 
 HISTSIZE=10000
 SAVEHIST=10000
-HISTFILE=~/.zhistory
+HISTFILE=~/.zsh/zhistory
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
@@ -86,8 +91,15 @@ bindkey -M menuselect '^m' self-insert
 ################################################################################
 # Completion
 ################################################################################
+ZCOMPDUMP=~/.zsh/zcompdump
 autoload -U compinit
-compinit
+
+# zcompdump の最終更新日が昨日なら、zcompdump を作り直す
+if [[ ! -e ${ZCOMPDUMP} || `stat -c %Y ${ZCOMPDUMP}` -lt `date -d "yesterday" +%s` ]]; then
+  compinit -d ${ZCOMPDUMP}
+else
+  compinit -C -d ${ZCOMPDUMP}
+fi
 
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' menu true
