@@ -25,6 +25,8 @@ command! -range=% Reverse <line1>,<line2>call <SID>my_reverse()
 
 command! -nargs=* -complete=file Grep silent grep<bang> <args>
 
+command! -range=% -nargs=+ Swap <line1>,<line2>call <SID>swap_string(<f-args>)
+
 function! s:diff_start(...) abort "{{{
   " MEMO: botright vertical にしたいから 'diffopt' の vertical
   " オプションは使わない
@@ -94,6 +96,13 @@ function! s:set_indent_style(length) "{{{
   let str = str . ' shiftwidth='  . a:length
   let str = str . ' softtabstop=' . a:length
   echo str
+endfunction "}}}
+function! s:swap_string(lhs, rhs) range "{{{
+  let tmp = '__my_tmp_string__'
+  let cmd = a:firstline  . ',' . a:lastline . 's'
+  call execute(cmd . '/' . a:lhs . '/' . tmp   . '/')
+  call execute(cmd . '/' . a:rhs . '/' . a:lhs . '/')
+  call execute(cmd . '/' . tmp   . '/' . a:rhs . '/')
 endfunction "}}}
 
 let &cpo = s:save_cpo
