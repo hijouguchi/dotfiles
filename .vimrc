@@ -27,7 +27,7 @@ call packman#config#github#new('vim-scripts/Align')
 call packman#config#github#new( 'vim-scripts/vcscommand.vim')
       \ .add_hook_commands(
       \   'VCSCommit', 'VCSDiff',   'VCSLog',     'VCSRevert',
-      \   'VCSStatus', 'VCSUpdate', 'VCSVimDiff', 'VSCBlame'
+      \   'VCSStatus', 'VCSUpdate', 'VCSVimDiff', 'VCSBlame'
       \ )
 
 call packman#config#runtime#new('macros/matchit.vim')
@@ -40,7 +40,7 @@ source ~/.vim/rc/pack/vim-smartinput.vim
 source ~/.vim/rc/pack/vim-quickrun.vim
 source ~/.vim/rc/pack/gtags.vim
 source ~/.vim/rc/pack/netrw.vim
-"source ~/.vim/rc/pack/complete.vim
+source ~/.vim/rc/pack/complete.vim
 
 call packman#end()
 
@@ -52,6 +52,6 @@ source ~/.vim/rc/general.vim
 source ~/.vim/rc/command.vim
 source ~/.vim/rc/autocmd.vim
 source ~/.vim/rc/keymap.vim
-source ~/.vim/rc/complete.vim
+"source ~/.vim/rc/complete.vim
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker

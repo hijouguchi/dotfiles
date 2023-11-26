@@ -1,42 +1,79 @@
-let s:save_cpo = &cpo
-set cpo&vim
 
-let e = packman#config#github#new('prabirshrestha/vim-lsp')
-call e.add_hook_events('InsertEnter')
-call e.add_depends(
+set complete=.,w,b,u,t,k
+
+inoremap <expr> <TAB>   pumvisible() ? "\<C-N>" : "\<TAB>"
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
+inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
+nnoremap <expr> <C-K>      <SID>RegisterWordToDictionary()
+
+nnoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
+nnoremap        <C-L><C-R> <plug>(lsp-rename)
+nnoremap        <C-L><C-H> <plug>(lsp-hover)
+
+let g:lsp_diagnostics_enabled                        = 1
+let g:lsp_diagnostics_echo_cursor                    = 1
+let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
+let g:lsp_document_highlight_delay                   = 100
+let g:lsp_text_edit_enabled                          = 0
+
+call packman#config#github#new('prabirshrestha/vim-lsp')
+      \ .add_depends(
       \   packman#config#github#new('prabirshrestha/async.vim'),
       \   packman#config#github#new('prabirshrestha/asyncomplete.vim'),
-      \   packman#config#github#new('prabirshrestha/asyncomplete-lsp.vim')
-      \)
+      \   packman#config#github#new('prabirshrestha/asyncomplete-lsp.vim'),
+      \   packman#config#github#new('mattn/vim-lsp-settings')
+      \ )
 
-function! e.pre_load()
-  let g:lsp_diagnostics_enabled = 0
-  "let g:lsp_log_verbose = 1
-  "let g:lsp_log_file = expand('~/vim-lsp.log')
-  "let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+augroup MyInsertComplete "{{{
+  autocmd!
+  autocmd FileType * call <SID>LspSetUp()
+  "autocmd CursorHold * LspHover
+augroup END "}}}
 
-  if executable('solargraph')
-    " gem install solargraph
-    au User lsp_setup call lsp#register_server({
-          \ 'name': 'solargraph',
-          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-          \ 'initialization_options': {"diagnostics": "true"},
-          \ 'whitelist': ['ruby'],
-          \ })
+function! s:RegisterWordToDictionary() "{{{
+  let word = expand('<cword>')
+  let dict = &l:dictionary
+
+  if !filereadable(dict)
+    echo dict . ' is not exist...'
+    return
   endif
 
-  if executable('clangd')
-    au User lsp_setup call lsp#register_server({
-          \ 'name': 'clangd',
-          \ 'cmd': {server_info->['clangd', '-background-index']},
-          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-          \ })
+  " 既に登録されてるなら無視
+  let list = readfile(dict)
+  if match(list, word) != -1
+    return
   endif
-endfunction
 
+  " 辞書に登録
+  if input("Append '" . word . "' to '" . dict . "'? [Yn]: ", 'n', ) == 'Y'
+    call writefile([word], dict, "a")
+    echo "Appended '" . word . "'"
+  endif
+endfunction "}}}
+function! s:LspSetUp() "{{{
+  exec 'setlocal dictionary=~/.vim/dict/'.&l:filetype.'.dict'
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=number
+  setlocal updatetime=1500
+endfunction "}}}
+function! s:InsertCRWrapper() "{{{
+  if pumvisible()
+    return "\<C-Y>"
+  else
+    return "\<CR>"
+  endif
+endfunction "}}}
+function! s:InsertTabWrapper(next, tab) "{{{
+  if pumvisible()
+    return a:next
+  elseif getline('.')[col('.')-2] =~ '\k'
+    return a:next
+  else
+    return a:tab
+  endif
+endfunction "}}}
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
 " vim: ts=2 sw=2 sts=2 et fdm=marker
 
 
