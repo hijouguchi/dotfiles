@@ -1,10 +1,10 @@
 
 set complete=.,w,b,u,t,k
 
-inoremap <expr> <TAB>   pumvisible() ? "\<C-N>" : "\<TAB>"
-inoremap <expr> <S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
+inoremap <expr> <Tab>   <SID>InsertTabWrapper("\<C-N>", "\<Tab>")
+inoremap <expr> <S-Tab> <SID>InsertTabWrapper("\<C-P>", "\<S-Tab>")
 inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
-nnoremap <expr> <C-K>      <SID>RegisterWordToDictionary()
+nnoremap <expr> <C-K>   <SID>RegisterWordToDictionary()
 
 nnoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
 nnoremap        <C-L><C-R> <plug>(lsp-rename)
