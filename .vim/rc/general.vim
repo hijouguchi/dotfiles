@@ -19,6 +19,9 @@ set matchpairs& matchpairs+=<:>
 set clipboard=unnamed
 set incsearch
 
+set signcolumn=number
+"set updatetime=1500
+
 set showmatch
 set matchtime=1
 

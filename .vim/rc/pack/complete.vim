@@ -9,11 +9,16 @@ nnoremap <expr> <C-K>   <SID>RegisterWordToDictionary()
 nnoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
 nnoremap        <C-L><C-R> <plug>(lsp-rename)
 nnoremap        <C-L><C-H> <plug>(lsp-hover)
+nnoremap <expr> <plug>(lsp-hover-scroll-down) lsp#scroll(+4)
+nnoremap <expr> <plug>(lsp-hover-scroll-up)   lsp#scroll(-4)
+nnoremap        <C-L><C-J> <plug>(lsp-hover-scroll-down)
+nnoremap        <C-L><C-K> <plug>(lsp-hover-scroll-up)
 
 let g:lsp_diagnostics_enabled                        = 1
+let g:lsp_diagnostics_virtual_text_enabled           = 0
 let g:lsp_diagnostics_echo_cursor                    = 1
 let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
-let g:lsp_document_highlight_delay                   = 100
+let g:lsp_document_highlight_delay                   = 200
 let g:lsp_text_edit_enabled                          = 0
 
 call packman#config#github#new('prabirshrestha/vim-lsp')
@@ -54,8 +59,6 @@ endfunction "}}}
 function! s:LspSetUp() "{{{
   exec 'setlocal dictionary=~/.vim/dict/'.&l:filetype.'.dict'
   setlocal omnifunc=lsp#complete
-  setlocal signcolumn=number
-  setlocal updatetime=1500
 endfunction "}}}
 function! s:InsertCRWrapper() "{{{
   if pumvisible()
