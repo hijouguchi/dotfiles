@@ -41,6 +41,7 @@ source ~/.vim/rc/pack/vim-quickrun.vim
 source ~/.vim/rc/pack/gtags.vim
 source ~/.vim/rc/pack/netrw.vim
 source ~/.vim/rc/pack/complete.vim
+source ~/.vim/rc/pack/vim-clang-format.vim
 
 call packman#end()
 

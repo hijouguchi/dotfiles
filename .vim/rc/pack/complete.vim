@@ -21,6 +21,11 @@ let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
 let g:lsp_document_highlight_delay                   = 200
 let g:lsp_text_edit_enabled                          = 0
 
+let g:lsp_settings = {
+      \  'clangd': {'cmd': ['clangd', '--clang-tidy']},
+      \  'efm-langserver': {'disabled': v:false}
+      \}
+
 call packman#config#github#new('prabirshrestha/vim-lsp')
       \ .add_depends(
       \   packman#config#github#new('prabirshrestha/async.vim'),

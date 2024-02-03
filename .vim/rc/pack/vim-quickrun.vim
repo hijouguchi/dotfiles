@@ -5,7 +5,7 @@ let e = packman#config#github#new('thinca/vim-quickrun.git')
 call e.add_depends(
       \   packman#config#github#new('osyo-manga/quickrun-outputter-replace_region.git')
       \ )
-call e.add_hook_commands('QuickRun', 'ReplaceRegion')
+call e.add_hook_commands('QuickRun', 'ReplaceRegion', 'Tidy')
 
 function! e.pre_load()
   if !exists('g:quickrun_config')
@@ -35,8 +35,16 @@ function! e.pre_load()
         \   'command'                   : 'ruby',
         \   'cmdopt'                    : '-r yaml -e "pp YAML::load_file ARGV.shift"'
         \ }
+  let g:quickrun_config.tidy = {
+        \   'command'                   : 'clang-tidy',
+        \   'outputter'                 : 'quickfix'
+        \ }
 endfunction
 
+augroup MyQuickRun
+  autocmd!
+  autocmd FileType c command! Tidy QuickRun tidy
+augroup END
 
 command! -nargs=* -range=0 -complete=customlist,quickrun#complete
       \ ReplaceRegion QuickRun -mode v
