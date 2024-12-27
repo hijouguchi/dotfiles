@@ -3,34 +3,44 @@
 #       'screen -D -RR -e"^Gg"'
 
 autodetach on
-startup_message off
+cjkwidth off
 defscrollback 10000
+defutf8 on
+startup_message off
 term xterm-256color
+truecolor on
 
 ################################################################################
 # Status Line
 ################################################################################
 setenv _s "%{=}"
-setenv _s "${_s}%?%F%{BW}%:%{Kw}%?"
-setenv _s "${_s}%?%E%{CW}%?"
-setenv _s "${_s}%?%P%{GW}%?"
-setenv _s "${_s}%n %t"
-setenv _s "${_s}%="
-setenv _s "${_s}%?%P[COPY]%?"
-setenv _s "${_s}%?%E[SCREEN]%?"
-setenv _s "${_s}%{-}"
+setenv _s "$_s%?%F%{b15;12}%:%{15;241}%?" # focus or non-focus
+setenv _s "$_s%?%P%{b15;5}%?"             # paste  (focus)
+setenv _s "$_s%?%E%{b15;6}%?"             # escape (focus)
+setenv _s "$_s%n %t"
+setenv _s "$_s%="
+setenv _s "$_s%?%P[COPY]%?"               # paste  (focus)
+setenv _s "$_s%?%E[SCREEN]%?"             # escape (focus)
+setenv _s "$_s%{-}"
 caption always "$_s"
 
-setenv _s ""
+setenv _s "%{=}"
 setenv _s "$_s%-w"
-setenv _s "${_s}%50>"
-setenv _s "$_s%{= BW}%n %t%{-}"
+setenv _s "$_s%50>"
+setenv _s "$_s%{b15;12}%n %t%{-}"
 setenv _s "$_s%+w"
-setenv _s "${_s}%-40<%="
-setenv _s "${_s}[%H:%l][%m/%d %c:%s]"
+setenv _s "$_s%-30<%="
+setenv _s "$_s[%H:%2`]" # [host:load average (1min)]
+setenv _s "$_s[%1`]"    # [mm/dd hh:mm:ss]
+setenv _s "$_s%{-}"
 hardstatus alwayslastline "$_s"
 
-rendition monitor "=b"  "RW"
+backtick 1  1  1 date '+%m/%d %H:%M:%S'
+backtick 2 60 60 sh -c 'uptime | sed -e "s/.*load average:\s*//" -e "s/,.*$//"'
+
+#rendition monitor "=b"  "RW"
+
+unsetenv _s
 
 ################################################################################
 # key binds
@@ -53,8 +63,7 @@ bind  l focus right
 
 bind ^k eval '@kill'
 bind ^m monitor
-
-unsetenv _s
+bind  w windowlist -b
 
 
 ################################################################################
