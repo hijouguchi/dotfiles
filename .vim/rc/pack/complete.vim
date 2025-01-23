@@ -11,8 +11,8 @@ nnoremap        <C-L><C-R> <plug>(lsp-rename)
 nnoremap        <C-L><C-H> <plug>(lsp-hover)
 nnoremap <expr> <plug>(lsp-hover-scroll-down) lsp#scroll(+4)
 nnoremap <expr> <plug>(lsp-hover-scroll-up)   lsp#scroll(-4)
-nnoremap        <C-L><C-J> <plug>(lsp-hover-scroll-down)
-nnoremap        <C-L><C-K> <plug>(lsp-hover-scroll-up)
+nnoremap             <C-J> <plug>(lsp-hover-scroll-down)
+nnoremap             <C-K> <plug>(lsp-hover-scroll-up)
 
 let g:lsp_diagnostics_enabled                        = 1
 let g:lsp_diagnostics_virtual_text_enabled           = 0
@@ -22,7 +22,11 @@ let g:lsp_document_highlight_delay                   = 200
 let g:lsp_text_edit_enabled                          = 0
 
 let g:lsp_settings = {
-      \  'clangd': {'cmd': ['clangd', '--clang-tidy']},
+      \  'clangd': {'args': ['--clang-tidy']},
+      \  'verible-verilog-ls': {'args': [
+      \    '--ruleset=all',
+      \    '--rules_config=' .. expand('~/.vim/rc/pack/verible-verilog-ls-rules.conf')
+      \  ]},
       \  'efm-langserver': {'disabled': v:false}
       \}
 
@@ -49,8 +53,7 @@ function! s:RegisterWordToDictionary() "{{{
     return
   endif
 
-  " 既に登録されてるなら無視
-  let list = readfile(dict)
+  " 既に登録されてるなら無�  let list = readfile(dict)
   if match(list, word) != -1
     return
   endif

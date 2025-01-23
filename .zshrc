@@ -11,6 +11,8 @@ fi
 # for $LS_COLORS
 eval `dircolors -b`
 
+unsetopt BEEP
+
 ## Changing Directories
 setopt AUTO_CD
 setopt AUTO_PUSHD
@@ -50,8 +52,7 @@ alias -g T2='2>&1 | tee'
 alias -g L2='2>&1 | less'
 
 
-## FIXME: 別の端末でscreenを開いていると、自分が screen に属していないにも関わらず screen 判定されてしまう
-if [[ ! -n "`screen -ls 2>&1 | grep 'No Sockets found in'`" ]]; then
+if [[ -n "$STY"  ]]; then
   alias vim="screen vim"
   alias vimdiff="screen vimdiff"
   alias s='screen'
@@ -153,7 +154,7 @@ function prompt_async::job::git-branch() {
     return
   fi
 
-  local branch=`git branch --contains | cut -d " " -f 2`
+  local branch=`git branch --contains | grep '^*' | cut -d " " -f 2`
   local repo=`basename $(git rev-parse --show-toplevel)`
 
   echo "%B[${repo}:${branch}]%b"

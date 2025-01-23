@@ -3,6 +3,9 @@ set cpo&vim
 
 command! Cd cd %:h
 
+" https://vim-jp.org/vim-users-jp/2009/05/27/Hack-17.html
+command! -nargs=1 -complete=file Rename f <args>|call delete(expand('#'))
+
 command! -bang Utf8  e<bang> ++enc=utf-8
 command! -bang Euc   e<bang> ++enc=euc-jp
 command! -bang Cp932 e<bang> ++enc=cp932

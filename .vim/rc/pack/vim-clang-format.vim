@@ -10,8 +10,8 @@ call e.add_depends(
 function! e.pre_load()
   augroup MyClangFormat
     autocmd!
-    autocmd FileType c vmap =  <Plug>(operator-clang-format)
-    autocmd FileType c nmap == <Plug>(operator-clang-format)
+    autocmd FileType c,cpp vmap =  <Plug>(operator-clang-format)
+    autocmd FileType c,cpp nmap == <Plug>(operator-clang-format)
   augroup END
 endfunction
 
