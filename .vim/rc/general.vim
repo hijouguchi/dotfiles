@@ -81,8 +81,9 @@ set pumheight=15
 
 "set laststatus=2 " set by rc/pack/lightline.vim
 
-if executable('ag')
-  set grepprg=ag\ --vimgrep
+if executable('ugrep')
+  set grepprg=ugrep\ -RInk\ -j\ -u\ --tabs=1\ --ignore-files
+  set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
 endif
 
 let &cpo = s:save_cpo

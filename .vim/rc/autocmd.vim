@@ -138,15 +138,13 @@ HighlightTralingSpaceStart
 augroup BinaryXXD
   autocmd!
   autocmd BufReadPre   *.bin set binary
-  autocmd BufReadPost  * call <SID>binary_write()
+  autocmd BufReadPost  *.bin call <SID>binary_write()
 augroup END
 
 function! s:binary_write() "{{{
-  if &l:binary
     set ft=xxd
     set readonly
     silent %!xxd -g 1
-  endif
 endfunction "}}}
 
 " イベントチェック用
