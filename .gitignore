@@ -3,5 +3,5 @@
 .vim/.netrwhist
 .vim/viminfo
 start_linux.zsh
-.vim/pack/packman
+.vim/pack/repo
 zfunctions/async

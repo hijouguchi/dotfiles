@@ -8,7 +8,7 @@ let s:during_setup = v:false
 " 各種設定を作ること
 function! packman#begin() abort "{{{
   if !exists('g:packman_default_directory')
-    let g:packman_default_directory = $HOME.'/.vim/pack/packman/opt'
+    let g:packman_default_directory = $HOME.'/.vim/pack/repo/opt'
   endif
 
   let s:during_setup = v:true

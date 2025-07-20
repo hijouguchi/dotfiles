@@ -4,10 +4,10 @@ set cpo&vim
 
 
 call packman#config#github#new('vim-scripts/surround.vim')
-      \ .add_hook_keymaps(
-      \   '<Plug>Dsurround', '<Plug>Csurround',
-      \   '<Plug>VSurround', '<Plug>VgSurround'
-      \ )
+"      \.add_hook_keymaps(
+"      \  '<Plug>Dsurround', '<Plug>Csurround',
+"      \  '<Plug>VSurround', '<Plug>VgSurround'
+"      \)
 
 " MEMO: plugin/surround.vim でここがマップされるので
 "       あらかじめマップ (しておかないと起きない)

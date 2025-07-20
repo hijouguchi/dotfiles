@@ -173,13 +173,13 @@ $sync$or$plane
 $system
 $tan
 $tanh
+$test$plusargs
 $time
 $timeformat
 $typename
 $ungetc
 $unpacked_dimensions
 $unsigned
-$test$plusargs
 $value$plusargs
 $warning
 $write
@@ -363,6 +363,8 @@ packed
 parameter
 pmos
 posedge
+post_randomize
+pre_randomize
 primitive
 priority
 program
