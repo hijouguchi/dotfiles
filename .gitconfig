@@ -14,5 +14,7 @@
 	s  = status
 	c  = commit
 	cm = checkout master
+[include]
+	path = ~/.gitconfig.local
 [merge]
 	ff = true
