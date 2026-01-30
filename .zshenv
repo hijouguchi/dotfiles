@@ -1,26 +1,18 @@
 typeset -U path cdpath fpath
 
-export LANG=ja_JP.UTF-8
+ZSHENV_DIR="${HOME}/dotfiles/zshenv"
+ZSHENV_HOSTS_DIR="${HOME}/.zshenv.hosts"
 
-path=( \
-  /opt/packages/*/bin(N-/) \
-  /usr/local/opt/coreutils/libexec/gnubin \
-  /usr/local/opt/ruby/bin \
-  /usr/local/bin \
-  /usr/local/sbin \
-  $path \
-)
+case "$(uname -s 2>/dev/null)" in
+  Darwin)
+    [ -f "${ZSHENV_DIR}/macos.zsh" ] && source "${ZSHENV_DIR}/macos.zsh"
+    ;;
+  Linux)
+    [ -f "${ZSHENV_DIR}/linux.zsh" ] && source "${ZSHENV_DIR}/linux.zsh"
+    ;;
+esac
 
-fpath=( \
-  $HOME/dotfiles/zfunctions \
-  /usr/local/share/zsh/site-functions \
-  $fpath \
-)
-
-
-export GOPATH=$HOME/work/.go
-
-if [ `uname -s` = 'Darwin' ]; then
-  setopt no_global_rcs
+host="$(hostname -s 2>/dev/null || hostname)"
+if [ -n "${host}" ] && [ -f "${ZSHENV_HOSTS_DIR}/${host}.zsh" ]; then
+  source "${ZSHENV_HOSTS_DIR}/${host}.zsh"
 fi
-

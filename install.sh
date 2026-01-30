@@ -33,3 +33,24 @@ create_symlink "${src_dir}" "${dst_dir}" ".vimrc"
 create_symlink "${src_dir}" "${dst_dir}" ".vim"
 
 echo "Vim setup complete!"
+
+### zshenv host configuration
+echo "Setting up zshenv host configuration..."
+
+hosts_dir="${dst_dir}/.zshenv.hosts"
+hosts_template_src="${src_dir}/zshenv/host-template.zsh"
+hosts_template_dst="${hosts_dir}/HOSTNAME.zsh"
+
+if [ ! -d "${hosts_dir}" ]; then
+    echo "Creating ${hosts_dir}..."
+    mkdir -p "${hosts_dir}"
+fi
+
+if [ ! -f "${hosts_template_dst}" ]; then
+    echo "Creating host template ${hosts_template_dst}..."
+    cp "${hosts_template_src}" "${hosts_template_dst}"
+else
+    echo "Host template already exists"
+fi
+
+echo "Zshenv host setup complete!"
