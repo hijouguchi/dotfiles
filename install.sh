@@ -33,10 +33,3 @@ create_symlink "${src_dir}" "${dst_dir}" ".vimrc"
 create_symlink "${src_dir}" "${dst_dir}" ".vim"
 
 echo "Vim setup complete!"
-
-### nvim configuration
-echo "Setting up nvim configuration..."
-
-create_symlink "${src_dir}" "${dst_dir}/.config" "nvim"
-
-echo "Nvim setup complete!"
