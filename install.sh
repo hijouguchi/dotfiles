@@ -34,12 +34,29 @@ create_symlink "${src_dir}" "${dst_dir}" ".vim"
 
 echo "Vim setup complete!"
 
+### shell and tooling configuration
+echo "Setting up shell and tooling configuration..."
+
+create_symlink "${src_dir}" "${dst_dir}" ".zshenv"
+create_symlink "${src_dir}" "${dst_dir}" ".zshrc"
+create_symlink "${src_dir}" "${dst_dir}" ".gitconfig"
+create_symlink "${src_dir}" "${dst_dir}" ".gitignore.global"
+create_symlink "${src_dir}" "${dst_dir}" ".screenrc"
+create_symlink "${src_dir}" "${dst_dir}" ".ctags"
+create_symlink "${src_dir}" "${dst_dir}" ".ugrep"
+create_symlink "${src_dir}" "${dst_dir}" ".globalrc"
+
+echo "Shell and tooling setup complete!"
+
 ### zshenv host configuration
 echo "Setting up zshenv host configuration..."
 
 hosts_dir="${dst_dir}/.zshenv.hosts"
 hosts_template_src="${src_dir}/zshenv/host-template.zsh"
 hosts_template_dst="${hosts_dir}/HOSTNAME.zsh"
+
+gitconfig_local="${dst_dir}/.gitconfig.local"
+gitconfig_local_template="${src_dir}/gitconfig.local.template"
 
 if [ ! -d "${hosts_dir}" ]; then
     echo "Creating ${hosts_dir}..."
@@ -54,3 +71,15 @@ else
 fi
 
 echo "Zshenv host setup complete!"
+
+### gitconfig local configuration
+echo "Setting up gitconfig local..."
+
+if [ ! -f "${gitconfig_local}" ]; then
+    echo "Creating ${gitconfig_local} from template..."
+    cp "${gitconfig_local_template}" "${gitconfig_local}"
+else
+    echo ".gitconfig.local already exists"
+fi
+
+echo "Gitconfig local setup complete!"

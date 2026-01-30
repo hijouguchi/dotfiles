@@ -1,3 +1,13 @@
+# macOS metadata
 ._*
 .DS_Store
-*.swp
+
+# Editor/temporary files
+*.sw*
+*.tmp
+*.bak
+*.org
+*.log
+
+# Local tooling state
+.claude/
