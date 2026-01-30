@@ -3,6 +3,28 @@
 # Get the directory where this script is located
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 dst_dir="$HOME"
+dry_run=0
+
+for arg in "$@"; do
+    case "${arg}" in
+        -n|--dry-run)
+            dry_run=1
+            ;;
+        *)
+            echo "Unknown option: ${arg}"
+            echo "Usage: $0 [--dry-run|-n]"
+            exit 1
+            ;;
+    esac
+done
+
+run_cmd() {
+    if [ "${dry_run}" -eq 1 ]; then
+        echo "DRY RUN: $*"
+    else
+        "$@"
+    fi
+}
 
 # Function to create symlinks
 create_symlink() {
@@ -14,13 +36,13 @@ create_symlink() {
     local dst_parent="$(dirname "${dst_path}")"
     if [ ! -d "${dst_parent}" ]; then
         echo "Creating directory ${dst_parent}..."
-        mkdir -p "${dst_parent}"
+        run_cmd mkdir -p "${dst_parent}"
     fi
     
     # Create symlink if it doesn't exist
     if [ ! -e "${dst_path}/${name}" ]; then
         echo "Creating ${name} symlink..."
-        ln -s "${src_path}/${name}" "${dst_path}/${name}"
+        run_cmd ln -s "${src_path}/${name}" "${dst_path}/${name}"
     else
         echo "${name} already exists"
     fi
@@ -60,12 +82,12 @@ gitconfig_local_template="${src_dir}/gitconfig.local.template"
 
 if [ ! -d "${hosts_dir}" ]; then
     echo "Creating ${hosts_dir}..."
-    mkdir -p "${hosts_dir}"
+    run_cmd mkdir -p "${hosts_dir}"
 fi
 
 if [ ! -f "${hosts_template_dst}" ]; then
     echo "Creating host template ${hosts_template_dst}..."
-    cp "${hosts_template_src}" "${hosts_template_dst}"
+    run_cmd cp "${hosts_template_src}" "${hosts_template_dst}"
 else
     echo "Host template already exists"
 fi
@@ -77,7 +99,7 @@ echo "Setting up gitconfig local..."
 
 if [ ! -f "${gitconfig_local}" ]; then
     echo "Creating ${gitconfig_local} from template..."
-    cp "${gitconfig_local_template}" "${gitconfig_local}"
+    run_cmd cp "${gitconfig_local_template}" "${gitconfig_local}"
 else
     echo ".gitconfig.local already exists"
 fi
