@@ -9,6 +9,7 @@ set t_Co=256
 set visualbell
 set t_vb=
 set noerrorbells
+set autoread
 set number
 set nolist
 set listchars=tab:._,trail:_,eol:.

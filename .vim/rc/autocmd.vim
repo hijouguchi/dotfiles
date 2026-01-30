@@ -48,6 +48,13 @@ augroup VimrcAutoCmd
   autocmd SwapExists * let v:swapchoice = 'o'
 augroup END
 
+augroup AutoReloadExternalChanges
+  autocmd!
+  autocmd FocusGained            * checktime
+  autocmd BufEnter,WinEnter      * checktime
+  autocmd CursorHold,CursorHoldI * checktime
+augroup END
+
 let s:space_match_config = {
       \ 'SpaceEnd'     : '\s\+$',
       \ 'TabAndSpace'  : '\s*\(\t \| \t\)\s*',
