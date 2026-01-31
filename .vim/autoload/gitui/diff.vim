@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Open a vertical diff view against HEAD or index for a repo path.
+" The right split shows the base content while the current buffer is diffed.
+" Keeps the original filetype for proper highlighting.
 function! gitui#diff#file(path, cached, root) abort
   let l:repo_path = a:path
   let l:src = a:root . '/' . l:repo_path
@@ -42,6 +45,9 @@ function! gitui#diff#file(path, cached, root) abort
   diffthis
 endfunction
 
+" Diff the current buffer file against HEAD/index using a repo-relative path.
+" Resolves the git root from the current buffer location.
+" Delegates to gitui#diff#file for the actual diff view.
 function! gitui#diff#current(cached) abort
   let l:path = gitui#core#current_file_path()
   if empty(l:path)
@@ -57,6 +63,9 @@ function! gitui#diff#current(cached) abort
   call gitui#diff#file(l:rel, a:cached, l:root)
 endfunction
 
+" Stage the current buffer file via git add.
+" Converts the current file path to a repo-relative path.
+" Does not prompt; failures are reported by gitui#core#git_run.
 function! gitui#diff#add_current() abort
   let l:path = gitui#core#current_file_path()
   if empty(l:path)
@@ -72,6 +81,9 @@ function! gitui#diff#add_current() abort
   call gitui#core#git_run(l:root, ['add', '--', l:rel])
 endfunction
 
+" Restore changes for the current buffer (unstage or discard working tree).
+" Staged files are unstaged; unstaged files can be discarded with confirm.
+" Untracked files are reported without changes.
 function! gitui#diff#restore_current() abort
   let l:path = gitui#core#current_file_path()
   if empty(l:path)
@@ -104,6 +116,9 @@ function! gitui#diff#restore_current() abort
   echohl WarningMsg | echom 'no changes to restore' | echohl None
 endfunction
 
+" Render a single-buffer blame view (meta + code) in a botright split.
+" Builds a fixed-width meta column followed by the original code.
+" The resulting buffer is scratch and non-editable.
 function! gitui#diff#blame_file(path, root, code_ft) abort
   let l:full = a:root . '/' . a:path
   if !filereadable(l:full)
@@ -159,6 +174,9 @@ function! gitui#diff#blame_file(path, root, code_ft) abort
   call win_execute(l:blame_win, 'normal! gg')
 endfunction
 
+" Parse blame porcelain into per-line metadata and code text.
+" Extracts hash, author, and author-time for each line.
+" The tab-prefixed code line becomes the displayed code portion.
 function! s:blame_parse_porcelain(lines) abort
   let l:entries = []
   let l:hash = ''
@@ -189,6 +207,9 @@ function! s:blame_parse_porcelain(lines) abort
   return l:entries
 endfunction
 
+" Build blame lines: fixed-width meta + separator + code.
+" The meta column is padded/truncated to a stable width.
+" Returns a list of display lines for the blame buffer.
 function! s:blame_render_lines(entries, prefix_width) abort
   let l:lines = []
   let l:sep = ' | '
@@ -207,6 +228,9 @@ function! s:blame_render_lines(entries, prefix_width) abort
   return l:lines
 endfunction
 
+" Clamp or pad text to a fixed display width for meta alignment.
+" Uses display width to handle multi-byte characters safely.
+" Returns a string exactly at the requested width.
 function! s:blame_fit_width(text, width) abort
   let l:text = a:text
   if strdisplaywidth(l:text) > a:width
@@ -219,6 +243,9 @@ function! s:blame_fit_width(text, width) abort
   return l:text
 endfunction
 
+" Define highlight groups for blame age buckets and separator.
+" Uses default links so colors remain user-theme friendly.
+" The separator has its own group to avoid filetype variance.
 function! gitui#diff#blame_define_highlights() abort
   highlight default link GitBlameAge1 DiffAdd
   highlight default link GitBlameAge2 DiffChange
@@ -228,6 +255,9 @@ function! gitui#diff#blame_define_highlights() abort
   highlight default link GitBlameSeparator NonText
 endfunction
 
+" Apply per-line highlight based on blame age and separator width.
+" Creates match positions for each age bucket and the separator.
+" Stores match ids so they can be replaced on refresh.
 function! gitui#diff#blame_apply_matches() abort
   if !exists('b:gitui_blame_entries')
     return
@@ -287,6 +317,9 @@ function! gitui#diff#blame_apply_matches() abort
   endif
 endfunction
 
+" Enable target filetype syntax in blame buffer (code portion).
+" Sets local syntax to match the original filetype.
+" Keeps blame metadata coloring via match highlights.
 function! gitui#diff#blame_enable_syntax() abort
   if !exists('b:gitui_blame_prefix_width')
     return
@@ -307,6 +340,9 @@ function! gitui#diff#blame_enable_syntax() abort
   silent! execute 'syntax clear GitBlameCode'
 endfunction
 
+" Open blame for the current buffer file with detected filetype.
+" Resolves repo root and relative path from the current buffer.
+" Passes the filetype so the blame buffer can apply syntax.
 function! gitui#diff#blame_current() abort
   let l:path = gitui#core#current_file_path()
   if empty(l:path)

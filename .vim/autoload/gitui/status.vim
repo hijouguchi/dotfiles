@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Extract the path portion from a status line, handling rename arrows.
+" For rename lines, returns the destination path.
+" Used by status actions to resolve the file under cursor.
 function! s:status_path_from_line(text) abort
   let l:path = a:text[3:]
   if l:path =~# ' -> '
@@ -10,6 +13,9 @@ function! s:status_path_from_line(text) abort
   return l:path
 endfunction
 
+" Fetch porcelain status lines (branch header + entry lines).
+" This is the raw input used to build the status buffer sections.
+" Returns [] on error.
 function! s:git_status_entries(root) abort
   let l:entries = systemlist(gitui#core#git_cmd(a:root, ['status', '--porcelain=v1', '-b']))
   if v:shell_error
@@ -18,6 +24,9 @@ function! s:git_status_entries(root) abort
   return l:entries
 endfunction
 
+" Clear existing match highlights for the status buffer.
+" Called before applying new staged/unstaged/untracked highlights.
+" Safely handles the case where no matches exist yet.
 function! s:gitstatus_clear_matches() abort
   if !exists('b:gitui_match_ids')
     return
@@ -28,6 +37,9 @@ function! s:gitstatus_clear_matches() abort
   let b:gitui_match_ids = []
 endfunction
 
+" Apply match highlights for staged/unstaged/untracked sections.
+" Each category gets its own highlight group.
+" The match ids are stored so they can be cleared later.
 function! s:gitstatus_apply_matches(staged_lines, unstaged_lines, untracked_lines) abort
   call s:gitstatus_clear_matches()
   let b:gitui_match_ids = []
@@ -46,6 +58,9 @@ function! s:gitstatus_apply_matches(staged_lines, unstaged_lines, untracked_line
   endif
 endfunction
 
+" Keep cursor within buffer bounds when refreshing.
+" Ensures the target line is valid after a redraw.
+" Prevents cursor errors when the list length changes.
 function! s:gitstatus_place_cursor(target_line) abort
   let l:line = a:target_line
   let l:max = line('$')
@@ -57,6 +72,9 @@ function! s:gitstatus_place_cursor(target_line) abort
   call cursor(l:line, 1)
 endfunction
 
+" Determine which section the cursor is currently in by scanning upward.
+" Used to decide which restore action is appropriate.
+" Returns '', 'staged', 'unstaged', or 'untracked'.
 function! s:gitstatus_current_section() abort
   let l:lnum = line('.')
   while l:lnum >= 1
@@ -73,6 +91,9 @@ function! s:gitstatus_current_section() abort
   return ''
 endfunction
 
+" Resolve the file path for the current cursor line or ''.
+" Prefers cached line->path mappings, falls back to parsing the text.
+" Returns '' for headers and blank lines.
 function! s:gitstatus_get_path() abort
   let l:text = getline('.')
   if l:text =~# '^Branch:' || l:text =~# '^Staged:' || l:text =~# '^Unstaged:' || l:text =~# '^\s*$'
@@ -91,6 +112,9 @@ function! s:gitstatus_get_path() abort
   return ''
 endfunction
 
+" Open or refresh the git status buffer and rebuild all sections.
+" Populates the buffer text and sets up match highlights.
+" Keeps the cursor position when possible.
 function! gitui#status#open() abort
   let l:dir = expand('%:p:h')
   if empty(l:dir)
@@ -196,6 +220,9 @@ function! gitui#status#open() abort
   endif
 endfunction
 
+" Refresh status buffer and keep cursor near the previous line.
+" Optional argument specifies the target line for the new view.
+" Used after add/restore actions.
 function! gitui#status#refresh(...) abort
   if a:0 > 0
     let b:gitui_target_line = a:1
@@ -203,6 +230,9 @@ function! gitui#status#refresh(...) abort
   call gitui#status#open()
 endfunction
 
+" Stage the file under the cursor in the status buffer.
+" Moves to the next line to preserve navigation flow.
+" Refreshes the status buffer after git add.
 function! gitui#status#add_line() abort
   let l:path = s:gitstatus_get_path()
   if empty(l:path)
@@ -213,6 +243,9 @@ function! gitui#status#add_line() abort
   call gitui#status#refresh(l:next_line)
 endfunction
 
+" Restore file changes for the cursor line based on section.
+" Staged files are unstaged; unstaged files can be discarded with confirm.
+" Other sections show a warning.
 function! gitui#status#restore_line() abort
   let l:path = s:gitstatus_get_path()
   if empty(l:path)
@@ -237,6 +270,9 @@ function! gitui#status#restore_line() abort
   endif
 endfunction
 
+" Diff the file under cursor (HEAD or index).
+" The cached flag switches between working tree and index diff.
+" Opens a vertical diff view.
 function! gitui#status#diff_line(cached) abort
   let l:path = s:gitstatus_get_path()
   if empty(l:path)
@@ -245,6 +281,9 @@ function! gitui#status#diff_line(cached) abort
   call gitui#diff#file(l:path, a:cached, b:gitui_root)
 endfunction
 
+" Open blame for the file under cursor (preserve filetype).
+" Ensures filetype is captured even when the file is not loaded.
+" Delegates to the blame view builder.
 function! gitui#status#blame_line() abort
   let l:path = s:gitstatus_get_path()
   if empty(l:path)
@@ -260,6 +299,9 @@ function! gitui#status#blame_line() abort
   call gitui#diff#blame_file(l:path, b:gitui_root, l:ft)
 endfunction
 
+" Open the file under cursor in the current window.
+" Reuses existing buffers and avoids reopening on each entry.
+" Clears status highlights before switching buffers.
 function! gitui#status#open_file() abort
   let l:path = s:gitstatus_get_path()
   if empty(l:path)
@@ -276,6 +318,9 @@ function! gitui#status#open_file() abort
   execute 'buffer ' . l:bnr
 endfunction
 
+" Define buffer-local mappings for git status actions.
+" Keeps mappings local to the gitstatus buffer.
+" Keys provide open/add/restore/diff/blame/refresh.
 function! gitui#status#setup_buffer() abort
   setlocal nowrap
   nnoremap <silent><buffer> q :close<CR>
@@ -288,6 +333,9 @@ function! gitui#status#setup_buffer() abort
   nnoremap <silent><buffer> gr :<C-u>call gitui#status#refresh()<CR>
 endfunction
 
+" Define syntax groups and highlights for branch/section/status lines.
+" Highlights section headers and staged/unstaged/untracked entries.
+" Uses default links so user colors can override.
 function! gitui#status#setup_syntax() abort
   syntax clear
   syntax match GitStatusBranch /^Branch:.*/

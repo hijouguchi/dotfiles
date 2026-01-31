@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Resolve the git root for a directory via git rev-parse.
+" This is used to scope all git operations to the correct repo.
+" Returns '' when git is unavailable or the directory is not a repo.
 function! gitui#core#git_root(dir) abort
   if !executable('git')
     echohl ErrorMsg | echom 'git is not available' | echohl None
@@ -15,6 +18,9 @@ function! gitui#core#git_root(dir) abort
   return l:out[0]
 endfunction
 
+" Return the absolute path for the current buffer.
+" Used by commands that operate on the current file (diff/add/blame).
+" Returns '' when the buffer has no file.
 function! gitui#core#current_file_path() abort
   let l:path = expand('%:p')
   if empty(l:path)
@@ -24,6 +30,9 @@ function! gitui#core#current_file_path() abort
   return l:path
 endfunction
 
+" Convert a path to repository-relative form when it lives under root.
+" This keeps git commands stable across cwd changes.
+" Falls back to the original path when it is outside root.
 function! gitui#core#relative_path(root, path) abort
   let l:root = fnamemodify(a:root, ':p')
   let l:root = substitute(l:root, '/\+$', '', '')
@@ -34,6 +43,9 @@ function! gitui#core#relative_path(root, path) abort
   return a:path
 endfunction
 
+" Normalize pathspec so dotfiles can be targeted even without leading '.'.
+" If a dotfile exists and the caller passed it without '.', fix it.
+" Otherwise return the original pathspec unchanged.
 function! gitui#core#normalize_pathspec(root, rel) abort
   let l:rel = a:rel
   if empty(l:rel)
@@ -48,6 +60,9 @@ function! gitui#core#normalize_pathspec(root, rel) abort
   return l:rel
 endfunction
 
+" Run a git command and return output lines.
+" Errors are echoed with the full command for easier troubleshooting.
+" Callers should still check v:shell_error when needed.
 function! gitui#core#git_run(root, args) abort
   let l:cmd = gitui#core#git_cmd(a:root, a:args)
   let l:out = systemlist(l:cmd)
@@ -57,12 +72,18 @@ function! gitui#core#git_run(root, args) abort
   return l:out
 endfunction
 
+" Build a shell-escaped git command string (git -C <root> ...).
+" This keeps argument escaping consistent across all callers.
+" The resulting string is ready for systemlist().
 function! gitui#core#git_cmd(root, args) abort
   let l:parts = ['git', '-C', a:root]
   call extend(l:parts, a:args)
   return join(map(copy(l:parts), 'shellescape(v:val)'))
 endfunction
 
+" Return staged/unstaged/untracked status for a single file via porcelain.
+" This is used to decide which restore action is valid.
+" Untracked files are reported separately.
 function! gitui#core#git_file_status(root, rel) abort
   let l:out = gitui#core#git_run(a:root, ['status', '--porcelain=v1', '--', a:rel])
   if v:shell_error || empty(l:out)
@@ -79,6 +100,9 @@ function! gitui#core#git_file_status(root, rel) abort
         \ }
 endfunction
 
+" Open or reuse a scratch buffer in a specified window location (nofile).
+" Reuses existing buffers by name and jumps to their window when visible.
+" The buffer is configured as non-file and ready for writing content.
 function! gitui#core#open_scratch(name, filetype, where) abort
   if bufexists(a:name)
     let l:bnr = bufnr(a:name)
@@ -114,6 +138,9 @@ function! gitui#core#open_scratch(name, filetype, where) abort
   let &l:filetype = a:filetype
 endfunction
 
+" Replace buffer contents with the given lines, then lock it.
+" Ensures a buffer always has at least one line.
+" Leaves the buffer unmodified and non-editable.
 function! gitui#core#buffer_set_lines(lines) abort
   setlocal modifiable
   if empty(a:lines)
