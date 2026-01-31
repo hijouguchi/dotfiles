@@ -23,7 +23,7 @@ source ~/.vim/rc/pack/vimdoc-ja.vim
 source ~/.vim/rc/pack/vim-cursorword.vim
 source ~/.vim/rc/pack/vim-textobj-user.vim
 source ~/.vim/rc/pack/Align.vim
-source ~/.vim/rc/pack/vcscommand.vim
+"source ~/.vim/rc/pack/vcscommand.vim
 source ~/.vim/rc/pack/matchit.vim
 source ~/.vim/rc/pack/lightline.vim
 source ~/.vim/rc/pack/landscape.vim

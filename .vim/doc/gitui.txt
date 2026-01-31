@@ -1,0 +1,50 @@
+*gitui.txt*  Git UI commands for Vim
+
+Author: takafumi
+License: MIT (same as dotfiles)
+
+CONTENTS                                               *gitui-contents*
+
+  1. Overview.................................|gitui-overview|
+  2. Commands.................................|gitui-commands|
+  3. GitStatus buffer keys....................|gitui-status-keys|
+  4. Notes....................................|gitui-notes|
+
+==============================================================================
+1. Overview                                               *gitui-overview*
+
+This plugin provides simple Git commands and a status buffer UI similar to
+VSCode's version control view.
+
+==============================================================================
+2. Commands                                               *gitui-commands*
+
+:GitStatus        Open status buffer (branch, staged, unstaged)
+:GitDiff          Show diff for current buffer
+:GitDiffCached    Show cached diff for current buffer
+:GitAdd           Stage current buffer
+:GitRestore       Unstage current buffer
+:GitRevert        Revert current buffer to HEAD
+:GitBlame         Open blame output in a bottom-left split
+
+==============================================================================
+3. GitStatus buffer keys                                  *gitui-status-keys*
+
+In the GitStatus buffer:
+
+  a    git add (line under cursor)
+  r    git restore --staged (line under cursor)
+  R    git restore --source=HEAD (line under cursor)
+  d    git diff (line under cursor)
+  D    git diff --cached (line under cursor)
+  b    git blame (line under cursor)
+  gr   refresh status
+  q    close status buffer
+
+==============================================================================
+4. Notes                                                  *gitui-notes*
+
+- Requires Git 2.50 or newer.
+- Run :helptags ~/.vim/doc after installing to enable :help gitui.
+
+vim:tw=78:ts=8:ft=help:norl:
