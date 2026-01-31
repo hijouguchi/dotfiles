@@ -23,8 +23,8 @@ VSCode's version control view.
 :GitDiff          Show diff for current buffer
 :GitDiffCached    Show cached diff for current buffer
 :GitAdd           Stage current buffer
-:GitRestore       Unstage current buffer
-:GitRevert        Revert current buffer to HEAD
+:GitRestore       Staged: restore --staged (no confirm)
+                 Unstaged: confirm, then restore working tree
 :GitBlame         Open blame output in a bottom-left split
 
 ==============================================================================
@@ -33,8 +33,8 @@ VSCode's version control view.
 In the GitStatus buffer:
 
   a    git add (line under cursor)
-  r    git restore --staged (line under cursor)
-  R    git restore --source=HEAD (line under cursor)
+  r    staged: git restore --staged (line under cursor)
+       unstaged: confirm, then git restore (line under cursor)
   d    git diff (line under cursor)
   D    git diff --cached (line under cursor)
   b    git blame (line under cursor)

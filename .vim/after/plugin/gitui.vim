@@ -68,6 +68,22 @@ function! s:git_cmd(root, args) abort
   return join(map(copy(l:parts), 'shellescape(v:val)'))
 endfunction
 
+function! s:git_file_status(root, rel) abort
+  let l:out = s:git_run(a:root, ['status', '--porcelain=v1', '--', a:rel])
+  if v:shell_error || empty(l:out)
+    return #{staged: v:false, unstaged: v:false, untracked: v:false}
+  endif
+  let l:line = l:out[0]
+  if l:line[0:1] ==# '??'
+    return #{staged: v:false, unstaged: v:false, untracked: v:true}
+  endif
+  return #{
+        \ staged:   l:line[0] !=# ' ',
+        \ unstaged: l:line[1] !=# ' ',
+        \ untracked: v:false
+        \ }
+endfunction
+
 function! s:open_scratch(name, filetype, where) abort
   if bufexists(a:name)
     let l:bnr = bufnr(a:name)
@@ -295,20 +311,25 @@ function! s:gitstatus_restore_line() abort
   if empty(l:path)
     return
   endif
+  let l:section = s:gitstatus_current_section()
   let l:next_line = line('.')
-  call s:git_run(b:gitui_root, ['restore', '--staged', '--', l:path])
-  call s:gitstatus_refresh(l:next_line)
+  if l:section ==# 'staged'
+    call s:git_run(b:gitui_root, ['restore', '--staged', '--', l:path])
+    call s:gitstatus_refresh(l:next_line)
+    return
+  elseif l:section ==# 'unstaged'
+    let l:msg = 'Restore working tree for ' . l:path . '?'
+    if confirm(l:msg, "&Yes\n&No", 2) != 1
+      return
+    endif
+    call s:git_run(b:gitui_root, ['restore', '--', l:path])
+    call s:gitstatus_refresh(l:next_line)
+    return
+  else
+    echohl WarningMsg | echom 'restore is not supported for this line' | echohl None
+  endif
 endfunction
 
-function! s:gitstatus_revert_line() abort
-  let l:path = s:gitstatus_get_path()
-  if empty(l:path)
-    return
-  endif
-  let l:next_line = line('.')
-  call s:git_run(b:gitui_root, ['restore', '--source=HEAD', '--', l:path])
-  call s:gitstatus_refresh(l:next_line)
-endfunction
 
 function! s:gitstatus_diff_line(cached) abort
   let l:path = s:gitstatus_get_path()
@@ -401,23 +422,26 @@ function! s:git_restore_current() abort
   endif
   let l:rel = s:relative_path(l:root, l:path)
   let l:rel = s:normalize_pathspec(l:root, l:rel)
-  call s:git_run(l:root, ['restore', '--staged', '--', l:rel])
+  let l:st = s:git_file_status(l:root, l:rel)
+  if l:st.staged
+    call s:git_run(l:root, ['restore', '--staged', '--', l:rel])
+    return
+  endif
+  if l:st.unstaged
+    let l:msg = 'Restore working tree for ' . l:rel . '?'
+    if confirm(l:msg, "&Yes\n&No", 2) != 1
+      return
+    endif
+    call s:git_run(l:root, ['restore', '--', l:rel])
+    return
+  endif
+  if l:st.untracked
+    echohl WarningMsg | echom 'file is untracked' | echohl None
+    return
+  endif
+  echohl WarningMsg | echom 'no changes to restore' | echohl None
 endfunction
 
-function! s:git_revert_current() abort
-  let l:path = s:current_file_path()
-  if empty(l:path)
-    return
-  endif
-  let l:root = s:git_root(expand('%:p:h'))
-  if empty(l:root)
-    echohl ErrorMsg | echom 'not a git repository' | echohl None
-    return
-  endif
-  let l:rel = s:relative_path(l:root, l:path)
-  let l:rel = s:normalize_pathspec(l:root, l:rel)
-  call s:git_run(l:root, ['restore', '--source=HEAD', '--', l:rel])
-endfunction
 
 function! s:git_blame_file(path, root) abort
   let l:out = s:git_run(a:root, ['blame', '--date=short', '--', a:path])
@@ -441,6 +465,22 @@ function! s:gitstatus_place_cursor(target_line) abort
   call cursor(l:line, 1)
 endfunction
 
+function! s:gitstatus_current_section() abort
+  let l:lnum = line('.')
+  while l:lnum >= 1
+    let l:text = getline(l:lnum)
+    if l:text =~# '^Staged:$'
+      return 'staged'
+    elseif l:text =~# '^Unstaged:$'
+      return 'unstaged'
+    elseif l:text =~# '^Untracked:$'
+      return 'untracked'
+    endif
+    let l:lnum -= 1
+  endwhile
+  return ''
+endfunction
+
 function! s:git_blame_current() abort
   let l:path = s:current_file_path()
   if empty(l:path)
@@ -461,7 +501,6 @@ function! s:gitstatus_setup_buffer() abort
   nnoremap <silent><buffer> <CR> :<C-u>call <SID>gitstatus_open_file()<CR>
   nnoremap <silent><buffer> a :<C-u>call <SID>gitstatus_add_line()<CR>
   nnoremap <silent><buffer> r :<C-u>call <SID>gitstatus_restore_line()<CR>
-  nnoremap <silent><buffer> R :<C-u>call <SID>gitstatus_revert_line()<CR>
   nnoremap <silent><buffer> d :<C-u>call <SID>gitstatus_diff_line(0)<CR>
   nnoremap <silent><buffer> D :<C-u>call <SID>gitstatus_diff_line(1)<CR>
   nnoremap <silent><buffer> b :<C-u>call <SID>gitstatus_blame_line()<CR>
@@ -493,7 +532,6 @@ command! GitDiff       call <SID>git_diff_current(0)
 command! GitDiffCached call <SID>git_diff_current(1)
 command! GitAdd        call <SID>git_add_current()
 command! GitRestore    call <SID>git_restore_current()
-command! GitRevert     call <SID>git_revert_current()
 command! GitBlame      call <SID>git_blame_current()
 
 let &cpo = s:save_cpo
