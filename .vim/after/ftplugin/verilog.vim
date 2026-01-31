@@ -29,8 +29,8 @@ let b:match_words = join([
       \ ], ',')
 
 
-nnoremap <buffer> <Space>a :VerilogExpandArray<CR>
-vnoremap <buffer> <Space>a :VerilogExpandArray<CR>
+KMapNNoremap <buffer> <Space>a :VerilogExpandArray<CR>
+KMapVNoremap <buffer> <Space>a :VerilogExpandArray<CR>
 " inoremap <buffer> <expr> = smartchr#loop(' = ', ' <= ', ' == ', '=')
 
 
@@ -78,4 +78,3 @@ augroup END
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim: ts=2 sw=2 sts=2 et fdm=marker
-

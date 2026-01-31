@@ -1,58 +1,58 @@
 " vim: ts=2 sw=2 sts=2 et fdm=marker
 
-noremap ; :
-noremap : ;
-nnoremap q; q:
+KMapNoremap ; :
+KMapNoremap : ;
+KMapNNoremap q; q:
 
-noremap  <F1> <NOP>
-noremap! <F1> <NOP>
+KMapNoremap  <F1> <NOP>
+KMapNoremap! <F1> <NOP>
 
-nnoremap q    <NOP>
-nnoremap Q    <NOP>
+KMapNNoremap q    <NOP>
+KMapNNoremap Q    <NOP>
 
-nnoremap j gj
-nnoremap k gk
+KMapNNoremap j gj
+KMapNNoremap k gk
 
-nnoremap ) t)
-nnoremap ( t(
+KMapNNoremap ) t)
+KMapNNoremap ( t(
 
-nnoremap <Space>tj <C-W>:tabnext<CR>
-nnoremap <Space>tk <C-W>:tabprev<CR>
+KMapNNoremap <Space>tj <C-W>:tabnext<CR>
+KMapNNoremap <Space>tk <C-W>:tabprev<CR>
 
-noremap qo :<C-U>copen<CR>
-noremap qq :<C-U>cclose<CR>
+KMapNoremap qo :<C-U>copen<CR>
+KMapNoremap qq :<C-U>cclose<CR>
 
 " <C-h> is defined by ~/.vim/rc/bundle/unite.vim
-silent! nnoremap <unique> <C-h> :help<Space>
+silent! KMapNNoremap <unique> <C-h> :help<Space>
 
-nnoremap Y  y$
-nnoremap dl 0d$
+KMapNNoremap Y  y$
+KMapNNoremap dl 0d$
 
-nnoremap -- mzgg=G`z
+KMapNNoremap -- mzgg=G`z
 
-nnoremap / :set hlsearch<CR>/
-"nnoremap * :set hlsearch<CR>*
-nnoremap <Space>/ :set hlsearch! \| set hlsearch?<CR>
+KMapNNoremap / :set hlsearch<CR>/
+"KMapNNoremap * :set hlsearch<CR>*
+KMapNNoremap <Space>/ :set hlsearch! \| set hlsearch?<CR>
 
-nnoremap <F1> <NOP>
+KMapNNoremap <F1> <NOP>
 
 " fold を展開して，画面の中央にする
-nnoremap gg ggzvzz
-nnoremap n  nzvzz
-nnoremap N  Nzvzz
+KMapNNoremap gg ggzvzz
+KMapNNoremap n  nzvzz
+KMapNNoremap N  Nzvzz
 
-" nnoremap + <C-A>
-" nnoremap - <C-X>
+" KMapNNoremap + <C-A>
+" KMapNNoremap - <C-X>
 
-nnoremap <Space>p :set paste!    \| :set paste?<CR>
-nnoremap <Space>h :set readonly! \| :set readonly?<CR>
+KMapNNoremap <Space>p :set paste!    \| :set paste?<CR>
+KMapNNoremap <Space>h :set readonly! \| :set readonly?<CR>
 
-nnoremap <Space>m :marks<CR>
-nnoremap <Space>r :registers<CR>
+KMapNNoremap <Space>m :marks<CR>
+KMapNNoremap <Space>r :registers<CR>
 
-nmap <Space>w <C-W>
+KMapNMap <Space>w <C-W>
 
-let s:str = "nnoremap <Space>t%d %dgt"
+let s:str = "KMapNNoremap <Space>t%d %dgt"
 for s:i in range(0,9)
   execute printf(s:str, s:i, s:i+1)
 endfor
@@ -60,40 +60,30 @@ unlet s:i
 
 
 " emacs like keybind for cmdline
-cnoremap <C-B> <Left>
-cnoremap <C-F> <Right>
-cnoremap <C-A> <Home>
-cnoremap <C-E> <End>
+KMapCNoremap <C-B> <Left>
+KMapCNoremap <C-F> <Right>
+KMapCNoremap <C-A> <Home>
+KMapCNoremap <C-E> <End>
 
-cnoremap <C-P> <Up>
-cnoremap <C-N> <Down>
+KMapCNoremap <C-P> <Up>
+KMapCNoremap <C-N> <Down>
 
-cnoremap <expr> <C-]> expand('<cword>')
+KMapCNoremap <expr> <C-]> expand('<cword>')
 
-tmap     <C-T>     <C-W>
-tmap     <C-W>;    <C-W>:
+KMapTMap     <C-T>     <C-W>
+KMapTMap     <C-W>;    <C-W>:
 
-tnoremap <C-W><C-V> <C-W>N
+KMapTNoremap <C-W><C-V> <C-W>N
 
-tnoremap <Space>wh <C-W>h
-tnoremap <Space>wj <C-W>j
-tnoremap <Space>wk <C-W>k
-tnoremap <Space>wl <C-W>l
+KMapTNoremap <Space>wh <C-W>h
+KMapTNoremap <Space>wj <C-W>j
+KMapTNoremap <Space>wk <C-W>k
+KMapTNoremap <Space>wl <C-W>l
 
-tnoremap <Space>tj <C-W>:tabnext<CR>
-tnoremap <Space>tk <C-W>:tabprev<CR>
+KMapTNoremap <Space>tj <C-W>:tabnext<CR>
+KMapTNoremap <Space>tk <C-W>:tabprev<CR>
 
 
-function! s:MyCmdLineWrapper(...) abort "{{{
-  if getcmdtype() =~ '[/?]'
-    return a:2
-  elseif getcmdline() =~? '\<s\(ubstitute\)\?/'
-    return a:3
-  else
-    return a:1
-  endif
-endfunction "}}}
-cnoremap <expr> <CR> <SID>MyCmdLineWrapper("\<CR>", "\<CR>zvzz", "\<CR>")
+KMapCNoremap <expr> <CR> cmdline#enter_by_cmdtype("\<CR>", "\<CR>zvzz", "\<CR>")
 
-tnoremap <C-W>p    <C-W>:call term_sendkeys(bufnr('%'), getreg())<CR>
-
+KMapTNoremap <C-W>p    <C-W>:call term_sendkeys(bufnr('%'), getreg())<CR>
