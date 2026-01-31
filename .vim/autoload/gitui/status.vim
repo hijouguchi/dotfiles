@@ -250,7 +250,14 @@ function! gitui#status#blame_line() abort
   if empty(l:path)
     return
   endif
-  call gitui#diff#blame_file(l:path, b:gitui_root)
+  let l:full = b:gitui_root . '/' . l:path
+  let l:bnr = bufnr(l:full)
+  if l:bnr == -1
+    execute 'badd ' . fnameescape(l:full)
+    let l:bnr = bufnr(l:full)
+  endif
+  let l:ft = getbufvar(l:bnr, '&filetype')
+  call gitui#diff#blame_file(l:path, b:gitui_root, l:ft)
 endfunction
 
 function! gitui#status#open_file() abort
