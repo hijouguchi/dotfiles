@@ -10,8 +10,8 @@ call e.add_depends(
 function! e.pre_load()
   augroup MyClangFormat
     autocmd!
-    autocmd FileType c,cpp vmap =  <Plug>(operator-clang-format)
-    autocmd FileType c,cpp nmap == <Plug>(operator-clang-format)
+    autocmd FileType c,cpp KMapVMap =  <Plug>(operator-clang-format)
+    autocmd FileType c,cpp KMapNMap == <Plug>(operator-clang-format)
   augroup END
 endfunction
 
@@ -19,4 +19,3 @@ let &cpo = s:save_cpo
 unlet s:save_cpo
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
-

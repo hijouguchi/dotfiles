@@ -11,11 +11,11 @@ call packman#config#github#new('vim-scripts/surround.vim')
 
 " MEMO: plugin/surround.vim でここがマップされるので
 "       あらかじめマップ (しておかないと起きない)
-nmap ds  <Plug>Dsurround
-nmap cs  <Plug>Csurround
+KMapNMap ds  <Plug>Dsurround
+KMapNMap cs  <Plug>Csurround
 
-xmap s  <Plug>VSurround
-xmap gs <Plug>VgSurround
+KMapXMap s  <Plug>VSurround
+KMapXMap gs <Plug>VgSurround
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -52,12 +52,11 @@ command! -nargs=* -range=0 -complete=customlist,quickrun#complete
       \   -outputter/error quickfix
       \   <args>
 
-vnoremap <Space>rp :ReplaceRegion ruby<CR>
-nnoremap <Space>e  :QuickRun<CR>
+KMapVNoremap <Space>rp :ReplaceRegion ruby<CR>
+KMapNNoremap <Space>e  :QuickRun<CR>
 
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
-

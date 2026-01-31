@@ -29,11 +29,11 @@ set cpo&vim
 " 実装
 " 1. getmatches() に登録されている情報を使って
 
-nnoremap <silent> * :call highword#add_from_normal()<CR>
-nnoremap <silent> # :call highword#remove_from_normal()<CR>
+KMapNNoremap <silent> * :call highword#add_from_normal()<CR>
+KMapNNoremap <silent> # :call highword#remove_from_normal()<CR>
 
-vnoremap <silent> * :call highword#add_from_visual()<CR>
-vnoremap <silent> # :call highword#remove_from_visual()<CR>
+KMapVNoremap <silent> * :call highword#add_from_visual()<CR>
+KMapVNoremap <silent> # :call highword#remove_from_visual()<CR>
 
 command! HighWordClear  call highword#clear()
 command! HighWordList   call highword#show_list()

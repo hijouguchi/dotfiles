@@ -1,18 +1,19 @@
 
 set complete=.,w,b,u,t,k
 
-inoremap <expr> <Tab>   <SID>InsertTabWrapper("\<C-N>", "\<Tab>")
-inoremap <expr> <S-Tab> <SID>InsertTabWrapper("\<C-P>", "\<S-Tab>")
-inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
-nnoremap <expr> <C-K>   <SID>RegisterWordToDictionary()
+KMapINoremap <expr> <Tab>   <SID>InsertTabWrapper("\<C-N>", "\<Tab>")
+KMapINoremap <expr> <S-Tab> <SID>InsertTabWrapper("\<C-P>", "\<S-Tab>")
+KMapINoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
+KMapNNoremap <expr> <C-K>   <SID>RegisterWordToDictionary()
 
-nnoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
-nnoremap        <C-L><C-R> <plug>(lsp-rename)
-nnoremap        <C-L><C-H> <plug>(lsp-hover)
-nnoremap <expr> <plug>(lsp-hover-scroll-down) lsp#scroll(+4)
-nnoremap <expr> <plug>(lsp-hover-scroll-up)   lsp#scroll(-4)
-nnoremap             <C-J> <plug>(lsp-hover-scroll-down)
-nnoremap             <C-K> <plug>(lsp-hover-scroll-up)
+KMapNNoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
+KMapNNoremap        <C-L><C-R> <plug>(lsp-rename)
+KMapNNoremap        <C-L><C-H> <plug>(lsp-hover)
+KMapNNoremap <expr> <plug>(lsp-hover-scroll-down) lsp#scroll(+4)
+KMapNNoremap <expr> <plug>(lsp-hover-scroll-up)   lsp#scroll(-4)
+KMapNNoremap             <C-J> <plug>(lsp-hover-scroll-down)
+KMapNNoremap             <C-K> <plug>(lsp-hover-scroll-up)
+
 
 let g:lsp_diagnostics_enabled                        = 1
 let g:lsp_diagnostics_virtual_text_enabled           = 0
@@ -53,7 +54,7 @@ function! s:RegisterWordToDictionary() "{{{
     return
   endif
 
-  " 既に登録されてるなら無�  let list = readfile(dict)
+  " 既に登録されてるなら無視  let list = readfile(dict)
   if match(list, word) != -1
     return
   endif
