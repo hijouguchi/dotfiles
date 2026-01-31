@@ -364,20 +364,44 @@ function! s:gitstatus_open_file() abort
 endfunction
 
 function! s:git_diff_file(path, cached, root) abort
-  let l:args = ['diff']
-  if a:cached
-    call add(l:args, '--cached')
+  let l:repo_path = a:path
+  let l:src = a:root . '/' . l:repo_path
+  if !filereadable(l:src)
+    echohl ErrorMsg | echom 'file not found: ' . l:src | echohl None
+    return
   endif
-  call extend(l:args, ['--', a:path])
-  let l:out = s:git_run(a:root, l:args)
 
-  call s:open_scratch('[git-diff]', 'diff', 'botright')
-  if empty(l:out)
-    call s:buffer_set_lines(['(no changes)'])
+  let l:ft = &filetype
+  let l:hash = systemlist(s:git_cmd(a:root, ['rev-parse', '--short', 'HEAD']))
+  let l:hash = (!v:shell_error && !empty(l:hash)) ? l:hash[0] : 'HEAD'
+  let l:title = fnamemodify(l:repo_path, ':t') . ' (' . l:hash . ')'
+
+  let l:args = []
+  if a:cached
+    let l:args = ['show', ':' . l:repo_path]
   else
-    call s:buffer_set_lines(l:out)
+    let l:args = ['show', 'HEAD:' . l:repo_path]
   endif
-  normal! gg
+
+  let l:content = systemlist(s:git_cmd(a:root, l:args))
+  if v:shell_error
+    echohl ErrorMsg | echom 'failed to get base content' | echohl None
+    return
+  endif
+
+  diffthis
+  botright vertical new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
+  setlocal modifiable
+  execute 'file ' . fnameescape(l:title)
+  if empty(l:content)
+    call setline(1, [''])
+  else
+    call setline(1, l:content)
+  endif
+  setlocal nomodifiable readonly
+  let &l:filetype = l:ft
+  diffthis
 endfunction
 
 function! s:git_diff_current(cached) abort
