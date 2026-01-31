@@ -52,7 +52,7 @@ augroup AutoReloadExternalChanges
   autocmd!
   autocmd FocusGained            * checktime
   autocmd BufEnter,WinEnter      * checktime
-  autocmd CursorHold,CursorHoldI * checktime
+  autocmd CursorHold             * checktime
 augroup END
 
 let s:space_match_config = {

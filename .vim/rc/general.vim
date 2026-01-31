@@ -10,6 +10,7 @@ set visualbell
 set t_vb=
 set noerrorbells
 set autoread
+set updatetime=1000
 set number
 set nolist
 set listchars=tab:._,trail:_,eol:.
