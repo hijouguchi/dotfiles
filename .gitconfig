@@ -17,4 +17,4 @@
 [include]
 	path = ~/.gitconfig.local
 [merge]
-	ff = true
+	ff = false
