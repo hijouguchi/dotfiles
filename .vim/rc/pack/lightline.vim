@@ -34,35 +34,42 @@ function! s:try_create_lightline_git_status() abort "{{{
         \   branch:   #{
         \     result:       '',
         \     last_changed: 0,
-        \     command:      'branch',
+        \     command:      ['branch'],
         \     callback:     'LightlineGitBranchCallback',
+        \     job:          v:false
+        \   },
+        \   untracked:   #{
+        \     result:       '',
+        \     last_changed: 0,
+        \     command:      ['status', '--porcelain=v1', '-b'],
+        \     callback:     'LightlineGitUntrackedCallback',
         \     job:          v:false
         \   },
         \   unstaged:   #{
         \     result:       '',
         \     last_changed: 0,
-        \     command:      'status',
+        \     command:      ['status', '--porcelain=v1', '-b'],
         \     callback:     'LightlineGitUnstageCallback',
         \     job:          v:false
         \   },
         \   staged:   #{
         \     result:       '',
         \     last_changed: 0,
-        \     command:      'status',
+        \     command:      ['status', '--porcelain=v1', '-b'],
         \     callback:     'LightlineGitStageCallback',
         \     job:          v:false
         \   },
         \   behind:   #{
         \     result:       '',
         \     last_changed: 0,
-        \     command:      'status',
+        \     command:      ['status', '--porcelain=v1', '-b'],
         \     callback:     'LightlineGitBehindCallback',
         \     job:          v:false
         \   },
         \   ahead:   #{
         \     result:       '',
         \     last_changed: 0,
-        \     command:      'status',
+        \     command:      ['status', '--porcelain=v1', '-b'],
         \     callback:     'LightlineGitAheadCallback',
         \     job:          v:false
         \   }
@@ -72,14 +79,20 @@ endfunction "}}}
 function! LightlineGitStatus(arg) abort "{{{
   call s:try_create_lightline_git_status()
 
-
   let ltime = localtime()
   let job   = b:lightline_git_status[a:arg]
 
   if (ltime - job.last_changed >= 60) && (job.job == v:false)
+    let cmd = ['git', '-C', s:dir()]
+    let cmd += (type(job.command) == v:t_list) ? job.command : [job.command]
+    let job.result = ''
     let job.job = job_start(
-          \ ['git', '-C', s:dir(), job.command],
-          \ {'callback': job.callback})
+          \ cmd,
+          \ {
+          \   'out_cb':  function(job.callback, [a:arg]),
+          \   'err_cb':  function('LightlineGitErrorCallback', [a:arg]),
+          \   'exit_cb': function('LightlineGitExitCallback', [a:arg])
+          \ })
   endif
 
   return job.result
@@ -89,8 +102,6 @@ function! s:GitBranchCallbackJob(target) abort "{{{
     call s:try_create_lightline_git_status()
 
     let job = b:lightline_git_status[a:target]
-    let job.last_changed = localtime()
-    let job.job          = v:false
 
     return job
 endfunction "}}}
@@ -108,76 +119,105 @@ function! s:GitBranchCallbackResult(target, text) abort "{{{
     endif
 endfunction "}}}
 
-function! LightlineGitBranchCallback(ch, msg) abort "{{{
-    let target = 'branch'
-    let job = s:GitBranchCallbackJob(target)
+function! LightlineGitExitCallback(target, job, status) abort "{{{
+  call s:try_create_lightline_git_status()
 
-    for elm in a:msg->split('\n', 1)
-      if elm[0:1] == '* '
-        call s:GitBranchCallbackResult(target, elm[2:-1])
-        return
-      endif
-    endfor
+  let job = b:lightline_git_status[a:target]
+  let job.last_changed = localtime()
+  let job.job          = v:false
 endfunction "}}}
 
-function! LightlineGitUnstageCallback(ch, msg) abort "{{{
-    call s:try_create_lightline_git_status()
+function! LightlineGitErrorCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
 
-    let job = b:lightline_git_status.unstaged
-    let job.last_changed = localtime()
-    let job.job          = v:false
-
-    for elm in a:msg->split('\n', 1)
-      if elm =~ 'Changes not staged for commit'
-        let job.result = 'work'
-        return
-      endif
-    endfor
+  let job = b:lightline_git_status[a:target]
+  let job.last_changed = localtime()
+  let job.job          = v:false
 endfunction "}}}
 
-function! LightlineGitStageCallback(ch, msg) abort "{{{
-    call s:try_create_lightline_git_status()
+function! LightlineGitBranchCallback(target, ch, msg) abort "{{{
+  let job = s:GitBranchCallbackJob(a:target)
 
-    let job = b:lightline_git_status.staged
-    let job.last_changed = localtime()
-    let job.job          = v:false
-
-    for elm in a:msg->split('\n', 1)
-      if elm =~ 'Changes to be committed'
-        let job.result = 'index'
-        return
-      endif
-    endfor
+  for elm in a:msg->split('\n', 1)
+    if elm[0:1] == '* '
+      call s:GitBranchCallbackResult(a:target, elm[2:-1])
+      return
+    endif
+  endfor
 endfunction "}}}
 
-function! LightlineGitBehindCallback(ch, msg) abort "{{{
-    call s:try_create_lightline_git_status()
+function! LightlineGitUntrackedCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
 
-    let job = b:lightline_git_status.behind
-    let job.last_changed = localtime()
-    let job.job          = v:false
+  let job = b:lightline_git_status.untracked
 
-    for elm in a:msg->split('\n', 1)
-      if elm =~ 'use "git pull" to merge' || elm =~ 'use "git pull" to update'
-        let job.result = 'behind'
-        return
-      endif
-    endfor
+  for elm in a:msg->split('\n', 1)
+    if elm =~# '^\V?? '
+      let job.result = 'untracked'
+      return
+    endif
+  endfor
 endfunction "}}}
 
-function! LightlineGitAheadCallback(ch, msg) abort "{{{
-    call s:try_create_lightline_git_status()
+function! LightlineGitUnstageCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
 
-    let job = b:lightline_git_status.ahead
-    let job.last_changed = localtime()
-    let job.job          = v:false
+  let job = b:lightline_git_status.unstaged
 
-    for elm in a:msg->split('\n', 1)
-      if elm =~ 'use "git pull" to merge' || elm =~ 'use "git push" to publish'
-        let job.result = 'ahead'
-        return
-      endif
-    endfor
+  for elm in a:msg->split('\n', 1)
+    if elm =~# '^## '
+      continue
+    endif
+    if elm =~# '^\V?? '
+      continue
+    endif
+    if len(elm) >= 2 && elm[1] !=# ' '
+      let job.result = 'work'
+      return
+    endif
+  endfor
+endfunction "}}}
+
+function! LightlineGitStageCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
+
+  let job = b:lightline_git_status.staged
+
+  for elm in a:msg->split('\n', 1)
+    if elm =~# '^## '
+      continue
+    endif
+    if len(elm) >= 2 && elm[0] !=# ' ' && elm[0] !=# '?'
+      let job.result = 'index'
+      return
+    endif
+  endfor
+endfunction "}}}
+
+function! LightlineGitBehindCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
+
+  let job = b:lightline_git_status.behind
+
+  for elm in a:msg->split('\n', 1)
+    if elm =~# '^## ' && elm =~# '\<behind [0-9]\+\>'
+      let job.result = 'behind'
+      return
+    endif
+  endfor
+endfunction "}}}
+
+function! LightlineGitAheadCallback(target, ch, msg) abort "{{{
+  call s:try_create_lightline_git_status()
+
+  let job = b:lightline_git_status.ahead
+
+  for elm in a:msg->split('\n', 1)
+    if elm =~# '^## ' && elm =~# '\<ahead [0-9]\+\>'
+      let job.result = 'ahead'
+      return
+    endif
+  endfor
 endfunction "}}}
 
 function! LightlineGitBranch() abort "{{{
@@ -186,6 +226,10 @@ endfunction "}}}
 
 function! LightlineGitUnstaged() abort "{{{
   return LightlineGitStatus('unstaged')
+endfunction "}}}
+
+function! LightlineGitUntracked() abort "{{{
+  return LightlineGitStatus('untracked')
 endfunction "}}}
 
 function! LightlineGitStaged() abort "{{{
@@ -204,12 +248,13 @@ let g:lightline = #{
       \   active: #{
       \     left: [
       \       ['mode', 'paste'],
-      \       ['git-branch', 'git-unstaged', 'git-staged', 'git-behind', 'git-ahead', 'filename', 'readonly', 'modified'],
+      \       ['git-branch', 'git-untracked', 'git-unstaged', 'git-staged', 'git-behind', 'git-ahead', 'filename', 'readonly', 'modified'],
       \     ]
       \   },
       \   component_function: #{
       \     filename:      'LightlineFilename',
       \     git-branch:    'LightlineGitBranch',
+      \     git-untracked: 'LightlineGitUntracked',
       \     git-unstaged:  'LightlineGitUnstaged',
       \     git-staged:    'LightlineGitStaged',
       \     git-behind:    'LightlineGitBihind',
@@ -227,4 +272,3 @@ augroup END
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim: ts=2 sw=2 sts=2 et fdm=marker
-
