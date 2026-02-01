@@ -1,10 +1,11 @@
 
 set complete=.,w,b,u,t,k
 
-KMapINoremap <expr> <Tab>   <SID>InsertTabWrapper("\<C-N>", "\<Tab>")
-KMapINoremap <expr> <S-Tab> <SID>InsertTabWrapper("\<C-P>", "\<S-Tab>")
+let s:sid = expand('<SID>')
+execute 'KMapINoremap <expr> <Tab>   ' . s:sid . 'InsertTabWrapper("\<C-N>", "\<Tab>")'
+execute 'KMapINoremap <expr> <S-Tab> ' . s:sid . 'InsertTabWrapper("\<C-P>", "\<S-Tab>")'
 KMapINoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
-KMapNNoremap <expr> <C-K>   <SID>RegisterWordToDictionary()
+execute 'KMapNNoremap <expr> <C-K>   ' . s:sid . 'RegisterWordToDictionary()'
 
 KMapNNoremap        <C-L><C-D> <plug>(lsp-document-diagnostics)
 KMapNNoremap        <C-L><C-R> <plug>(lsp-rename)
@@ -87,5 +88,4 @@ function! s:InsertTabWrapper(next, tab) "{{{
 endfunction "}}}
 
 " vim: ts=2 sw=2 sts=2 et fdm=marker
-
 

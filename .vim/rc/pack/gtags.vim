@@ -4,13 +4,14 @@ set cpo&vim
 call packman#config#github#new('vim-scripts/gtags.vim')
       \ .add_hook_commands('Gtags', 'GtagsCursor')
 
+let s:sid = expand('<SID>')
 KMapNNoremap <expr> <space>gt ':Gtags '   .expand('<cword>')."\<CR>"
 KMapNNoremap <expr> <space>gr ':Gtags -r '.expand('<cword>')."\<CR>"
 KMapNNoremap <expr> <space>gs ':Gtags -s '.expand('<cword>')."\<CR>"
 KMapNNoremap <expr> <space>gf ':Gtags -f '.expand('<cword>')."\<CR>"
 KMapNNoremap <expr> <space>gg ':Gtags -g '.expand('<cword>')."\<CR>"
 
-KMapNNoremap <expr> <C-]> <SID>TagSearch()
+execute 'KMapNNoremap <expr> <C-]> ' . s:sid . 'TagSearch()'
 
 function! s:TagSearch() "{{{
   if &l:ft != 'help' && filereadable('GPATH')
