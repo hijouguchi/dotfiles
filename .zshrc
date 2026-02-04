@@ -266,14 +266,17 @@ zle -N zle-keymap-select
 
 # -----------------------------------------------------------------------------
 function _my_hook_show_chdir() {
-  if [[ $# == 0 ]]; then
-    local _target=$PWD
-  else
-    local _target=$1
-  fi
+  emulate -L zsh
+  setopt null_glob
 
-  local fcount=${$(timeout 1 ls ${_target} -A1 | wc -l)##*[[:blank:]]}
-  echo -e "\e[31m ${fcount} files in \e[32m${_target}\e[m"
+  local _target=${1:-$PWD}
+  local -a entries
+
+  entries=("${_target}"/*(DN) "${_target}"/.*(DN))
+  entries=(${entries:#${_target}/.} ${entries:#${_target}/..})
+
+  local fcount=${#entries}
+  print -r -- $'\e[31m'" ${fcount} files in "$'\e[32m'"${_target}"$'\e[m'
 }
 
 function _my_hook_precmd_ls() {
@@ -282,4 +285,3 @@ function _my_hook_precmd_ls() {
 }
 add-zsh-hook chpwd   _my_hook_show_chdir
 add-zsh-hook preexec _my_hook_precmd_ls
-
