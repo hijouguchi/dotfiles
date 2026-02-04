@@ -103,23 +103,23 @@ else
 fi
 
 zstyle ':completion:*' verbose yes
-zstyle ':completion:*' menu true
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z} r:|[-_.]=**'
-zstyle ':completion:*' completer _extensions _expand _complete _match _prefix _approximate
+zstyle ':completion:*' completer _extensions _expand _complete _prefix _match _approximate
+zstyle ':completion:*' ignore-parents parent pwd
 
 zstyle ':completion:*' file-patterns \
   '*(^-/):files:files' \
   '*(-/):directories:directories'
 
-zstyle ':completion:*' ignore-parents parent pwd ..
+compdef _command_with_dirs -command-
 
 zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o'
 
+zstyle ':completion:*'              max-errors 1
 zstyle ':completion:*'              group-name ''
 zstyle ':completion:*'              list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:descriptions' format "%B%F{blue}--- Completing %d ---%f%b"
-zstyle ':completion:*:corrections'  format "%B%F{blue}--- %d%f %F{red}(erros: %e)%f %F{blue} ---%f%b"
 zstyle ':completion:*:warnings'     format "%B%F{yellow}--- Not Found ---%f%b"
 zstyle ':completion:*:options'      description yes
 

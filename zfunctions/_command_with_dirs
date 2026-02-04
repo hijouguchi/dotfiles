@@ -1,0 +1,15 @@
+#compdef -command-
+
+# Show directories and files when the command position contains a slash,
+# while keeping normal command completion otherwise.
+local ret=1
+
+if [[ $PREFIX = */* ]]; then
+  _alternative \
+    'directories:directory:_path_files -/' \
+    'files:file:_path_files -g "*(-.)"' && ret=0
+else
+  _command_names && ret=0
+fi
+
+return ret
