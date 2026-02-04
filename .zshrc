@@ -103,7 +103,6 @@ else
 fi
 
 zstyle ':completion:*' verbose yes
-zstyle ':completion:*' menu true
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z} r:|[-_.]=**'
 zstyle ':completion:*' completer _extensions _expand _complete _match _prefix _approximate
@@ -112,7 +111,7 @@ zstyle ':completion:*' file-patterns \
   '*(^-/):files:files' \
   '*(-/):directories:directories'
 
-zstyle ':completion:*' ignore-parents parent pwd ..
+zstyle ':completion:*' ignore-parents parent pwd
 
 zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o'
 
