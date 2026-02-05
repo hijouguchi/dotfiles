@@ -69,6 +69,8 @@ bindkey '^n'   history-beginning-search-forward
 bindkey '^i'   menu-complete
 bindkey '^[[Z' reverse-menu-complete
 
+bindkey '^[OP' _complete_help
+
 bindkey '^b'    backward-char
 bindkey '^f'    forward-char
 bindkey '^a'    beginning-of-line
@@ -105,14 +107,12 @@ fi
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z} r:|[-_.]=**'
-zstyle ':completion:*' completer _extensions _expand _complete _prefix _match _approximate
+zstyle ':completion:*' completer _expand _complete _match _files _ignored _approximate
 zstyle ':completion:*' ignore-parents parent pwd
 
-zstyle ':completion:*' file-patterns \
-  '*(^-/):files:files' \
-  '*(-/):directories:directories'
-
-compdef _command_with_dirs -command-
+#zstyle ':completion:*' file-patterns \
+#  '*(^-/):files:files' \
+#  '*(-/):directories:directories'
 
 zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o'
 
