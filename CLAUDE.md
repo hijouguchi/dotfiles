@@ -1,11 +1,10 @@
 # Dotfiles
 
-これは個人設定ファイル (vim, zsh など) を管理するリポジトリです。
-詳細な使用方法、ディレクトリ構成は README.md を参照してください。
+This repository manages personal configuration files (vim, zsh, etc.).
+See README.md for usage and directory structure.
 
-## Coding Rule
+## Coding Rules
 
-- multibyte の使用を一切禁止。コメント含めて全て英語で記述すること
-- indent は spece 2 文字を使用する
-- 1行 100 文字以下になるように努めること。120 文字を超えることは禁止。
-
+- No multibyte characters. All content including comments must be written in English.
+- Indent with 2 spaces.
+- Keep each line within 100 characters. Exceeding 120 characters is not allowed.
