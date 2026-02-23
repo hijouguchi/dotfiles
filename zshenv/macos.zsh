@@ -1,7 +1,9 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 path=( \
+  /opt/packages/*/bin(N-/) \
   /opt/tool/*/bin(N-/) \
+  $HOME/.local/bin \
   $(brew --prefix coreutils)/libexec/gnubin \
   $(brew --prefix llvm)/bin \
   $(brew --prefix ruby)/bin \

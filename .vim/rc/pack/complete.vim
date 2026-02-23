@@ -46,6 +46,22 @@ augroup MyInsertComplete "{{{
   "autocmd CursorHold * LspHover
 augroup END "}}}
 
+
+if executable('slang-server')
+  augroup LspSlangServer
+    autocmd!
+
+    autocmd BufNewFile,BufRead *.sv,*.svh,*.v,*.vh setfiletype systemverilog
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'slang-server',
+          \ 'cmd': {server_info->['slang-server']},
+          \ 'allowlist': ['systemverilog', 'verilog'],
+          \ 'workspace_config': {},
+          \ })
+  augroup END
+endif
+
+
 function! s:RegisterWordToDictionary() "{{{
   let word = expand('<cword>')
   let dict = &l:dictionary

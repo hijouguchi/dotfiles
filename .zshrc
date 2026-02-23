@@ -1,7 +1,7 @@
 
-if [[ -z "$STY"  ]]; then
-  exec screen -D -RR -e"^Gg"
-fi
+#if [[ -z "$STY"  ]]; then
+#  exec screen -D -RR -e"^Gg"
+#fi
 
 # ここに zhistory, zcompdump を作る
 if [[ ! -e ~/.zsh ]]; then
@@ -57,6 +57,11 @@ if [[ -n "$STY"  ]]; then
   alias vimdiff="screen vimdiff"
   alias s='screen'
   alias title='screen -X title'
+
+  function number() {
+    WINDOW=$1
+    screen -X @number $1
+  }
 fi
 
 ################################################################################
