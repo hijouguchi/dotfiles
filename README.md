@@ -25,7 +25,17 @@ dotfiles/
 |   |   |-- .globalrc               # -> ~/.globalrc
 |   |   `-- .ctags                  # -> ~/.ctags
 |   |-- screen/
-|   |   `-- .screenrc               # -> ~/.screenrc
+|   |   |-- common.screenrc         # -> ~/.config/screen/common.screenrc
+|   |   |-- v4/                     # -> ~/.config/screen/v4/
+|   |   |   |-- base.screenrc
+|   |   |   |-- statusline-default.screenrc
+|   |   |   |-- statusline-linux.screenrc
+|   |   |   `-- statusline-macos.screenrc
+|   |   `-- v5/                     # -> ~/.config/screen/v5/
+|   |       |-- base.screenrc
+|   |       |-- statusline-default.screenrc
+|   |       |-- statusline-linux.screenrc
+|   |       `-- statusline-macos.screenrc
 |   |-- ugrep/
 |   |   `-- .ugrep                  # -> ~/.ugrep
 |   |-- vim/
@@ -94,7 +104,11 @@ make install FORCE=1
 | git      | `sources/git/config`                 | `~/.config/git/config`           | symlink  |
 | git      | `sources/git/ignore`                 | `~/.config/git/ignore`           | symlink  |
 | git      | `sources/git/config.local.template`  | `~/.config/git/config.local`     | template |
-| screen   | `sources/screen/.screenrc`           | `~/.screenrc`                    | symlink  |
+| screen   | `sources/screen/common.screenrc`     | `~/.config/screen/common.screenrc` | symlink |
+| screen   | `sources/screen/v4/`                 | `~/.config/screen/v4/`           | symlink  |
+| screen   | `sources/screen/v5/`                 | `~/.config/screen/v5/`           | symlink  |
+| screen   | (generated)                          | `~/.config/screen/host.screenrc` | generate |
+| screen   | (generated)                          | `~/.screenrc`                    | generate |
 | ugrep    | `sources/ugrep/.ugrep`               | `~/.ugrep`                       | symlink  |
 | global   | `sources/global/.globalrc`           | `~/.globalrc`                    | symlink  |
 | global   | `sources/global/.ctags`              | `~/.ctags`                       | symlink  |
@@ -106,6 +120,12 @@ make install FORCE=1
   No `core.excludesFile` setting is required.
 - **template**: Template files are copied once (skipped if the destination already exists).
   Edit the copied file to add machine-specific settings.
+- **uninstall**: Symlink targets are removed only when the destination is a symlink.
+  Manually created regular files are preserved.
+- **git/zsh local files**: `~/.config/git/config.local` and `~/.config/zsh/host.zshenv`
+  are preserved on uninstall.
+- **screen**: `~/.screenrc` is generated on each install and sources version/OS-specific files.
+  It also sources manually created non-symlink `~/.config/screen/*.screenrc` files.
 
 ## Post-Install Manual Configuration
 

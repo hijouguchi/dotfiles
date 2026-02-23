@@ -1,0 +1,30 @@
+# vim: filetype=screen
+# Status line (v5, Linux)
+setenv _s "%{=}"
+setenv _s "$_s%?%F%{b15;12}%:%{15;241}%?" # focus or non-focus
+setenv _s "$_s%?%P%{b15;5}%?"             # paste  (focus)
+setenv _s "$_s%?%E%{b15;6}%?"             # escape (focus)
+setenv _s "$_s%n %t"
+setenv _s "$_s%="
+setenv _s "$_s%?%P[COPY]%?"               # paste  (focus)
+setenv _s "$_s%?%E[SCREEN]%?"             # escape (focus)
+setenv _s "$_s%{-}"
+caption always "$_s"
+
+setenv _s "%{=}"
+setenv _s "$_s%-w"
+setenv _s "$_s%50>"
+setenv _s "$_s%{b15;12}%n %t%{-}"
+setenv _s "$_s%+w"
+setenv _s "$_s%-30<%="
+setenv _s "$_s[%H:%2`]" # [host:load average (1min)]
+setenv _s "$_s[%1`]"    # [mm/dd hh:mm:ss]
+setenv _s "$_s%{-}"
+hardstatus alwayslastline "$_s"
+
+backtick 1  1  1 date '+%m/%d %H:%M:%S'
+backtick 2 60 60 sh -c 'uptime | sed "s/.*load average: *//; s/,.*//"'
+
+#rendition monitor "=b"  "RW"
+
+unsetenv _s

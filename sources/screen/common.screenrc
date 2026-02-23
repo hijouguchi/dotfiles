@@ -1,3 +1,4 @@
+# vim: filetype=screen
 # NOTE: escape key was changed by command line argument
 #       DO NOT SET BY SCREENRC FILE
 #       'screen -D -RR -e"^Gg"'
@@ -11,38 +12,6 @@ term xterm-256color
 truecolor on
 
 ################################################################################
-# Status Line
-################################################################################
-setenv _s "%{=}"
-setenv _s "$_s%?%F%{b15;12}%:%{15;241}%?" # focus or non-focus
-setenv _s "$_s%?%P%{b15;5}%?"             # paste  (focus)
-setenv _s "$_s%?%E%{b15;6}%?"             # escape (focus)
-setenv _s "$_s%n %t"
-setenv _s "$_s%="
-setenv _s "$_s%?%P[COPY]%?"               # paste  (focus)
-setenv _s "$_s%?%E[SCREEN]%?"             # escape (focus)
-setenv _s "$_s%{-}"
-caption always "$_s"
-
-setenv _s "%{=}"
-setenv _s "$_s%-w"
-setenv _s "$_s%50>"
-setenv _s "$_s%{b15;12}%n %t%{-}"
-setenv _s "$_s%+w"
-setenv _s "$_s%-30<%="
-setenv _s "$_s[%H:%2`]" # [host:load average (1min)]
-setenv _s "$_s[%1`]"    # [mm/dd hh:mm:ss]
-setenv _s "$_s%{-}"
-hardstatus alwayslastline "$_s"
-
-backtick 1  1  1 date '+%m/%d %H:%M:%S'
-backtick 2 60 60 sh -c 'uptime | sed -e "s/.*load average:\s*//" -e "s/,.*$//"'
-
-#rendition monitor "=b"  "RW"
-
-unsetenv _s
-
-################################################################################
 # key binds
 ################################################################################
 bind  ; colon
@@ -53,7 +22,7 @@ bind  q remove
 bind  s split
 bind  v split -v
 
-# move findow forcus
+# move window focus
 bind ^n next
 bind ^p prev
 bind  h focus left
@@ -65,17 +34,8 @@ bind ^k eval '@kill'
 bind ^m monitor
 bind  w windowlist -b
 
-
-################################################################################
-# key binds
-################################################################################
-
 bind ^[ # old bind is copy
 bind ^v copy
-
-### TODO: vi 風の keybind を定義する？
-# clip board でもできるようにしてるので
-# paste とか含めてあまり考えなくても佳いかもしれない
 
 bind                  r eval                'command -c window_resize' 'echo "resize mode"'
 bind                  + eval 'resize -v +1' 'command -c window_resize' 'echo "resize mode"'
@@ -90,4 +50,3 @@ bind -c window_resize > eval 'resize -h +1' 'command -c window_resize' 'echo "re
 bind -c window_resize < eval 'resize -h -1' 'command -c window_resize' 'echo "resize mode"'
 bind -c window_resize = eval 'resize ='     'command -c window_resize' 'echo "resize mode"'
 bind -c window_resize _ eval 'resize max'   'command -c window_resize' 'echo "resize mode"'
-
