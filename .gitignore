@@ -1,8 +1,8 @@
 .DS_Store
+.vscode
+.claude/settings.local.json
 *.swp
-.claude/
-.vim/.netrwhist
-.vim/viminfo
-start_linux.zsh
-.vim/pack/repo
-zfunctions/async
+**/.vim/.netrwhist
+**/.vim/viminfo
+**/.vim/pack/repo
+**/zfunctions/async

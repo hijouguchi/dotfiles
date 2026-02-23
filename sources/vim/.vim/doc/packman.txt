@@ -1,0 +1,143 @@
+*packman.txt*                                         package managor for github
+
+Version: 1.0
+Author:  hijouguchi <taka13.mac@gmail.com>
+License: MIT license
+
+==============================================================================
+CONTENTS                                                      *packman-contents*
+
+==============================================================================
+INTRODUCTION                                              *packman-introduction*
+
+==============================================================================
+COMMANDS                                                      *packman-commands*
+
+PackManAdd {repo-name} {options}                                    *PackManAdd*
+               Register and load immidiate the plugins. plugin are specified
+               only github repository as {repo-name}.
+
+               NOTE: if you set Shougo/vimproc.vim as {repo-name}, packman
+               downloads from https://github.com/Shougo/vimproc.vim to
+               |g:packman_default_directory|/vimproc.vim.
+
+PackManAddLazy {repo-name} {options}                            *PackManAddLazy*
+               Register the plugin as lazy load mode.
+               Any hooks for loading plugins are specified from the {options}.
+               Hooks can be specified on event, keymap and commands.
+               If any hooks are not presented, this plugin will be load as
+               timer mode.
+
+
+|PackManAdd-options|
+
+PackManCheck                                                      *PackManCheck*
+               Install or update all plugins. If plugin has not been
+               installed, it will executes 'git clone', othersize executes
+               'git pull'.
+
+PackManList                                                        *PackManList*
+               Display the plugin names that are added by PackManAdd or
+               PackManAddLazy. They are displayed as {repo-name}.
+               The character '*'  will be desplayed for loaded plugins.
+               The character '->' will be desplayed for depended plugins.
+
+
+==============================================================================
+PACKMAN ADD OPTIONS                                         *PackManAdd-options*
+
+NOTE: This section are not completed. 
+
+
+noload                                                  *packman-options-noload*
+    does not load automatically, this option are used for depends repository.
+
+type                                                      *packman-options-type*
+    Specify repository type as github(default) or runtime.
+>
+    PackManAddLazy 'macros/matchit.vim', {'type' : 'runtime'}
+<
+
+depends                                                *packman-options-depends*
+>
+    PackManAddLazy 'kana/vim-textobj-user.git',
+    \ {'depends' : ['sgur/vim-textobj-parameter.git']}
+<
+
+commands                                              *packman-options-commands*
+>
+    PackManAddLazy 'vim-scripts/Align',
+    \ {'commands': ['Align']}
+<
+
+event                                                    *packman-options-event*
+>
+  PackManAddLazy 'Shougo/neocomplete.vim.git', 
+  {'event': ['InsertEnter']}
+<
+
+keymaps                                                *packman-options-keymaps*
+>
+    PackManAddLazy 'haya14busa/incsearch.vim',
+    \ {'keymaps': ['<Plug>(incsearch-forward)']}
+<
+
+post_install_func()                          *packman-options-post_install_func*
+>
+    let elm = {}
+
+    function! elm.post_install_func()
+      if !has('win32') && !has('win32unix')
+        call system('cd '.self.dir.' && make')
+      endif
+    endfunction
+
+    PackManAdd     'Shougo/vimproc.vim', elm
+<
+
+pre_load()                                            *packman-options-pre_laod*
+
+post_load()                                          *packman-options-post_load*
+
+dir                                                         *packman-option-dir*
+          Returned installed directory. Set automatically by |PackManAdd| or
+          |PackManAddLazy|.  Refer to |packman-options-post_install_func|.
+
+
+==============================================================================
+FUNCTIONS                                                    *packman-functions*
+
+packman#initialize()                                      *packman#initialize()*
+               Initialize mackman.  After called this function, You can use
+               Packman commands.
+               NOTE: Please set global packman variables before calling it.
+
+==============================================================================
+VARIABLES                                                    *packman-variables*
+
+
+g:packman_default_directory                        *g:packman_default_directory*
+                set the directory path for pack install.
+                default is ~/.vim/pack/packman/opt.
+
+g:packman_delay_load_time                            *g:packman_delay_load_time*
+                set the delay time for timer lazy mode. unit is milliseconds.
+                default is 10 (10ms).
+
+g:packman_load_and_install_config            *g:packman_load_and_install_config*
+                Specify the load, install and update function for rech
+                repositories.
+>
+   let g:packman_load_and_install_config.github = {
+          \ 'load':    funcref('packman#repository_github_load'),
+          \ 'update':  funcref('packman#repository_github_update'),
+          \ 'install': funcref('packman#repository_github_install')
+          \ }
+<
+               default are set for github and runtime.
+
+==============================================================================
+EXAMPLES                                                  *packman-introduction*
+
+
+vim:tw=78:ts=8:ft=help:norl:

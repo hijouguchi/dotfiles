@@ -1,0 +1,41 @@
+snippet    alwaysr
+abbr       always @(posedge clk ...)
+  // always (reg) ${1:#:variable} {{{
+  always @(posedge clk or negedge xrst) begin
+    if(!xrst) begin
+      $1 <= ${2:1'b0};
+    end else ${3:TARGET}begin
+      $1 <= ${4:1'b0};
+    end
+  end // }}}${0}
+
+
+snippet    alwaysw
+abbr       always @(*)
+  // always (wire) ${1:#:variable} {{{
+  always @(*) begin
+    $1 = ${2:1'b0};
+  end // }}}${0}
+
+
+snippet     task
+abbr        task
+  task ${1}; // {{{
+    ${2}
+    begin
+      ${3}
+    end
+  endtask // }}}${0}
+
+
+snippet     module
+abbr        module
+  module ${0:TARGET}
+  endmodule
+
+
+snippet     case
+abbr        case
+  case(${1:#:variable})
+    ${0:TARGET}
+  endcase
