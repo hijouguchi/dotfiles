@@ -39,10 +39,13 @@ _do_symlink() { \
 }; \
 _do_copy_template() { \
   if [ "$(DRY_RUN)" = "1" ]; then \
-    if [ ! -e "$$2" ]; then printf "Installed: ~%s\n" "$${2#$$HOME}"; \
+    if [ ! -e "$$2" ]; then \
+      printf "Installed: ~%s\n" "$${2#$$HOME}"; \
+      [ -n "$$3" ] && printf "  --> %s\n" "$$3"; \
     else printf "Skipped:   ~%s\n" "$${2#$$HOME}"; fi; \
   elif [ ! -e "$$2" ]; then \
     cp "$$1" "$$2"; printf "Installed: ~%s\n" "$${2#$$HOME}"; \
+    [ -n "$$3" ] && printf "  --> %s\n" "$$3"; \
   else \
     printf "Skipped:   ~%s\n" "$${2#$$HOME}"; \
   fi; \
@@ -143,7 +146,8 @@ install-zsh:
 	if [ "$(DRY_RUN)" != "1" ]; then mkdir -p "$(HOME_DIR)/.config/zsh"; fi; \
 	_do_symlink "$(SOURCES_DIR)/zsh/zfunctions" "$(HOME_DIR)/.config/zsh/zfunctions"; \
 	_do_copy_template "$(SOURCES_DIR)/zsh/host-template.zsh" \
-	  "$(HOME_DIR)/.config/zsh/host.zshenv"; \
+	  "$(HOME_DIR)/.config/zsh/host.zshenv" \
+	  "Edit ~/.config/zsh/host.zshenv to add machine-specific settings."; \
 	_do_download "$(ASYNC_URL)" "$(ASYNC_FILE)"
 
 uninstall-zsh:
@@ -184,7 +188,8 @@ install-git:
 	_do_symlink "$(SOURCES_DIR)/git/config" "$(HOME_DIR)/.config/git/config"; \
 	_do_symlink "$(SOURCES_DIR)/git/ignore" "$(HOME_DIR)/.config/git/ignore"; \
 	_do_copy_template "$(SOURCES_DIR)/git/config.local.template" \
-	  "$(HOME_DIR)/.config/git/config.local"
+	  "$(HOME_DIR)/.config/git/config.local" \
+	  "Edit ~/.config/git/config.local to set your name and email."
 
 uninstall-git:
 	@$(SHELLFN); \
