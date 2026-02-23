@@ -1,7 +1,6 @@
 typeset -U path cdpath fpath
 
-ZSHENV_DIR="${HOME}/dotfiles/zshenv"
-ZSHENV_HOSTS_DIR="${HOME}/.zshenv.hosts"
+ZSHENV_DIR="${HOME}/dotfiles/sources/zsh/zshenv"
 
 case "$(uname -s 2>/dev/null)" in
   Darwin)
@@ -12,7 +11,4 @@ case "$(uname -s 2>/dev/null)" in
     ;;
 esac
 
-host="$(hostname -s 2>/dev/null || hostname)"
-if [ -n "${host}" ] && [ -f "${ZSHENV_HOSTS_DIR}/${host}.zsh" ]; then
-  source "${ZSHENV_HOSTS_DIR}/${host}.zsh"
-fi
+[ -f "${HOME}/.config/zsh/host.zshenv" ] && source "${HOME}/.config/zsh/host.zshenv"

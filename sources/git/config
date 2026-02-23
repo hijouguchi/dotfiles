@@ -8,13 +8,12 @@
 [core]
 	editor = vim
 	pager  = lv -c
-	excludesfile = $HOME/.gitignore
 [alias]
-	l  = log --pretty=format:\"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset\" --graph --all
+	l  = log --pretty=format:"%C(yellow)%h%Cblue%d%Creset %s %C(black bold)%an, %ar%Creset" --graph --all
 	s  = status
 	c  = commit
 	cm = checkout master
 [include]
-	path = ~/.gitconfig.local
+	path = ~/.config/git/config.local
 [merge]
 	ff = false

@@ -120,11 +120,11 @@ uninstall-vim:
 
 # ------------------------------------------------------------------------------
 # zsh
-#   symlink:  sources/zsh/.zshrc              -> ~/.zshrc
-#   symlink:  sources/zsh/.zshenv             -> ~/.zshenv
-#   symlink:  sources/zsh/zfunctions/         -> ~/zfunctions/
-#   template: sources/zsh/zshenv/host-template.zsh -> ~/.zshenv.hosts/HOSTNAME.zsh
-#   download: zsh-async (mafredri/zsh-async)  -> sources/zsh/zfunctions/async
+#   symlink:  sources/zsh/.zshrc           -> ~/.zshrc
+#   symlink:  sources/zsh/.zshenv          -> ~/.zshenv
+#   symlink:  sources/zsh/zfunctions/      -> ~/.config/zsh/zfunctions/
+#   template: sources/zsh/host-template.zsh -> ~/.config/zsh/host.zshenv
+#   download: zsh-async (mafredri/zsh-async) -> sources/zsh/zfunctions/async
 # ------------------------------------------------------------------------------
 install-zsh:
 	@$(SHELLFN); \
@@ -133,17 +133,17 @@ install-zsh:
 	  echo "I will install the following files:"; \
 	  _plan_install "$(HOME_DIR)/.zshrc"; \
 	  _plan_install "$(HOME_DIR)/.zshenv"; \
-	  _plan_install "$(HOME_DIR)/zfunctions"; \
-	  _plan_install "$(HOME_DIR)/.zshenv.hosts/HOSTNAME.zsh"; \
+	  _plan_install "$(HOME_DIR)/.config/zsh/zfunctions"; \
+	  _plan_install "$(HOME_DIR)/.config/zsh/host.zshenv"; \
 	  _plan_install "$(ASYNC_FILE)"; \
 	  _confirm || exit 0; \
 	fi; \
 	_do_symlink "$(SOURCES_DIR)/zsh/.zshrc"     "$(HOME_DIR)/.zshrc"; \
 	_do_symlink "$(SOURCES_DIR)/zsh/.zshenv"    "$(HOME_DIR)/.zshenv"; \
-	_do_symlink "$(SOURCES_DIR)/zsh/zfunctions" "$(HOME_DIR)/zfunctions"; \
-	if [ "$(DRY_RUN)" != "1" ]; then mkdir -p "$(HOME_DIR)/.zshenv.hosts"; fi; \
-	_do_copy_template "$(SOURCES_DIR)/zsh/zshenv/host-template.zsh" \
-	  "$(HOME_DIR)/.zshenv.hosts/HOSTNAME.zsh"; \
+	if [ "$(DRY_RUN)" != "1" ]; then mkdir -p "$(HOME_DIR)/.config/zsh"; fi; \
+	_do_symlink "$(SOURCES_DIR)/zsh/zfunctions" "$(HOME_DIR)/.config/zsh/zfunctions"; \
+	_do_copy_template "$(SOURCES_DIR)/zsh/host-template.zsh" \
+	  "$(HOME_DIR)/.config/zsh/host.zshenv"; \
 	_do_download "$(ASYNC_URL)" "$(ASYNC_FILE)"
 
 uninstall-zsh:
@@ -153,47 +153,50 @@ uninstall-zsh:
 	  echo "I will remove the following files:"; \
 	  _plan_remove "$(HOME_DIR)/.zshrc"; \
 	  _plan_remove "$(HOME_DIR)/.zshenv"; \
-	  _plan_remove "$(HOME_DIR)/zfunctions"; \
+	  _plan_remove "$(HOME_DIR)/.config/zsh/zfunctions"; \
+	  _plan_remove "$(HOME_DIR)/.config/zsh/host.zshenv"; \
 	  _plan_remove "$(ASYNC_FILE)"; \
 	  _confirm || exit 0; \
 	fi; \
 	_do_remove "$(HOME_DIR)/.zshrc"; \
 	_do_remove "$(HOME_DIR)/.zshenv"; \
-	_do_remove "$(HOME_DIR)/zfunctions"; \
+	_do_remove "$(HOME_DIR)/.config/zsh/zfunctions"; \
+	_do_remove "$(HOME_DIR)/.config/zsh/host.zshenv"; \
 	_do_remove "$(ASYNC_FILE)"
 
 # ------------------------------------------------------------------------------
 # git
-#   symlink:  sources/git/.gitconfig          -> ~/.gitconfig
-#   symlink:  sources/git/.gitignore.global   -> ~/.gitignore.global
-#   template: sources/git/gitconfig.local.template -> ~/.gitconfig.local
+#   symlink:  sources/git/config              -> ~/.config/git/config
+#   symlink:  sources/git/ignore              -> ~/.config/git/ignore
+#   template: sources/git/config.local.template -> ~/.config/git/config.local
 # ------------------------------------------------------------------------------
 install-git:
 	@$(SHELLFN); \
 	echo "===== Install Git Configuration ====="; \
 	if [ "$(DRY_RUN)" != "1" ] && [ "$(FORCE)" != "1" ]; then \
 	  echo "I will install the following files:"; \
-	  _plan_install "$(HOME_DIR)/.gitconfig"; \
-	  _plan_install "$(HOME_DIR)/.gitignore.global"; \
-	  _plan_install "$(HOME_DIR)/.gitconfig.local"; \
+	  _plan_install "$(HOME_DIR)/.config/git/config"; \
+	  _plan_install "$(HOME_DIR)/.config/git/ignore"; \
+	  _plan_install "$(HOME_DIR)/.config/git/config.local"; \
 	  _confirm || exit 0; \
 	fi; \
-	_do_symlink "$(SOURCES_DIR)/git/.gitconfig"        "$(HOME_DIR)/.gitconfig"; \
-	_do_symlink "$(SOURCES_DIR)/git/.gitignore.global" "$(HOME_DIR)/.gitignore.global"; \
-	_do_copy_template "$(SOURCES_DIR)/git/gitconfig.local.template" \
-	  "$(HOME_DIR)/.gitconfig.local"
+	if [ "$(DRY_RUN)" != "1" ]; then mkdir -p "$(HOME_DIR)/.config/git"; fi; \
+	_do_symlink "$(SOURCES_DIR)/git/config" "$(HOME_DIR)/.config/git/config"; \
+	_do_symlink "$(SOURCES_DIR)/git/ignore" "$(HOME_DIR)/.config/git/ignore"; \
+	_do_copy_template "$(SOURCES_DIR)/git/config.local.template" \
+	  "$(HOME_DIR)/.config/git/config.local"
 
 uninstall-git:
 	@$(SHELLFN); \
 	echo "===== Uninstall Git Configuration ====="; \
 	if [ "$(DRY_RUN)" != "1" ] && [ "$(FORCE)" != "1" ]; then \
 	  echo "I will remove the following files:"; \
-	  _plan_remove "$(HOME_DIR)/.gitconfig"; \
-	  _plan_remove "$(HOME_DIR)/.gitignore.global"; \
+	  _plan_remove "$(HOME_DIR)/.config/git/config"; \
+	  _plan_remove "$(HOME_DIR)/.config/git/ignore"; \
 	  _confirm || exit 0; \
 	fi; \
-	_do_remove "$(HOME_DIR)/.gitconfig"; \
-	_do_remove "$(HOME_DIR)/.gitignore.global"
+	_do_remove "$(HOME_DIR)/.config/git/config"; \
+	_do_remove "$(HOME_DIR)/.config/git/ignore"
 
 # ------------------------------------------------------------------------------
 # screen

@@ -13,7 +13,7 @@ path=( \
 )
 
 fpath=( \
-  $HOME/dotfiles/zfunctions \
+  $HOME/.config/zsh/zfunctions \
   /usr/local/share/zsh/site-functions \
   /opt/homebrew/share/zsh/site-functions \
   /opt/homebrew/opt/rustup/share/zsh/site-functions \
