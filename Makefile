@@ -113,7 +113,8 @@ _print_screen_sources() { \
   _home_dir="$(HOME_DIR)"; \
   printf "  source ~/.config/screen/common.screenrc\n"; \
   printf "  source ~/.config/screen/v%s/base.screenrc\n" "$$_screen_ver"; \
-  printf "  source ~/.config/screen/v%s/statusline-%s.screenrc\n" "$$_screen_ver" "$$_os_key"; \
+  printf "  source ~/.config/screen/v%s/statusline-%s.screenrc\n" \
+    "$$_screen_ver" "$$_os_key"; \
   printf "  source ~/.config/screen/host.screenrc\n"; \
   for _manual in "$$_home_dir/.config/screen/"*.screenrc; do \
     [ -e "$$_manual" ] || continue; \
@@ -183,6 +184,7 @@ uninstall-vim:
 #   symlink:  sources/zsh/.zshenv          -> ~/.zshenv
 #   symlink:  sources/zsh/zfunctions/      -> ~/.config/zsh/zfunctions/
 #   template: sources/zsh/host-template.zsh -> ~/.config/zsh/host.zshenv
+#             (preserved on uninstall)
 #   download: zsh-async (mafredri/zsh-async) -> sources/zsh/zfunctions/async
 # ------------------------------------------------------------------------------
 install-zsh:
@@ -211,17 +213,15 @@ uninstall-zsh:
 	echo "===== Uninstall Zsh Configuration ====="; \
 	if [ "$(DRY_RUN)" != "1" ] && [ "$(FORCE)" != "1" ]; then \
 	  echo "I will remove the following files:"; \
-	  _plan_remove "$(HOME_DIR)/.zshrc"; \
-	  _plan_remove "$(HOME_DIR)/.zshenv"; \
-	  _plan_remove "$(HOME_DIR)/.config/zsh/zfunctions"; \
-	  _plan_remove "$(HOME_DIR)/.config/zsh/host.zshenv"; \
+	  _plan_remove_symlink "$(HOME_DIR)/.zshrc"; \
+	  _plan_remove_symlink "$(HOME_DIR)/.zshenv"; \
+	  _plan_remove_symlink "$(HOME_DIR)/.config/zsh/zfunctions"; \
 	  _plan_remove "$(ASYNC_FILE)"; \
 	  _confirm || exit 0; \
 	fi; \
-	_do_remove "$(HOME_DIR)/.zshrc"; \
-	_do_remove "$(HOME_DIR)/.zshenv"; \
-	_do_remove "$(HOME_DIR)/.config/zsh/zfunctions"; \
-	_do_remove "$(HOME_DIR)/.config/zsh/host.zshenv"; \
+	_do_remove_symlink "$(HOME_DIR)/.zshrc"; \
+	_do_remove_symlink "$(HOME_DIR)/.zshenv"; \
+	_do_remove_symlink "$(HOME_DIR)/.config/zsh/zfunctions"; \
 	_do_remove "$(ASYNC_FILE)"
 
 # ------------------------------------------------------------------------------
@@ -229,6 +229,7 @@ uninstall-zsh:
 #   symlink:  sources/git/config              -> ~/.config/git/config
 #   symlink:  sources/git/ignore              -> ~/.config/git/ignore
 #   template: sources/git/config.local.template -> ~/.config/git/config.local
+#             (preserved on uninstall)
 # ------------------------------------------------------------------------------
 install-git:
 	@$(SHELLFN); \
@@ -252,12 +253,12 @@ uninstall-git:
 	echo "===== Uninstall Git Configuration ====="; \
 	if [ "$(DRY_RUN)" != "1" ] && [ "$(FORCE)" != "1" ]; then \
 	  echo "I will remove the following files:"; \
-	  _plan_remove "$(HOME_DIR)/.config/git/config"; \
-	  _plan_remove "$(HOME_DIR)/.config/git/ignore"; \
+	  _plan_remove_symlink "$(HOME_DIR)/.config/git/config"; \
+	  _plan_remove_symlink "$(HOME_DIR)/.config/git/ignore"; \
 	  _confirm || exit 0; \
 	fi; \
-	_do_remove "$(HOME_DIR)/.config/git/config"; \
-	_do_remove "$(HOME_DIR)/.config/git/ignore"
+	_do_remove_symlink "$(HOME_DIR)/.config/git/config"; \
+	_do_remove_symlink "$(HOME_DIR)/.config/git/ignore"
 
 # ------------------------------------------------------------------------------
 # screen
@@ -309,21 +310,21 @@ install-screen:
 	    > "$(HOME_DIR)/.screenrc"; \
 	  printf "# Generated for: screen %s.x, %s\n" \
 	    "$$_screen_ver" "$$_os_key" >> "$(HOME_DIR)/.screenrc"; \
-	  printf "source %s/.config/screen/common.screenrc\n" \
-	    "$(HOME_DIR)" >> "$(HOME_DIR)/.screenrc"; \
-	  printf "source %s/.config/screen/v%s/base.screenrc\n" \
-	    "$(HOME_DIR)" "$$_screen_ver" >> "$(HOME_DIR)/.screenrc"; \
-	  printf "source %s/.config/screen/v%s/statusline-%s.screenrc\n" \
-	    "$(HOME_DIR)" "$$_screen_ver" "$$_os_key" >> "$(HOME_DIR)/.screenrc"; \
-	  printf "source %s/.config/screen/host.screenrc\n" \
-	    "$(HOME_DIR)" >> "$(HOME_DIR)/.screenrc"; \
+	  printf "source ~/.config/screen/common.screenrc\n" \
+	    >> "$(HOME_DIR)/.screenrc"; \
+	  printf "source ~/.config/screen/v%s/base.screenrc\n" \
+	    "$$_screen_ver" >> "$(HOME_DIR)/.screenrc"; \
+	  printf "source ~/.config/screen/v%s/statusline-%s.screenrc\n" \
+	    "$$_screen_ver" "$$_os_key" >> "$(HOME_DIR)/.screenrc"; \
+	  printf "source ~/.config/screen/host.screenrc\n" \
+	    >> "$(HOME_DIR)/.screenrc"; \
 	  for _manual in "$(HOME_DIR)/.config/screen/"*.screenrc; do \
 	    [ -e "$$_manual" ] || continue; \
 	    _manual_name=$${_manual##*/}; \
 	    case "$$_manual_name" in common.screenrc|host.screenrc) continue ;; esac; \
 	    if [ ! -L "$$_manual" ]; then \
-	      printf "source %s/.config/screen/%s\n" \
-	        "$(HOME_DIR)" "$$_manual_name" >> "$(HOME_DIR)/.screenrc"; \
+	      printf "source ~/.config/screen/%s\n" \
+	        "$$_manual_name" >> "$(HOME_DIR)/.screenrc"; \
 	    fi; \
 	  done; \
 	  printf "Generated: ~/.screenrc with source entries:\n"; \

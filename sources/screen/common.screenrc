@@ -1,3 +1,4 @@
+# vim: filetype=screen
 # NOTE: escape key was changed by command line argument
 #       DO NOT SET BY SCREENRC FILE
 #       'screen -D -RR -e"^Gg"'

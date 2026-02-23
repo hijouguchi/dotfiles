@@ -1,3 +1,4 @@
+# vim: filetype=screen
 # Status line (v4, Linux)
 setenv _s "%{=}"
 setenv _s "$_s%?%F%{b15;12}%:%{15;241}%?" # focus or non-focus
